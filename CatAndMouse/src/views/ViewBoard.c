@@ -1,4 +1,4 @@
-#include "../views/ViewBoard.h"
+#include "ViewBoard.h"
 
 
 Board* create_boardView(Screen* topPanel, Screen* sideBar)
