@@ -1,9 +1,9 @@
 #include <SDL.h>
 #include <SDL_image.h>
-#include <SDL_ttf.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
+//kapara !!
 
 #define SCREEN_HEIGHT 578
 #define SCREEN_WIDTH 350
