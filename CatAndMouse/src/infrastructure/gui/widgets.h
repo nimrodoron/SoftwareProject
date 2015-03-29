@@ -3,8 +3,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-//kapara !!
-
 #define SCREEN_HEIGHT 578
 #define SCREEN_WIDTH 350
 #define GAMEGAP 30 /*the gap between the buttons in the game state */
