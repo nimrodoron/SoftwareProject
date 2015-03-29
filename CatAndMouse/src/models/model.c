@@ -1,4 +1,4 @@
-#include "model.h"
+#include "../models/model.h"
 
 Model* create_model(char** imagesArr, char** imagesArrChosen, int* stateArr, int marked_button, int level)
 {

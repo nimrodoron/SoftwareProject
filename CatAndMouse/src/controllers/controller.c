@@ -1,5 +1,6 @@
 #include "controller.h"
 #include <SDL_image.h>
+#include <stdbool.h>
 
 /*for main menu*/
 
@@ -104,7 +105,7 @@ void button_click(Uint16 x, Uint16 y,View* v)
 
 	while (button != NULL)
 	{
-		if (button->enabled == true)
+		if (button->enabled == 1)
 		{
 			if (x >= button->componentProps.dest_rect->x)
 				if (x <= button->componentProps.dest_rect->x + button->componentProps.dest_rect->w)

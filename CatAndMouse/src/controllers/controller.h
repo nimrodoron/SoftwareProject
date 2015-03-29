@@ -1,4 +1,4 @@
-#include "view.h"
+#include "../views/view.h"
 
 View* currentView;
 /*for main menu*/

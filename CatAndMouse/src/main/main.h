@@ -1,4 +1,4 @@
-#include "../gui/controller.h"
+#include "../controllers/controller.h"
 
 
 int currentStateIndex;

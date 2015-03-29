@@ -1,4 +1,4 @@
-#include "widgets.h"
+#include "../infrastructure/gui/widgets.h"
 
 
 typedef struct model{
