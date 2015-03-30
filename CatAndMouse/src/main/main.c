@@ -17,7 +17,7 @@ int main()
 	//currentState = stateId_main_menu[0];
 	
 
-	currentStateIndex = 0;
+	int currentStateIndex = 0;
 	initialize_states();
 	
 	currentView = states[currentStateIndex];
