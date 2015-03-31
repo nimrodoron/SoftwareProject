@@ -100,6 +100,7 @@ Screen* create_topPanel()
 	}
 	
 	SDL_Flip(allBoards);
+	return scr;
 }
 
 Screen* create_sideBar()
@@ -130,6 +131,7 @@ Screen* create_sideBar()
 	}
 
 	SDL_Flip(allBoards);
+	return scr;
 }
 
 void apply_surfaceBoard(int x, int y, SDL_Surface* source, SDL_Surface* destination)

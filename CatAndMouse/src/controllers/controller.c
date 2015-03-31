@@ -2,6 +2,7 @@
 #include <SDL_image.h>
 #include <stdbool.h>
 
+int currentStateIndex = 0;
 /*for main menu*/
 
 char* main_menu_buttons_image[NUMBER_BUTTONS_MAIN_MENU] = { "images/cat_mouse_title.png", "images/new_game.png", "images/load_game.png", "images/create_game.png", "images/edit_game.png", "images/quit.png" }; /*the images in the main menu*/
@@ -21,13 +22,13 @@ int stateId_choose_your_mouse_menu[NUMBER_BUTTONS_CHOOSE_MOUSE_MENU] = {2, 5, 4,
 /*for choose cat skill level menu*/
 char* choose_cat_skills_menu_buttons_image[NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU] = { "images/choose_cat_skill_level_title.png", "images/skill_level5.png", "images/done.png", "images/back.png" }; /*the images in the choose mouse menu menu*/
 char* choose_cat_skills_menu_buttons_image_chosen[NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU] = { "images/choose_cat_skill_level_title.png", "images/skill_level5_chosen.png", "images/done_chosen.png", "images/back_chosen.png" };
-int stateId_choose_cat_skill_level[NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU] = { 3, 0, 5, 1 };//change in the end- 5 should be the game screen and -1 should be up and down arrows!!!!!!!!!!!/
+int stateId_choose_cat_skill_level[NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU] = { 3, 10, 5, 1 };//change in the end- 5 should be the game screen and -1 should be up and down arrows!!!!!!!!!!!/
 // Hila change
 
 /*for choose mouse skill level menu*/
 char* choose_mouse_skills_menu_buttons_image[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU+8] = { "images/choose_mouse_skill_level_title.png", "images/skill_level5.png", "images/done.png", "images/back.png","images/skill_level1.png","images/skill_level2.png","images/skill_level3.png","images/skill_level4.png","images/skill_level6.png","images/skill_level7.png","images/skill_level8.png","images/skill_level9.png" }; /*the images in the choose mouse menu menu*/
 char* choose_mouse_skills_menu_buttons_image_chosen[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU] = { "images/choose_mouse_skill_level_title.png", "images/skill_level5_chosen.png", "images/done_chosen.png", "images/back_chosen.png" };
-int stateId_choose_mouse_skill_level[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU] = { 4, 0, 5, 2 };//change in the end- 5 should be the game screen and -1 should be up and down arrows!!!!!!!!!!!/
+int stateId_choose_mouse_skill_level[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU] = { 4, 10, 5, 2 };//change in the end- 5 should be the game screen and -1 should be up and down arrows!!!!!!!!!!!/
 // Hila change
 void initialize_states(){
 	states[0] = build_all_view(main_menu_buttons_image, main_menu_buttons_image_chosen, stateId_main_menu, 1, -1, NUMBER_BUTTONS_MAIN_MENU);
@@ -45,8 +46,7 @@ void handle_event(SDL_Event *ev, View* v)
 	switch (ev->type)
 	{
 	case SDL_QUIT:
-		quit = 1;
-		//free_UI_Tree(currentWindow);
+		quit_main_menu();
 		break;
 	case SDL_MOUSEBUTTONUP:
 		button_click(ev->button.x, ev->button.y, v);
@@ -71,8 +71,7 @@ void enter_click(View* v){
 	for (i = 0; i < markedButton; i++){
 		current = current->next;
 	}
-	currentView = states[current->nextState];
-	draw_screen("Cat&Mouse", currentView->screen);
+	handale_click(current,0,0);
 }
 
 void tab_click(View* v)
@@ -121,13 +120,79 @@ void button_click(Uint16 x, Uint16 y,View* v)
 							current->componentProps.surface = IMG_Load(v->model->images[markedButton]);
 							button->componentProps.surface = IMG_Load(v->model->chosen_images[markedButtonIndex++]);
 							draw_screen("Cat&Mouse", currentView->screen);
-							currentView = states[button->nextState];
-							draw_screen("Cat&Mouse",currentView->screen);
-							break;
+							handale_click(button,x,y);
+
 						}
 				}
 		}
 		button = button->next;
 		markedButtonIndex++;
 	}
+}
+
+void quit_main_menu()
+{
+	quit = 1;
+	//free_UI_Tree(currentWindow);
+}
+
+void handale_click(Panel* button, Uint16 x, Uint16 y)
+{
+	switch(button->nextState){
+	case 5: //going to the main game
+		//mainviewboard();
+		break;
+	case 7: //quit was pressed
+		quit_main_menu();
+		break;
+	case 10: //level button was pressed
+		if(currentStateIndex ==3||currentStateIndex==4){
+			if (x >= button->componentProps.dest_rect->x+147)
+							if (x <= button->componentProps.dest_rect->x + button->componentProps.dest_rect->w)
+							{
+								if (y >= button->componentProps.dest_rect->y)
+									if (y <= button->componentProps.dest_rect->y + button->componentProps.dest_rect->h -36)
+									{
+
+										handale_up_level_button(button);
+									}
+									else
+									{
+									if(y >= button->componentProps.dest_rect->y+26)
+										if (y <= button->componentProps.dest_rect->y + button->componentProps.dest_rect->h)
+									{
+										handale_down_level_button(button);
+									}
+									}
+								}
+
+		break;
+	default:
+	currentView = states[button->nextState];
+	draw_screen("Cat&Mouse",currentView->screen);
+	break;
+}
+	}
+}
+
+void handale_up_level_button(Panel* button)
+{
+	if(currentView->model->level<9){
+		currentView->model->level++;
+			char* chosenImagePath = currentView->model->chosen_images [currentView->model->level +4];
+			currentView->screen->head->next->next->componentProps.surface = IMG_Load(chosenImagePath);// the next chosen image from the array
+			draw_screen("Cat&Mouse", currentView->screen);
+
+}
+}
+void handale_down_level_button(Panel* button)
+{
+	if(currentView->model->level>1){
+		currentView->model->level--;
+			char* chosenImagePath = currentView->model->chosen_images [currentView->model->level +4];
+			currentView->screen->head->next->next->componentProps.surface = IMG_Load(chosenImagePath);// the next chosen image from the array
+			//currentView->screen->head->next->next->componentProps.surface = IMG_Load("hila");
+			draw_screen("Cat&Mouse", currentView->screen);
+	}
+
 }

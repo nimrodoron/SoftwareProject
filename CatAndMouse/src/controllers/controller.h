@@ -1,6 +1,7 @@
 #include "../views/view.h"
 
 View* currentView;
+extern int currentStateIndex;
 /*for main menu*/
 
 
@@ -34,6 +35,7 @@ extern int stateId_choose_mouse_skill_level[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MEN
 
 
  int quit;
+ //int currentStateIndex;
 //char* currentState;
 #define NUMBER_MENUES 4
 View* states[NUMBER_MENUES];
@@ -46,4 +48,7 @@ void handle_event(SDL_Event *ev, View* v);
 void tab_click(View* v);
 void button_click(Uint16 x, Uint16 y, View* v);
 void enter_click(View* v);
-//void init_arrays();
+void quit_main_menu();
+void handale_click(Panel* button, Uint16 x, Uint16 y);
+void handale_down_level_button(Panel* button);
+void handale_up_level_button(Panel* button);
