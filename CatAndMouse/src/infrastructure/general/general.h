@@ -9,13 +9,13 @@
 #define SRC_MAIN_GENERAL_H_
 
 typedef enum resultCode {
-	SUCCESS,
-	ERROR
+	ERROR = 0,
+	SUCCESS = 1
 }resultCode;
 
 typedef struct result {
 	resultCode code;
-	char message[30];
+	char* message;
 }result;
 
 #endif /* SRC_MAIN_GENERAL_H_ */

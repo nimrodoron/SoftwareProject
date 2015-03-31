@@ -1,6 +1,30 @@
-#include <stdlib.h>
-#define  NUMBER_BUTTONS_TOP_PANEL  6
-#define NUMBER_BUTTONS_SIDE_BAR 5
+#ifndef CONTROLLERBOARD_H_
+#define CONTROLLERBOARD_H_
 
-extern char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL];
-extern char* side_bar_images[NUMBER_BUTTONS_SIDE_BAR];
+#include <stdlib.h>
+//#include "../infrastructure/general/general.h"
+#include "../models/ModelBoard.h"
+#include "../views/ViewBoard.h"
+
+typedef struct controllerBoard {
+	modelBoard* model;
+	viewBoard* view;
+}controllerBoard;
+
+controllerBoard* controller;
+
+// Create new controller if not exist
+result createBoardController(mode Mode, char* name, player cat,
+		 	 	 	 	 	 player mouse, int Level);
+
+// Show the view of the controller
+result showView();
+
+// Destroy the singelton controller
+result freeBoardController();
+
+// function used to handle view events update the model and view accordingly
+void HandleSystemEvent (viewBoardEvents event, int x, int y);
+
+#endif
+

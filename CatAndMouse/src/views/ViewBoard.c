@@ -1,9 +1,31 @@
 #include "ViewBoard.h"
 
 
-Board* create_boardView(Screen* topPanel, Screen* sideBar)
+char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL] = { "Mouse's _move.png", "2.png", NULL, ").png", "Machine_computing.png", "Pause Before Next Move.png" };
+
+char* side_bar_images[NUMBER_BUTTONS_SIDE_BAR] = { "Reconfigue_mouse.png", "Reconfigue_cat.png", "Restart_game.png", "go_to_main_menu.png", "Quit_program.png" };
+
+
+result createViewBoard(viewBoard* view, void (*HandleSystemEvent) (viewBoardEvents event, int x, int y),
+					   modelBoard* model) {
+	result res;
+	res.code = SUCCESS;
+	return res;
+}
+
+result showViewBoard(viewBoard* view) {
+	result res;
+	res.code = SUCCESS;
+	return res;
+}
+
+result freeViewBoard(viewBoard* view) {
+
+}
+
+viewBoard* create_boardView(Screen* topPanel, Screen* sideBar)
 {
-	Board* board = (Board*)malloc(sizeof(Board));
+	viewBoard* board = (viewBoard*)malloc(sizeof(viewBoard));
 	if (board == NULL)
 	{
 		isError - 1;
@@ -15,9 +37,9 @@ Board* create_boardView(Screen* topPanel, Screen* sideBar)
 	return board;
 }
 
-Board* buildBord()
+viewBoard* buildBord()
 {
-	Board* board;
+	viewBoard* board;
 	Screen* topPanel = create_topPanel();
 	Screen* sideBar = create_sideBar();
 
@@ -130,7 +152,7 @@ void mainviewboard()
 	/*SDL_Color color = { 255, 255, 255 };
 	SDL_FillRect(allBoards, 0, SDL_MapRGB(allBoards->format, color.r, color.g, color.b));
 */
-	Board* board = buildBord();
+	viewBoard* board = buildBord();
 	
 	SDL_Delay(3000);
 }
