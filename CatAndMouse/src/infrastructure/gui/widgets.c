@@ -58,12 +58,12 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	}
 	if (type == BUTTON)
 	{
-		pan->componentProps.surface = IMG_Load(path);
+		pan->componentProps.surface = SDL_LoadBMP(path);
 		pan->enabled = true;
 	}
 	else if (type == IMAGE)
 	{
-		pan->componentProps.surface = IMG_Load(path);
+		pan->componentProps.surface = SDL_LoadBMP(path);
 		pan->enabled = false;
 	}
 	else if (type == PANEL)

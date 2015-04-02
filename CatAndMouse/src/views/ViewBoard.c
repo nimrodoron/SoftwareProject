@@ -1,9 +1,9 @@
 #include "ViewBoard.h"
 
 
-char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL] = { "Mouse's _move.png", "2.png", NULL, ").png", "Machine_computing.png", "Pause Before Next Move.png" };
+char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL] = { "images/Mouse's _move.bmp", "images/2.bmp", NULL, "images/).bmp", "images/Machine_computing.bmp", "images/Pause Before Next Move.bmp" }; 
 
-char* side_bar_images[NUMBER_BUTTONS_SIDE_BAR] = { "Reconfigue_mouse.png", "Reconfigue_cat.png", "Restart_game.png", "go_to_main_menu.png", "Quit_program.png" };
+char* side_bar_images[NUMBER_BUTTONS_SIDE_BAR] = { "images/Reconfigue_mouse.bmp", "images/Reconfigue_cat.bmp", "images/Restart_game.bmp", "images/go_to_main_menu.bmp", "images/Quit_program.bmp" };
 
 
 result createViewBoard(viewBoard* view, void (*HandleSystemEvent) (viewBoardEvents event, int x, int y),
@@ -117,7 +117,7 @@ Screen* create_sideBar()
 	}
 	scr->screen = allBoards;
 	
-	scr->head = create_panel(200, 600, 0, 0, "side_bar_grey.png", IMAGE, -1, scr, 1);
+	scr->head = create_panel(200, 600, 0, 0, "side_bar_grey.bmp", IMAGE, -1, scr, 1);
 	apply_surfaceBoard(0, 100 , scr->head->componentProps.surface, allBoards);
 
 	Panel* currentHead = scr->head;

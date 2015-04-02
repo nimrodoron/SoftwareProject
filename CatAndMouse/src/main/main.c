@@ -13,6 +13,9 @@ int main()
 	}
 	atexit(SDL_Quit);
 
+
+	//mainviewboard();
+	//exit(1);
 	//window = create_screen();
 	//currentState = stateId_main_menu[0];
 	
