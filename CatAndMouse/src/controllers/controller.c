@@ -268,6 +268,21 @@ void mainviewboard()
 	//SDL_FillRect(allBoards, 0, SDL_MapRGB(allBoards->format, color.r, color.g, color.b));
 	/*viewBoard* view =  createViewBoard(NULL, NULL, NULL);
 	showViewBoard(view);*/
-	 createBoardController(EDIT, "hila", USER, COMPUTER, 2);
+
+	// Example show board on edit mode (create)
+	player dummy;
+	createBoardController(EDIT,NULL,dummy,dummy,NONE);
+
+	// Example show board on edit mode (edit)
+	//createBoardController(EDIT,"world_1.txt",dummy,dummy,NONE);
+
+	// Example of Load game (new game is the same with world_1.txt)
+	//player mouse;
+	//mouse.type = COMPUTER;
+	//mouse.level = 2;
+	//player cat;
+	//cat.type = USER;
+	//createBoardController(GAME, "world_2.txt", mouse, cat, MOUSE);
+
 	 showView();
 }

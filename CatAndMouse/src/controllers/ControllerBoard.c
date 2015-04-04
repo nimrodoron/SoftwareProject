@@ -1,8 +1,8 @@
 #include "ControllerBoard.h"
 #include "../services/WorldsManager.h"
 
-result createBoardController(mode Mode, char* name, player cat,
-							 player mouse, int Level) {
+result createBoardController(mode Mode, char* name, player mouse,
+							 player cat, playerAnimal currentPlayer) {
 	result res;
 
 	// Create singelton controller
@@ -23,22 +23,25 @@ result createBoardController(mode Mode, char* name, player cat,
 	}
 
 	// Create the model
+	controller->model->modelMode = Mode;
 	if (Mode == EDIT) {
-		controller->model->Level = Level;
-		controller->model->cat = cat;
-		controller->model->mouse = mouse;
+		if (name == NULL)
+			createNewModel();
+		else
+			res = LoadWorldFromFile(&(controller->model), name);
 	}
 	else {
-	/*	res = LoadWorldFromFile(controller->model, name);
+		controller->model->players[CAT] = cat;
+		controller->model->players[MOUSE] = mouse;
+		controller->model->currentPlayer = currentPlayer;
+		res = LoadWorldFromFile(&(controller->model), name);
 		if (!res.code) {
 			freeBoardController();
 			return res;
-		}*/
-		controller->model->Level = Level;
-		controller->model->cat = cat;
-		controller->model->mouse = mouse;
+		}
 	}
 
+	// create the view
 	res = createViewBoard(&(controller->view), HandleSystemEvent, controller->model);
 	if (!res.code)
 	 {
@@ -80,3 +83,10 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 	}
 }
 
+void createNewModel() {
+	for (int i=0; i<GRID_SIZE; i++) {
+		for (int j=0; j<GRID_SIZE; j++) {
+			controller->model->board[i][j] = EMPTY;
+		}
+	}
+}
