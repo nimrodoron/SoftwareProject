@@ -52,3 +52,5 @@ void quit_main_menu();
 void handale_click(Panel* button, Uint16 x, Uint16 y, View* v);
 void handale_down_level_button(Panel* button, View* v);
 void handale_up_level_button(Panel* button, View* v);
+
+void mainviewboard();

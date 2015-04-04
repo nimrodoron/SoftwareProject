@@ -1,6 +1,8 @@
 #include "controller.h"
 #include <SDL_image.h>
 #include <stdbool.h>
+#include "../models/ModelBoard.h"
+#include "ControllerBoard.h"
 
 
 /*for main menu*/
@@ -256,4 +258,16 @@ void handale_down_level_button(Panel* button, View* v)
 			draw_screen("Cat&Mouse", v->screen);
 	}
 
+}
+
+void mainviewboard()
+{
+
+	//allBoards = SDL_SetVideoMode(800, 800, 0, 0);
+	//SDL_Color color = { 255, 255, 255 };
+	//SDL_FillRect(allBoards, 0, SDL_MapRGB(allBoards->format, color.r, color.g, color.b));
+	/*viewBoard* view =  createViewBoard(NULL, NULL, NULL);
+	showViewBoard(view);*/
+	 createBoardController(EDIT, "hila", USER, COMPUTER, 2);
+	 showView();
 }

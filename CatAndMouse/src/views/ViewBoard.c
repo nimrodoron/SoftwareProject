@@ -5,8 +5,8 @@ char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL] = { "images/Mouse's _
 //arrays for the images in the top panel
 char* top_panel_animal_move[2] = { "images/Cat_move.bmp", "images/Mouse's _move.bmp" };
 char* top_panel_numbers[11] = { "images/).bmp", "images/0.bmp", "images/1.bmp", "images/2.bmp", "images/3.bmp", "images/4.bmp", "images/5.bmp", "images/6.bmp", "images/7.bmp", "images/8.bmp", "images/9.bmp" };
-char* top_panel_win_status[3] = { "images/Game Over – Cat Wins.bmp", "images/Game Over – Mouse Wins.bmp", "images/Game Over – Timeout.bmp" };
-char* top_panel_game_status[4] = { "images/Human-waiting for next move….bmp","images/Human-paused.bmp","images/Machine_computing.bmp","images/Machine-paused.bmp"};
+char* top_panel_win_status[3] = { "images/Game Over ï¿½ Cat Wins.bmp", "images/Game Over ï¿½ Mouse Wins.bmp", "images/Game Over ï¿½ Timeout.bmp" };
+char* top_panel_game_status[4] = { "images/Human-waiting for next moveï¿½.bmp","images/Human-paused.bmp","images/Machine_computing.bmp","images/Machine-paused.bmp"};
 
 char* side_bar_images[NUMBER_BUTTONS_SIDE_BAR] = { "images/Reconfigue_mouse.bmp", "images/Reconfigue_cat.bmp", "images/Restart_game.bmp", "images/go_to_main_menu.bmp", "images/Quit_program.bmp" };
 
@@ -42,6 +42,8 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 		res.message = "ERROR: failed to allocate memory for board\n";
 		return res;
 	}
+	(*view)->model = model;
+	//view->HandleSystemEvent = HandleSystemEvent;
 	sideBar = create_sideBar();
 	topPanel = create_topPanel();
 	if ((sideBar == NULL) || (topPanel == NULL))
@@ -59,14 +61,34 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 
 result showViewBoard(viewBoard* view) {
 	result res;
+	int quit=0;
 	
+	allBoards = SDL_SetVideoMode(800, 800, 0, 0);
+	SDL_Color color = { 255, 255, 255 };
+	SDL_FillRect(allBoards, 0, SDL_MapRGB(allBoards->format, color.r, color.g, color.b));
+
 	show_side_bar(view->sideBar);
 	show_top_panel(view->topPanel);
+
+	while (quit == 0)
+	{
+		//While there's events to handle
+		while (SDL_PollEvent(&event) != 0)
+		{
+			handle_gui_event(&event, view);
+		}
+	}
+
+
 	res.code = SUCCESS;
 	return res;
 }
 
 result freeViewBoard(viewBoard* view) {
+
+}
+
+void handle_gui_event(SDL_Event *ev, viewBoard* v) {
 
 }
 
@@ -256,19 +278,5 @@ void convert_model(viewBoard* view)
 	char* try = top_panel_animal_move[view->model->currentPlayer];
 	displayed_top_panel_images[0] = try;
 
-}
-
-void mainviewboard()
-{
-	
-	allBoards = SDL_SetVideoMode(800, 800, 0, 0);
-	SDL_Color color = { 255, 255, 255 };
-	SDL_FillRect(allBoards, 0, SDL_MapRGB(allBoards->format, color.r, color.g, color.b));
-	/*viewBoard* view =  createViewBoard(NULL, NULL, NULL);
-	showViewBoard(view);*/
-	 createBoardController(EDIT, "hila", USER, COMPUTER, 2);
-	 showView();
-
-	SDL_Delay(3000);
 }
 

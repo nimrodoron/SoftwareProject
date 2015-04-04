@@ -1,3 +1,6 @@
+#ifndef WIDGETS_H_
+#define WIDGETS_H_
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <stdbool.h>
@@ -18,7 +21,7 @@ extern int button_offsetX; /*the offset of the button*/
 extern int button_offsetY;
 
 /*component's type*/
-typedef enum {
+typedef enum  ComponentType {
 	BUTTON,
 	IMAGE,
 	PANEL,
@@ -76,3 +79,4 @@ int calc_height(int size, int height, int gap);
 int calc_width(int width);
 void add_child(Panel* item, Screen* window);
 
+#endif
