@@ -14,10 +14,9 @@ int main()
 	atexit(SDL_Quit);
 
 
-	//mainviewboard();
-	//exit(1);
-	//window = create_screen();
-	//currentState = stateId_main_menu[0];
+	mainviewboard();
+	exit(1);
+
 	
 
 	currentStateIndex = 0;
@@ -25,7 +24,6 @@ int main()
 	
 	currentView = states[currentStateIndex];
 	draw_screen("Cat&Mouse", currentView->screen);
-	//currentWindow = open_window_dialog(currentState);
 	//While the user hasn't quit
 	while (quit == 0)
 	{

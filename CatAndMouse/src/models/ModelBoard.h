@@ -11,8 +11,9 @@ typedef enum mode {
 typedef enum fillType {
 	EMPTY,
 	WALL,
-	CAT,
-	MOUSE,
+	CAT_PIC
+	,
+	MOUSE_PIC,
 	CHEESE
 }type;
 
@@ -21,6 +22,11 @@ typedef enum player {
 	USER
 }player;
 
+typedef enum currentAnimalPlayer {
+	CAT,
+	MOUSE
+}currentAnimalPlayer;
+
 typedef enum events {
 	MOUSE_MOVE,
 	CHEESE_MOVE
@@ -28,7 +34,7 @@ typedef enum events {
 
 typedef struct modelBoard {
 	type board[7][7];
-	player currentPlayer;
+	currentAnimalPlayer currentPlayer;
 	player cat;
 	player mouse;
 	int Level;
@@ -36,7 +42,7 @@ typedef struct modelBoard {
 	int movesBeforeTie;
 }modelBoard;
 
-result createEmptyModel(modelBoard* model);
+result createEmptyModel(modelBoard** model);
 result createModelFromData(modelBoard* model, type board[7][7]);
 result updateModel(modelBoard* model, int rawPos, int colPos, type data, mode modelMode,
 		int movesBeforeTie);
