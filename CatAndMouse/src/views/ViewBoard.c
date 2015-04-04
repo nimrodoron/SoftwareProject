@@ -1,7 +1,7 @@
 #include "ViewBoard.h"
 
 //array for the displayed images
-char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL] = { "images/Mouse's _move.bmp", "images/2.bmp", NULL, "images/).bmp", "images/Machine_computing.bmp", "images/Pause Before Next Move.bmp" }; 
+char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL] = { "images/Mouse's _move.bmp", "images/2.bmp", "", "images/).bmp", "images/Machine_computing.bmp", "images/Pause Before Next Move.bmp" };
 //arrays for the images in the top panel
 char* top_panel_animal_move[2] = { "images/Cat_move.bmp", "images/Mouse's _move.bmp" };
 char* top_panel_numbers[11] = { "images/).bmp", "images/0.bmp", "images/1.bmp", "images/2.bmp", "images/3.bmp", "images/4.bmp", "images/5.bmp", "images/6.bmp", "images/7.bmp", "images/8.bmp", "images/9.bmp" };
@@ -73,7 +73,7 @@ result showViewBoard(viewBoard* view) {
 
 	show_side_bar(view->sideBar);
 	show_top_panel(view->topPanel);
-<<<<<<< HEAD
+	show_grid_area(view->gridArea);
 
 	while (quit == 0)
 	{
@@ -84,10 +84,6 @@ result showViewBoard(viewBoard* view) {
 		}
 	}
 
-
-=======
-	show_grid_area(view->gridArea);
->>>>>>> 0e4647dccfb65d9d67bbf5ed0b373d65c00912fd
 	res.code = SUCCESS;
 	return res;
 }
@@ -96,7 +92,6 @@ result freeViewBoard(viewBoard* view) {
 
 }
 
-<<<<<<< HEAD
 void handle_gui_event(SDL_Event *ev, viewBoard* v) {
 
 }
@@ -126,8 +121,6 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v) {
 //	return board;
 //}
 
-=======
->>>>>>> 0e4647dccfb65d9d67bbf5ed0b373d65c00912fd
 Screen* create_topPanel()
 {
 	Screen* scr = (Screen*)malloc(sizeof(Screen));
@@ -316,18 +309,3 @@ void convert_model(viewBoard* view)
 
 }
 
-<<<<<<< HEAD
-=======
-void mainviewboard()
-{
-	
-	allBoards = SDL_SetVideoMode(800, 800, 0, 0);
-	SDL_Color color = { 255, 255, 255 };
-	SDL_FillRect(allBoards, 0, SDL_MapRGB(allBoards->format, color.r, color.g, color.b));
-	createBoardController(EDIT, "hila", USER, COMPUTER, 2);
-	showView();
-
-	SDL_Delay(3000);
-}
-
->>>>>>> 0e4647dccfb65d9d67bbf5ed0b373d65c00912fd

@@ -16,15 +16,12 @@ result createBoardController(mode Mode, char* name, player cat,
 		}
 	}
 
-<<<<<<< HEAD
 	res = createEmptyModel(&(controller->model));
 	if (!res.code) {
 		freeBoardController();
 		return res;
 	}
 
-=======
->>>>>>> 0e4647dccfb65d9d67bbf5ed0b373d65c00912fd
 	// Create the model
 	if (Mode == EDIT) {
 		controller->model->Level = Level;
