@@ -16,8 +16,6 @@ result createBoardController(mode Mode, char* name, player cat,
 		}
 	}
 
-		
-
 	// Create the model
 	if (Mode == EDIT) {
 		res = createEmptyModel(&(controller->model));
@@ -38,10 +36,6 @@ result createBoardController(mode Mode, char* name, player cat,
 		controller->model->mouse = mouse;
 	//}
 
-	// Create the view //change to this after the fixes in cuntrollerBoard
-	
-		//controller->view = createViewBoard(NULL, NULL, NULL);
-	//if (!createViewBoard(NULL, NULL, NULL))
 	res = createViewBoard(&(controller->view), HandleSystemEvent, controller->model);
 	if (!res.code)
 	 {

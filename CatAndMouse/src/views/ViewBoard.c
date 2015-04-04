@@ -35,6 +35,7 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	result res;
 	Screen* sideBar;
 	Screen* topPanel;
+	Screen* gridArea;
 	*view = (viewBoard*)malloc(sizeof(viewBoard));
 	if (view == NULL)
 	{
@@ -44,14 +45,17 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	}
 	sideBar = create_sideBar();
 	topPanel = create_topPanel();
-	if ((sideBar == NULL) || (topPanel == NULL))
+	gridArea = create_gridArea();
+
+	if ((sideBar == NULL) || (topPanel == NULL)|| (gridArea==NULL))
 	{
 		res.code = -1;
-		res.message = "ERROR: failed to allocate memory for sideBar\n";
+		res.message = "ERROR: failed to allocate memory for game window\n";
 		return res;
 	}
 	(*view)->topPanel = topPanel;
 	(*view)->sideBar = sideBar;
+	(*view)->gridArea = gridArea;
 
 	res.code = SUCCESS;
 	return res;
@@ -62,6 +66,7 @@ result showViewBoard(viewBoard* view) {
 	
 	show_side_bar(view->sideBar);
 	show_top_panel(view->topPanel);
+	show_grid_area(view->gridArea);
 	res.code = SUCCESS;
 	return res;
 }
@@ -70,36 +75,8 @@ result freeViewBoard(viewBoard* view) {
 
 }
 
-//viewBoard* create_boardView(Screen* topPanel, Screen* sideBar)
-//{
-//	viewBoard* board = (viewBoard*)malloc(sizeof(viewBoard));
-//	if (board == NULL)
-//	{
-//		isError - 1;
-//		printf("ERROR: failed to allocate memory for board\n");
-//		return NULL;
-//	}
-//	board->topPanel = topPanel;
-//	board->sideBar = sideBar;
-//	return board;
-//}
-
-//viewBoard* buildBord()
-//{
-//	viewBoard* board;
-//	Screen* topPanel = create_topPanel();
-//	Screen* sideBar = create_sideBar();
-//
-//	board =  create_boardView(topPanel, sideBar);
-//
-//	return board;
-//}
-
 Screen* create_topPanel()
 {
-	int screen_width = 800;
-	int screen_height = 200;
-
 	Screen* scr = (Screen*)malloc(sizeof(Screen));
 	if (scr == NULL)
 	{
@@ -142,11 +119,8 @@ Screen* create_topPanel()
 		}
 		
 		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, displayed_top_panel_images[i],type, 0, scr, 0), scr);	
-		/*apply_surfaceBoard(330 + xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
-		currentHead = currentHead->next;*/
 	}
 	
-	//SDL_Flip(allBoards);
 	return scr;
 }
 
@@ -190,9 +164,6 @@ void show_top_panel(Screen* scr)
 
 Screen* create_sideBar()
 {
-	int screen_width = 800;
-	int screen_height = 200;
-
 	Screen* scr = (Screen*)malloc(sizeof(Screen));
 	if (scr == NULL)
 	{
@@ -205,17 +176,11 @@ Screen* create_sideBar()
 	scr->head = create_panel(200, 600, 0, 0, "side_bar_grey.bmp", IMAGE, -1, scr, 1);
 	apply_surfaceBoard(0, 100 , scr->head->componentProps.surface, allBoards);
 
-	//Panel* currentHead = scr->head;
-
 	for (int i = 0; i < NUMBER_BUTTONS_SIDE_BAR; i++)
 	{
 		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + i*MENUGAP+30, side_bar_images[i], BUTTON, 0, scr, 0), scr);
-
-		//apply_surfaceBoard(15, 120 + i*MENUGAP+30, currentHead->next->componentProps.surface, allBoards);
-		//currentHead = currentHead->next;
 	}
 
-	//SDL_Flip(allBoards);
 	return scr;
 }
 
@@ -225,8 +190,6 @@ void show_side_bar(Screen* scr)
 
 	for (int i = 0; i < NUMBER_BUTTONS_SIDE_BAR; i++)
 	{
-		
-
 		apply_surfaceBoard(15, 120 + i*MENUGAP + 30, currentHead->next->componentProps.surface, allBoards);
 		currentHead = currentHead->next;
 	}
@@ -235,6 +198,48 @@ void show_side_bar(Screen* scr)
 }
 
 
+Screen* create_gridArea()
+{
+	Screen* scr = (Screen*)malloc(sizeof(Screen));
+	if (scr == NULL)
+	{
+		isError - 1;
+		printf("ERROR: failed to allocate memory for grid\n");
+		return NULL;
+	}
+	scr->screen = allBoards;
+
+	scr->head = create_panel(800, 200, 0, 0, NULL, PANEL, -1, scr, 1);
+	//apply_surfaceBoard(0, 100, scr->head->componentProps.surface, allBoards);
+
+	for (int i = 0; i < 7; i++)
+	{
+		for (int j = 0; j < 7; j++)
+		{
+			add_child(create_panel(70, 70, 70 * j, 70 * i, "images/square.bmp", BUTTON, 0, scr, 0), scr);
+		}
+		
+	}
+
+	return scr;
+}
+
+void show_grid_area(Screen* scr)
+{
+	Panel* currentHead = scr->head;
+
+	for (int i = 0; i < 7; i++)
+	{
+		for (int j = 0; j < 7; j++)
+		{
+			apply_surfaceBoard(230 + j*70, 120 + i * 70, currentHead->next->componentProps.surface, allBoards);
+			currentHead = currentHead->next;
+		}
+		
+	}
+
+	SDL_Flip(allBoards);
+}
 
 void apply_surfaceBoard(int x, int y, SDL_Surface* source, SDL_Surface* destination)
 {
@@ -264,10 +269,8 @@ void mainviewboard()
 	allBoards = SDL_SetVideoMode(800, 800, 0, 0);
 	SDL_Color color = { 255, 255, 255 };
 	SDL_FillRect(allBoards, 0, SDL_MapRGB(allBoards->format, color.r, color.g, color.b));
-	/*viewBoard* view =  createViewBoard(NULL, NULL, NULL);
-	showViewBoard(view);*/
-	 createBoardController(EDIT, "hila", USER, COMPUTER, 2);
-	 showView();
+	createBoardController(EDIT, "hila", USER, COMPUTER, 2);
+	showView();
 
 	SDL_Delay(3000);
 }

@@ -16,7 +16,7 @@ typedef enum {
 typedef struct viewBoard{
 	Screen* topPanel;
 	Screen* sideBar;
-	//Screen* gridArea;
+	Screen* gridArea;
 	void (*HandleSystemEvent) (viewBoardEvents event, int x, int y);
 	modelBoard* model;
 }viewBoard;
@@ -51,8 +51,8 @@ viewBoard* create_boardView(Screen* topPanel, Screen* sideBar);
 Screen* create_topPanel();
 void show_top_panel(Screen* scr);
 void show_side_bar(Screen* scr);
+void show_grid_area(Screen* scr);
 Screen* create_sideBar();
-void* create_gridArea();
+Screen* create_gridArea();
 void apply_surfaceBoard(int x, int y, SDL_Surface* source, SDL_Surface* destination);
-
 void mainviewboard();
