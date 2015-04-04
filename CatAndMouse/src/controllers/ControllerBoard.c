@@ -16,12 +16,15 @@ result createBoardController(mode Mode, char* name, player cat,
 		}
 	}
 
+<<<<<<< HEAD
 	res = createEmptyModel(&(controller->model));
 	if (!res.code) {
 		freeBoardController();
 		return res;
 	}
 
+=======
+>>>>>>> 0e4647dccfb65d9d67bbf5ed0b373d65c00912fd
 	// Create the model
 	if (Mode == EDIT) {
 		controller->model->Level = Level;
@@ -39,10 +42,6 @@ result createBoardController(mode Mode, char* name, player cat,
 		controller->model->mouse = mouse;
 	}
 
-	// Create the view //change to this after the fixes in cuntrollerBoard
-	
-		//controller->view = createViewBoard(NULL, NULL, NULL);
-	//if (!createViewBoard(NULL, NULL, NULL))
 	res = createViewBoard(&(controller->view), HandleSystemEvent, controller->model);
 	if (!res.code)
 	 {
