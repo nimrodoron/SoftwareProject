@@ -11,7 +11,10 @@
 // all the possible events in the view
 typedef enum {
 	EXIT,
-	RECONFIGURE_MOUSE
+	RECONFIGURE_MOUSE,
+	RECONFIGURE_CAT,
+	RESTART_GAME,
+	GO_TO_MAIN_MENU
 }viewBoardEvents;
 
 typedef struct viewBoard{

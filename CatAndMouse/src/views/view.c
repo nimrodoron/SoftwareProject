@@ -25,7 +25,7 @@ View* build_all_view(char** imagesArr, char** imagesArrChosen, int* stateArr, in
 }
 
 /**/
-int draw_screen(char* title, Screen* window)//, Panel* win)
+int draw_screen(char* title, Screen* window)
 {
 
 	// Create window surface

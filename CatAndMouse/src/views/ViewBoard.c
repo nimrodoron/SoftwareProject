@@ -89,23 +89,25 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v)
 			if (ev->button.y>0 && ev->button.y<600)
 				button_click_side_panel(ev->button.x, ev->button.y,v);
 		break;
-	/*case SDL_KEYDOWN:
-		switch (ev->key.keysym.sym){
-		case SDLK_TAB:
-			tab_click(v);
+	case SDL_KEYDOWN:
+		switch (ev->key.keysym.sym)
+		{
+		case SDLK_F1:
+			v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
 			break;
-		case SDLK_RETURN:
-			enter_click(v);
+		case SDLK_F2:
+			v->HandleSystemEvent(RECONFIGURE_CAT, 0, 0);
 			break;
-		case SDLK_UP:
-			if ((currentView->model->level != -1) && (v->model->marked_button == 1))
-				handale_up_level_button(v->screen->head->next, v);
+		case SDLK_F3:
+			v->HandleSystemEvent(RESTART_GAME, 0, 0);
 			break;
-		case SDLK_DOWN:
-			if ((currentView->model->level != -1) && (v->model->marked_button == 1))
-				handale_down_level_button(v->screen->head->next, v);
-			break;*/
-		
+		case SDLK_F4:
+			v->HandleSystemEvent(GO_TO_MAIN_MENU, 0, 0);
+			break;
+		case SDLK_ESCAPE:
+			v->HandleSystemEvent(RECONFIGURE_CAT, 0, 0);
+			break;
+		}	
 	default:
 		break;
 	}
@@ -113,7 +115,20 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v)
 
 void button_click_side_panel(Uint16 x, Uint16 y, viewBoard* v)
 {
-	v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
+	if (x > 15 && x < 197)
+	{
+		if (y>150 && y < 210)
+			v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
+		else if (y>150+88 && y < 210+88)
+			v->HandleSystemEvent(RECONFIGURE_CAT, 0, 0);
+		else if (y>150+88*2 && y < 210+88*2)
+			v->HandleSystemEvent(RESTART_GAME, 0, 0);
+		else if (y>150 + 88*3 && y < 210 + 88*3)
+			v->HandleSystemEvent(GO_TO_MAIN_MENU, 0, 0);
+		else if (y>150 + 88*4 && y < 210 + 88*4)
+			v->HandleSystemEvent(EXIT, 0, 0);
+	}
+
 }
 
 Screen* create_topPanel()

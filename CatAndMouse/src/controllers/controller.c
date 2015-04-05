@@ -228,10 +228,13 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 	case 12: //selecting back from type selection menu for the mouse in reconfigure mouse mode
 		quit = 1;
 		break;
+	case 15: //selction human in choose your cat menu in reconfigure mode
+		cat = USER;
+		quit = 1;
+		break;
 	case 14:
 		mouse = USER;
 	case 13://selecting done in mouse skil level menu in reconfigure mouse mode
-		//save_chages_mouse = 1;
 		updateModelBoardMouse(mouse, mouseLevel);
 		quit = 1;
 		break;
@@ -257,9 +260,15 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		//currentStateIndex++;
 		draw_screen("Cat&Mouse", currentView->screen);
 		break;
+	case 16: //in 'choose your cat menu' machine was chosen
+		cat = COMPUTER;
+		currentView = states[3];
+		//currentStateIndex++;
+		currentView->model->level = 5;
+		draw_screen("Cat&Mouse", currentView->screen);
+		break;
 	case 11: //level button was pressed from 'choose your cat skill level menu'
 		editedPlayer = CAT;
-
 	case 10: //level button was pressed for 'choose your mouse skill level menu'
 		if (v->model->level!=-1)
 		{
@@ -322,11 +331,6 @@ void handale_down_level_button(Panel* button, View* v)
 
 void mainviewboard(playerType catType, playerType mouseType, int catLevel, int mouseLevel)
 {
-	
-	
-	
-
-	
 
 	// Example show board on edit mode (create)
 	//player cat = createPlayer(catType, catLevel);
@@ -343,6 +347,7 @@ void mainviewboard(playerType catType, playerType mouseType, int catLevel, int m
 	mouse.level = 2;
 	player cat;
 	cat.type = USER;
+	cat.level = -1;
 	createBoardController(GAME, "world_2.txt", mouse, cat, MOUSE);
 
 	 showView();
@@ -358,15 +363,14 @@ void reconfigureMouseFunction(int level, playerType type,modelBoard* model)
 
 	if (type == COMPUTER)
 	{
-		currentView = states[4];
 		marked_button_choose_menu = 2;
+		choose_mouse_skills_menu_buttons_image_chosen[1] = choose_mouse_skills_menu_buttons_image_chosen[level + 3];
 	}
 	else if (type == USER)
 	{
-		currentView = states[2];
 		marked_button_choose_menu = 1;
 	}
-	choose_mouse_skills_menu_buttons_image_chosen[1] = choose_mouse_skills_menu_buttons_image_chosen[level + 3];
+	
 
 	int stateId_choose_your_mouse_menu_recon[NUMBER_BUTTONS_CHOOSE_MOUSE_MENU] = { 2, 14, 4, 12 };
 	int stateId_choose_mouse_skill_level_recon[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU] = { 4, 10, 13, 2 };
@@ -382,6 +386,52 @@ void reconfigureMouseFunction(int level, playerType type,modelBoard* model)
 		currentView = states[2];
 	}
 	draw_screen("Cat&Mouse", currentView->screen);
+	while_handle_event();
+}
+
+void reconfigureCatFunction(int level, playerType type, modelBoard* model)
+{
+	quit = 0;
+	int marked_button_choose_menu;
+	// the global parameters of the mouse and level
+	catLevel = level;
+	cat = type;
+
+	if (type == COMPUTER)
+	{
+		marked_button_choose_menu = 2;
+		choose_cat_skills_menu_buttons_image_chosen[1] = choose_cat_skills_menu_buttons_image_chosen[level + 3];
+	}
+	else if (type == USER)
+	{
+		marked_button_choose_menu = 1;
+	}
+	int stateId_choose_your_cat_menu_recon[NUMBER_BUTTONS_CHOOSE_MOUSE_MENU] = { 1, 15, 16, 12 }; 
+	int stateId_choose_mouse_skill_level_recon[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU] = { 3, 11, 13, 1 }; 
+	states[1] = build_all_view(choose_your_cat_menu_buttons_image, choose_your_cat_menu_buttons_image_chosen, stateId_choose_your_cat_menu_recon, marked_button_choose_menu, -1, NUMBER_BUTTONS_CHOOSE_CAT_MENU);
+	states[3] = build_all_view(choose_cat_skills_menu_buttons_image, choose_cat_skills_menu_buttons_image_chosen, stateId_choose_mouse_skill_level_recon, 1,level, NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU);
+
+	if (type == COMPUTER)
+	{
+		currentView = states[3];
+	}
+	else if (type == USER)
+	{
+		currentView = states[1];
+	}
+	draw_screen("Cat&Mouse", currentView->screen);
+	while_handle_event();
+}
+
+void GoToMainMenu(controllerBoard* con)
+{
+	// free all memory - controller, view and model and the new array 'states' that was created in the reconfigure options
+	currentStateIndex = 0;
+	initialize_states();
+
+	currentView = states[currentStateIndex];
+	draw_screen("Cat&Mouse", currentView->screen);
+	//While the user hasn't quit
 	while_handle_event();
 }
 

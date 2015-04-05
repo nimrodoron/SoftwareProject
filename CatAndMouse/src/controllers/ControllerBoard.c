@@ -82,6 +82,13 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 			reconfigureMouseFunction(controller->model->players[MOUSE].level, controller->model->players[MOUSE].type,controller->model);
 			showViewBoard(controller->view);
 			break;
+		case (RECONFIGURE_CAT) :
+			reconfigureCatFunction(controller->model->players[CAT].level, controller->model->players[CAT].type, controller->model);
+			showViewBoard(controller->view);
+			break;
+		case GO_TO_MAIN_MENU:
+			GoToMainMenu(controller);
+			break;
 		default:
 			break;
 	}
@@ -121,6 +128,6 @@ void updateModelBoardMouse(playerType mouse, int mouseLevel)
 
 void updateModelBoardCat(playerType cat, int catLevel)
 {
-	controller->model->players[0].type = cat;
-	controller->model->players[0].level = catLevel;
+	controller->model->players[CAT].type = cat;
+	controller->model->players[CAT].level = catLevel;
 }
