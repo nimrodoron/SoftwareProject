@@ -1,7 +1,7 @@
 #include "../views/ViewBoard.h"
 
 
-int pause = 0;
+int pause = 1;
 
 //array for the displayed images
 char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL-2] = { "images/Mouse's _move.bmp", "images/2.bmp", "images/Machine_computing.bmp", "images/Pause Before Next Move.bmp" };
@@ -24,7 +24,7 @@ char* creatGame_titels[NUMBER_WORLD_TITELS] = { "images/New_World_title.bmp", "i
 result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEvents event, int x, int y),
 	modelBoard* model, int worldsIndex) {
 	
-	pause = 0;
+	pause = 1;
 
 	result res;
 	Screen* sideBar;
@@ -46,7 +46,7 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	
 	if (model->modelMode == GAME)
 	{
-		sideBar = create_sideBar(side_bar_images);
+		sideBar = create_sideBar(side_bar_images_unable);
 		topPanel = create_topPanel(model);
 		gridArea = create_gridArea(model,*view);
 
@@ -124,7 +124,7 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 {
 	if (model->modelMode == GAME)
 	{
-	if (pause == 0) {
+	if (pause == 0) { // can be clicked only if the game is paused
 		switch (ev->type)
 		{
 		case SDL_QUIT:
@@ -159,21 +159,6 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 				case SDLK_ESCAPE:
 					v->HandleSystemEvent(EXIT, 0, 0);
 					break;
-				case SDLK_RIGHT://right key was pressed
-					if (model->players[model->currentPlayer].playerPos.y < 6)
-						v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x, model->players[model->currentPlayer].playerPos.y + 1);
-					break;
-				case SDLK_LEFT://left key was pressed
-					if (model->players[model->currentPlayer].playerPos.y > 0)
-						v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x, model->players[model->currentPlayer].playerPos.y - 1);
-					break;
-				case SDLK_UP:if (model->players[model->currentPlayer].playerPos.x > 0)
-					v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x - 1, model->players[model->currentPlayer].playerPos.y);;
-					break;
-				case SDLK_DOWN:
-					if (model->players[model->currentPlayer].playerPos.x < 6)
-						v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x + 1, model->players[model->currentPlayer].playerPos.y);
-					break;
 				default:
 					break;
 			}
@@ -181,14 +166,34 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 			break;
 		}
 		}
-	else {
+	else if(pause ==1){
 		if (ev->type == SDL_MOUSEBUTTONUP){
 			if ((ev->button.x > 200 && ev->button.x < 700) && (ev->button.y>0 && ev->button.y<110))
 				button_click_top_panel(ev->button.x, ev->button.y, v);
 		}
 		else if (ev->type == SDL_KEYDOWN){
-			if (ev->key.keysym.sym == SDLK_SPACE)
+			switch(ev->key.keysym.sym){
+			case SDLK_SPACE:
 				pauseWasPressed(v);
+				break;
+				case SDLK_RIGHT://right key was pressed
+						if (model->players[model->currentPlayer].playerPos.y < 6)
+							v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x, model->players[model->currentPlayer].playerPos.y + 1);
+						break;
+					case SDLK_LEFT://left key was pressed
+						if (model->players[model->currentPlayer].playerPos.y > 0)
+							v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x, model->players[model->currentPlayer].playerPos.y - 1);
+						break;
+					case SDLK_UP:if (model->players[model->currentPlayer].playerPos.x > 0)
+						v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x - 1, model->players[model->currentPlayer].playerPos.y);;
+						break;
+					case SDLK_DOWN:
+						if (model->players[model->currentPlayer].playerPos.x < 6)
+							v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x + 1, model->players[model->currentPlayer].playerPos.y);
+						break;
+						default:
+						break;
+			}
 		}
 	}
 }
@@ -1021,7 +1026,7 @@ result refreshSidePanel(viewBoard* view) {
 			}
 			
 		}
-		else if (pause == 1){ //if the game is paused (mean that it was not paused before and the puase button was pressed
+		else if (pause == 0){ //if the game is paused (mean that it was not paused before and the puase button was pressed
 			for (int i = 0; i < NUMBER_BUTTONS_SIDE_BAR; i++)
 			{
 				update_panel_picture(item, side_bar_images_unable[i]);
