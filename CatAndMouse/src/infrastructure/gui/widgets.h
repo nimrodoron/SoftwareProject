@@ -6,10 +6,7 @@
 #include <SDL_image.h>
 #include <stdbool.h>
 #include <stdlib.h>
-<<<<<<< HEAD
 
-=======
->>>>>>> 6a056fa9ada935a18575444bbd9de3e49c4a90c2
 
 #define SCREEN_HEIGHT 578
 #define SCREEN_WIDTH 350

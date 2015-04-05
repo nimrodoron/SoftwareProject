@@ -8,7 +8,7 @@ char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL-2] = { "images/Mouse's
 //arrays for the images in the top panel
 char* top_panel_animal_move[2] = { "images/Cat_move.bmp", "images/Mouse's _move.bmp" };
 char* top_panel_numbers[11] = { "images/0.bmp", "images/1.bmp", "images/2.bmp", "images/3.bmp", "images/4.bmp", "images/5.bmp", "images/6.bmp", "images/7.bmp", "images/8.bmp", "images/9.bmp","images/).bmp" };
-char* top_panel_win_status[3] = { "images/Game Over – Cat Wins.bmp", "images/Game Over – Mouse Wins.bmp", "images/Game Over – Timeout.bmp" };
+char* top_panel_win_status[3] = { "images/Game Over ï¿½ Cat Wins.bmp", "images/Game Over ï¿½ Mouse Wins.bmp", "images/Game Over ï¿½ Timeout.bmp" };
 char* top_panel_game_status[4] = { "images/Human-waiting.bmp","images/Human-paused.bmp","images/Machine_computing.bmp","images/Machine-paused.bmp"};
 char* top_panel_pause[3] = { "images/Pause Before Next Move.bmp", "images/Pause.bmp", "images/Resume Game.bmp" };
 
@@ -561,7 +561,7 @@ void show_top_panel(Screen* scr, modelBoard* model)
 		}
 	}
 	if (SDL_Flip(allBoards) != 0) {
-		perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+		printf("ERROR: failed to flip buffer: %s\n", SDL_GetError());
 	}
 }
 
@@ -600,7 +600,7 @@ void show_side_bar(Screen* scr)
 	}
 
 	if (SDL_Flip(allBoards) != 0) {
-		perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+		printf("ERROR: failed to flip buffer: %s\n", SDL_GetError());
 	}
 }
 
@@ -731,7 +731,7 @@ void show_grid_area(Screen* scr)
 	}
 
 	if (SDL_Flip(allBoards) != 0) {
-		perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+		printf("ERROR: failed to flip buffer: %s\n", SDL_GetError());
 	}
 }
 
@@ -816,7 +816,7 @@ void show_CreateWorld_top_panel(Screen* scr)
 		currentHead = currentHead->next;
 	}
 	if (SDL_Flip(allBoards) != 0) {
-		perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+		printf("ERROR: failed to flip buffer: %s\n", SDL_GetError());
 	}
 }
 void apply_surfaceBoard(int x, int y, SDL_Surface* source, SDL_Surface* destination)
@@ -831,7 +831,7 @@ void apply_surfaceBoard(int x, int y, SDL_Surface* source, SDL_Surface* destinat
 	
 	//Blit the surface
 	if (SDL_BlitSurface(source, NULL, destination, &offset) != 0) {
-		perror("ERROR: failed to blit image: %s\n", SDL_GetError());
+		printf("ERROR: failed to blit image: %s\n", SDL_GetError());
 	}
 }
 
@@ -918,7 +918,7 @@ result refreshViewBoard(viewBoard* view) {
 	//refresh the top panel
 	if (view->model->modelMode == GAME)
 	{
-		refreshTopPanel(view,view->model);
+		refreshTopPanel(view);
 		//create_topPanel(view->model);
 		//show_top_panel(view->topPanel,view->model);		
 	}		
@@ -991,7 +991,7 @@ void printWinnerTopPaenl(playerAnimal winner,viewBoard* view)
 	{
 		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[2], 1, 0, view->topPanel, 0), view->topPanel);
 	}
-	show_top_panel(view, view->model);
+	show_top_panel(view->topPanel, view->model);
 	pause = 1; //  the game enters to the pause state
 	refreshSidePanel(view);
 }
@@ -1048,7 +1048,6 @@ void createMessage(char* message)
 		res.code = ERROR;
 		res.message = "images/failed_to_allocate_memory.bmp";
 		printMessages(res.message);
-		return NULL;
 	}
 	scr->screen = allBoards;
 
@@ -1069,7 +1068,7 @@ void createMessage(char* message)
 		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 188, "images/back_chosen.bmp", BUTTON, 0, scr, 0), scr);
 		apply_surfaceBoard(385, 210 + 120, scr->head->next->next->next->componentProps.surface, allBoards);
 		if (SDL_Flip(allBoards) != 0) {
-			perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+			printf("ERROR: failed to flip buffer: %s\n", SDL_GetError());
 		}
 		while (quit == 0)
 		{

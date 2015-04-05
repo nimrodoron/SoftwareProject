@@ -37,8 +37,8 @@ int draw_screen(char* title, Screen* window)
 	//SDL_FillRect(window->screen, 0, SDL_MapRGB(window->screen->format, color.r, color.g, color.b));
 	if (SDL_FillRect(window->screen, 0, SDL_MapRGB(window->screen->format, color.r, color.g, color.b)) != 0) {
 		isError - 1;
-		perror("ERROR: failed to draw rect: %s\n", SDL_GetError());
-		return NULL;
+		printf("ERROR: failed to draw rect: %s\n", SDL_GetError());
+		return -1;
 	}
 	draw_components(window->head->next, window);
 }
@@ -60,7 +60,7 @@ void draw_components(Panel* comp, Screen* window){
 		i++;
 	}
 	if (SDL_Flip(window->screen) != 0) {
-		perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+		printf("ERROR: failed to flip buffer: %s\n", SDL_GetError());
 	}
 }
 

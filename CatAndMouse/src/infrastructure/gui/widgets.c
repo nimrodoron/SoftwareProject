@@ -60,8 +60,8 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	{
 		pan->componentProps.surface = SDL_LoadBMP(path);
 		if (pan->componentProps.surface == NULL) {
-			perror("ERROR: failed to load image: %s\n", SDL_GetError());
-			return 1;
+			printf("ERROR: failed to load image: %s\n", SDL_GetError());
+			return NULL;
 		}
 		pan->enabled = true;
 	}
@@ -69,8 +69,8 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	{
 		pan->componentProps.surface = SDL_LoadBMP(path);
 		if (pan->componentProps.surface == NULL) {
-			perror("ERROR: failed to load image: %s\n", SDL_GetError());
-			return 1;
+			printf("ERROR: failed to load image: %s\n", SDL_GetError());
+			return NULL;
 		}
 		pan->enabled = false;
 	}
@@ -99,8 +99,7 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 void update_panel_picture(Panel* item, char* path) {
 	item->componentProps.surface = SDL_LoadBMP(path);
 	if (item->componentProps.surface == NULL) {
-		perror("ERROR: failed to load image: %s\n", SDL_GetError());
-		return 1;
+		printf("ERROR: failed to load image: %s\n", SDL_GetError());
 	}
 }
 

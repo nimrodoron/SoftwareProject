@@ -205,7 +205,7 @@ void placeMouse(int x, int y) {
 
 	controller->model->currentPlayer = MOUSE;
 	controller->view->model = controller->model;
-	refreshViewBoard(controller->view,controller->model);
+	refreshViewBoard(controller->view);
 }
 
 void placeCat(int x, int y) {
@@ -229,7 +229,7 @@ void placeCat(int x, int y) {
 
 	controller->model->currentPlayer = CAT;
 	controller->view->model = controller->model;
-	refreshViewBoard(controller->view,controller->model);
+	refreshViewBoard(controller->view);
 }
 
 void checkCurrentPos(int x,int y) {
@@ -270,7 +270,7 @@ void placeCheese(int x, int y) {
 	}
 
 	controller->view->model = controller->model;
-	refreshViewBoard(controller->view,controller->model);
+	refreshViewBoard(controller->view);
 }
 void placeWall(int x, int y) {
 	checkCurrentPos(x,y);
@@ -278,7 +278,7 @@ void placeWall(int x, int y) {
 	controller->model->board[x][y] = WALL;
 
 	controller->view->model = controller->model;
-	refreshViewBoard(controller->view, controller->model);
+	refreshViewBoard(controller->view);
 }
 void placeEmpty(int x, int y) {
 	checkCurrentPos(x,y);
@@ -286,7 +286,7 @@ void placeEmpty(int x, int y) {
 	controller->model->board[x][y] = EMPTY;
 
 	controller->view->model = controller->model;
-	refreshViewBoard(controller->view, controller->model);
+	refreshViewBoard(controller->view);
 }
 
 result checkIfCanSaveModel(modelBoard* model) {
@@ -335,7 +335,7 @@ void playerMoveTo(int x, int y) {
 		 }
 
 		controller->view->model = controller->model;
-		refreshViewBoard(controller->view, controller->model);
+		refreshViewBoard(controller->view);
 	}
 }
 
