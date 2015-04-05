@@ -14,8 +14,8 @@ int main()
 	atexit(SDL_Quit);
 
 
-	mainviewboard();
-	exit(1);
+	//mainviewboard();
+	//exit(1);
 
 	
 

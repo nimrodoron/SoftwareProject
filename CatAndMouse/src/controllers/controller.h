@@ -64,4 +64,4 @@ void handale_up_level_button(Panel* button, View* v);
 void mainviewboard();
 void reconfigureMouseFunction(int level, playerType type, modelBoard* model);
 void reconfigureCatFunction(int level, playerType type, modelBoard* model);
-void GoToMainMenu(controllerBoard* con);
+void GoToMainMenu();

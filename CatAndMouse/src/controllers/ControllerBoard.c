@@ -86,7 +86,7 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 			reconfigureCatFunction(controller->model->players[CAT].level, controller->model->players[CAT].type, controller->model);
 			showViewBoard(controller->view);
 			break;
-		case GO_TO_MAIN_MENU:
+		case (GO_TO_MAIN_MENU):
 			GoToMainMenu(controller);
 			break;
 		default:

@@ -423,7 +423,7 @@ void reconfigureCatFunction(int level, playerType type, modelBoard* model)
 	while_handle_event();
 }
 
-void GoToMainMenu(controllerBoard* con)
+void GoToMainMenu()
 {
 	// free all memory - controller, view and model and the new array 'states' that was created in the reconfigure options
 	currentStateIndex = 0;
