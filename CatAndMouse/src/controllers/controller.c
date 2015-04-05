@@ -1,8 +1,5 @@
 #include "controller.h"
-#include <SDL_image.h>
-#include <stdbool.h>
-#include "../models/ModelBoard.h"
-#include "ControllerBoard.h"
+
 
 int loadGame = 1; //indicate that we are/aren't in Load Game menu
 int WorldToOpen = 1; // indicate which world is loaded
@@ -258,7 +255,7 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		draw_screen("Cat&Mouse", currentView->screen);
 		worldsMenus =0;
 		break;
-	case 23://fi the done button was pressed from the edit mode menu
+	case 23://if the done button was pressed from the edit mode menu
 		mainviewboard(cat, mouse, catLevel, mouseLevel, EDIT, WorldToOpen);
 		break;
 	case 24: //the edit game was preesed from the main menu 

@@ -1,8 +1,12 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include <SDL_image.h>
+#include <stdbool.h>
 #include "../views/view.h"
 #include "../models/ModelBoard.h"
+#include "../controllers/ControllerBoard.h"
+#include "../services/WorldsManager.h"
 
 
 
@@ -80,7 +84,7 @@ void handale_click(Panel* button, Uint16 x, Uint16 y, View* v);
 void handale_down_level_button(Panel* button, View* v);
 void handale_up_level_button(Panel* button, View* v);
 
-void mainviewboard(playerType catType, playerType mouseType, int catLevel, int mouseLevel, mode mod, char* filename);
+void mainviewboard(playerType catType, playerType mouseType, int catLevel, int mouseLevel, mode mod, int worldIndex);
 void reconfigureMouseFunction(int level, playerType type, modelBoard* model);
 void reconfigureCatFunction(int level, playerType type, modelBoard* model);
 void GoToMainMenu();
