@@ -1,7 +1,7 @@
 #include "../views/ViewBoard.h"
 
 
-int pause = 1;
+int pause ;
 
 //array for the displayed images
 char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL-2] = { "images/Mouse's _move.bmp", "images/2.bmp", "images/Machine_computing.bmp", "images/Pause Before Next Move.bmp" };
