@@ -28,7 +28,7 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 		return res;
 	}
 	(*view)->model = model;
-	//view->HandleSystemEvent = HandleSystemEvent;
+	(*view)->HandleSystemEvent = HandleSystemEvent;
 	sideBar = create_sideBar();
 	topPanel = create_topPanel();
 	gridArea = create_gridArea();
@@ -82,12 +82,12 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v)
 	switch (ev->type)
 	{
 	case SDL_QUIT:
-		HandleSystemEvent(EXIT, 0, 0);
+		v->HandleSystemEvent(EXIT, 0, 0);
 		break;
 	case SDL_MOUSEBUTTONUP:
 		if (ev->button.x > 0 && ev->button.x < 200)
 			if (ev->button.y>0 && ev->button.y<600)
-				button_click_side_panel(ev->button.x, ev->button.y);
+				button_click_side_panel(ev->button.x, ev->button.y,v);
 		break;
 	/*case SDL_KEYDOWN:
 		switch (ev->key.keysym.sym){
@@ -111,9 +111,9 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v)
 	}
 }
 
-void button_click_side_panel(Uint16 x, Uint16 y)
+void button_click_side_panel(Uint16 x, Uint16 y, viewBoard* v)
 {
-	HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
+	v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
 }
 
 Screen* create_topPanel()
