@@ -228,13 +228,14 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 	case 12: //selecting back from type selection menu for the mouse in reconfigure mouse mode
 		quit = 1;
 		break;
-	case 15: //selction human in choose your cat menu in reconfigure mode
+	case 15: //selecting human in choose your cat menu in reconfigure mode
 		cat = USER;
+		updateModelBoardCat(cat,catLevel);
 		quit = 1;
 		break;
 	case 14:
 		mouse = USER;
-	case 13://selecting done in mouse skil level menu in reconfigure mouse mode
+	case 13://selecting done in mouse skill level menu in reconfigure mouse mode
 		updateModelBoardMouse(mouse, mouseLevel);
 		quit = 1;
 		break;
@@ -258,6 +259,7 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		mouse = COMPUTER;
 		currentView = states[button->nextState];
 		//currentStateIndex++;
+		currentView->model->level = 5;
 		draw_screen("Cat&Mouse", currentView->screen);
 		break;
 	case 16: //in 'choose your cat menu' machine was chosen
