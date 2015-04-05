@@ -7,15 +7,15 @@ int main()
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		int isError = - 1;
-		quit = 0;
+		// int quit = 0;
 		printf("ERROR: unable to init SDL: %s\n", SDL_GetError());
 		return 1;
 	}
 	atexit(SDL_Quit);
 
 
-	mainviewboard();
-	exit(1);
+	//mainviewboard();
+	//exit(1);
 
 	
 

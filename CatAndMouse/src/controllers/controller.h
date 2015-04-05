@@ -1,10 +1,17 @@
 #include "../views/view.h"
+#include "../models/ModelBoard.h"
+
+
 
 View* currentView;
 int currentStateIndex;
+
+player cat;
+player mouse;
+int catLevel;
+int mouseLevel;
+
 /*for main menu*/
-
-
 #define  NUMBER_BUTTONS_MAIN_MENU  6
 extern char* main_menu_buttons_image[NUMBER_BUTTONS_MAIN_MENU];
 extern char* main_menu_buttons_image_chosen[NUMBER_BUTTONS_MAIN_MENU];

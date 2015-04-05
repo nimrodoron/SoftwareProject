@@ -19,12 +19,12 @@ int stateId_choose_your_cat_menu[NUMBER_BUTTONS_CHOOSE_CAT_MENU] = {1, 2, 3, 0};
 /*for choose mouse menu*/
 char* choose_your_mouse_menu_buttons_image[NUMBER_BUTTONS_CHOOSE_MOUSE_MENU] = { "images/choose_your_mouse_title.bmp", "images/human.bmp", "images/machine.bmp", "images/back.bmp" }; /*the images in the choose mouse menu menu*/
 char* choose_your_mouse_menu_buttons_image_chosen[NUMBER_BUTTONS_CHOOSE_MOUSE_MENU] = { "images/choose_your_mouse_title.bmp", "images/human_chosen.bmp", "images/machine_chosen.bmp", "images/back_chosen.bmp" };
-int stateId_choose_your_mouse_menu[NUMBER_BUTTONS_CHOOSE_MOUSE_MENU] = {2, 5, 4, 1 };//change in the end- 5 should be the game screen!!!!!!!!!!!/
+int stateId_choose_your_mouse_menu[NUMBER_BUTTONS_CHOOSE_MOUSE_MENU] = {2, 9, 4, 1 };
 
 /*for choose cat skill level menu*/
 char* choose_cat_skills_menu_buttons_image[NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU+9] = { "images/choose_cat_skill_level_title.bmp", "images/skill_level5.bmp", "images/done.bmp", "images/back.bmp", "images/skill_level1.bmp", "images/skill_level2.bmp", "images/skill_level3.bmp", "images/skill_level4.bmp","images/skill_level5.bmp", "images/skill_level6.bmp", "images/skill_level7.bmp", "images/skill_level8.bmp", "images/skill_level9.bmp" }; /*the images in the choose mouse menu menu*/
 char* choose_cat_skills_menu_buttons_image_chosen[NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU + 9] = { "images/choose_cat_skill_level_title.bmp", "images/skill_level5_chosen.bmp", "images/done_chosen.bmp", "images/back_chosen.bmp", "images/skill_level1_chosen.bmp", "images/skill_level2_chosen.bmp", "images/skill_level3_chosen.bmp", "images/skill_level4_chosen.bmp", "images/skill_level5_chosen.bmp", "images/skill_level6_chosen.bmp", "images/skill_level7_chosen.bmp", "images/skill_level8_chosen.bmp", "images/skill_level9_chosen.bmp" };
-int stateId_choose_cat_skill_level[NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU] = { 3, 10, 5, 1 };//change in the end- 5 should be the game screen and -1 should be up and down arrows!!!!!!!!!!!/
+int stateId_choose_cat_skill_level[NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU] = { 3, 11, 8, 1 };
 // Hila change
 
 /*for choose mouse skill level menu*/
@@ -199,15 +199,47 @@ void quit_main_menu()
 
 void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 {
+	currentAnimalPlayer editedPlayer = MOUSE;
+
+
 	switch(button->nextState){
+	case 9: //in 'choose your mouse menu' human was chosen and then go to step 5 to the main game screen
+		mouse = USER;
 	case 5: //going to the main game
-		mainviewboard();
+		if (cat == USER){
+			catLevel = -1;
+		}
+		if (mouse == USER){
+			mouseLevel = -1;
+		}
+		mainviewboard(cat,mouse,catLevel,mouseLevel);
 		break;
 	case 7: //quit was pressed
 		quit_main_menu();
 		break;
-	case 10: //level button was pressed
-		//if(currentStateIndex ==2||currentStateIndex==3)
+	case 2:
+		cat = USER;
+	case 8: // 'in choose your cat menu' human was chosen
+		currentView = states[2];
+		//currentStateIndex++;
+		draw_screen("Cat&Mouse", currentView->screen);
+		break;
+	case 3: //'in choose your cat menu' machine was chosen
+		cat = COMPUTER;
+		currentView = states[button->nextState];
+		//currentStateIndex++;
+		draw_screen("Cat&Mouse", currentView->screen);
+		break;
+	case 4: //in 'choose your mouse menu' human was chosen
+		mouse = COMPUTER;
+		currentView = states[button->nextState];
+		//currentStateIndex++;
+		draw_screen("Cat&Mouse", currentView->screen);
+		break;
+	case 11: //level button was pressed from 'choose your cat skill level menu'
+		editedPlayer = CAT;
+
+	case 10: //level button was pressed for 'choose your mouse skill level menu'
 		if (v->model->level!=-1)
 		{
 			if (x >= button->componentProps.dest_rect->x+147)
@@ -228,7 +260,14 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 									}
 									}
 								}
-
+			if (editedPlayer == CAT)
+			{
+				catLevel = v->model->level;
+			}
+			else
+			{
+				mouseLevel = v->model->level;
+			}
 		break;
 	default:
 	currentView = states[button->nextState];
@@ -260,7 +299,7 @@ void handale_down_level_button(Panel* button, View* v)
 
 }
 
-void mainviewboard()
+void mainviewboard(player cat, player mouse, int catLevel, int mouseLevel)
 {
 
 	//allBoards = SDL_SetVideoMode(800, 800, 0, 0);
@@ -268,6 +307,6 @@ void mainviewboard()
 	//SDL_FillRect(allBoards, 0, SDL_MapRGB(allBoards->format, color.r, color.g, color.b));
 	/*viewBoard* view =  createViewBoard(NULL, NULL, NULL);
 	showViewBoard(view);*/
-	 createBoardController(EDIT, "hila", USER, COMPUTER, 2);
+	 createBoardController(EDIT, "hila", cat, mouse, catLevel);
 	 showView();
 }

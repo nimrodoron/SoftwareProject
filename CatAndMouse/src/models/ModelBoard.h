@@ -11,8 +11,7 @@ typedef enum mode {
 typedef enum fillType {
 	EMPTY,
 	WALL,
-	CAT_PIC
-	,
+	CAT_PIC,
 	MOUSE_PIC,
 	CHEESE
 }type;

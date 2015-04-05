@@ -55,6 +55,5 @@ void show_grid_area(Screen* scr);
 Screen* create_sideBar();
 Screen* create_gridArea();
 void apply_surfaceBoard(int x, int y, SDL_Surface* source, SDL_Surface* destination);
-
 void handle_gui_event(SDL_Event *ev, viewBoard* v);
-
+void mainviewboard();
