@@ -1073,8 +1073,13 @@ void createMessage(char* message)
 		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 188, "images/back_chosen.bmp", BUTTON, 0, scr, 0), scr);
 		apply_surfaceBoard(385, 210 + 120, scr->head->next->next->next->componentProps.surface, allBoards);
 		if (SDL_Flip(allBoards) != 0) {
+<<<<<<< HEAD
 			printf("ERROR: failed to flip buffer: %s\n", SDL_GetError());
 		}
+=======
+			perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+	}
+>>>>>>> 4d6461747466197918291130df1d4ddcc46d8f1a
 		while (quit == 0)
 		{
 			//While there's events to handle
