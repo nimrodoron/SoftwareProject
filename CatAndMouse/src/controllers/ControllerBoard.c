@@ -78,10 +78,16 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 	switch (event) {
 		case(EXIT):
 			break;
+		case (RECONFIGURE_MOUSE) :
+			reconfigureMouseFunction(controller->model->players[MOUSE].level, controller->model->players[MOUSE].type,controller->model);
+			showViewBoard(controller->view);
+			break;
 		default:
 			break;
 	}
 }
+
+
 
 void createNewModel() {
 	for (int i=0; i<GRID_SIZE; i++) {
@@ -101,3 +107,20 @@ player createPlayer(playerType type, int level)
 
 
 
+void updateModelBoard(playerType cat, int catLevel, playerType mouse, int mouseLevel)
+{
+	updateModelBoardMouse(mouse, mouseLevel);
+	updateModelBoardCat(cat, catLevel);
+}
+
+void updateModelBoardMouse(playerType mouse, int mouseLevel)
+{
+	controller->model->players[MOUSE].type = mouse;
+	controller->model->players[MOUSE].level = mouseLevel;
+}
+
+void updateModelBoardCat(playerType cat, int catLevel)
+{
+	controller->model->players[0].type = cat;
+	controller->model->players[0].level = catLevel;
+}

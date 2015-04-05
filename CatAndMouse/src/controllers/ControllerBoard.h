@@ -5,6 +5,7 @@
 //#include "../infrastructure/general/general.h"
 #include "../models/ModelBoard.h"
 #include "../views/ViewBoard.h"
+#include "../controllers/controller.h"
 
 typedef struct controllerBoard {
 	modelBoard* model;
@@ -28,6 +29,10 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y);
 
 void createNewModel();
 player createPlayer(playerType type, int level);
+void updateModelBoard(playerType cat, int catLevel, playerType mouse, int mouseLevel);
+void updateModelBoardMouse(playerType mouse, int mouseLevel);
+void updateModelBoardCat(playerType cat, int catLevel);
+
 
 #endif
 

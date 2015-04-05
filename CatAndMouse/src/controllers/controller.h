@@ -42,6 +42,7 @@ extern int stateId_choose_mouse_skill_level[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MEN
 
 
  int quit;
+
  //int currentStateIndex;
 //char* currentState;
 #define NUMBER_MENUES 4
@@ -49,7 +50,7 @@ View* states[NUMBER_MENUES];
 /*supposed to be {main_menu, choose your cat, choose your mouse, choose cat skill level, load game, create game, edit game, quit}*/
 
 
-
+void while_handle_event();
 void initialize_states();
 void handle_event(SDL_Event *ev, View* v);
 void tab_click(View* v);
@@ -61,3 +62,5 @@ void handale_down_level_button(Panel* button, View* v);
 void handale_up_level_button(Panel* button, View* v);
 
 void mainviewboard();
+void reconfigureMouseFunction(int level, playerType type, modelBoard* model);
+

@@ -121,7 +121,6 @@ Screen* build_main_menu(int number_buttons, char* title, char** imagesArr, char*
 			add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + i*MENUGAP, imagesArr[i], BUTTON, stateArr[i], window,0),window);
 		}
 	}
-	//draw_screen(title, window);
 	return window;
 }
 

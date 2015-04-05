@@ -76,10 +76,45 @@ result freeViewBoard(viewBoard* view) {
 
 }
 
-void handle_gui_event(SDL_Event *ev, viewBoard* v) {
 
+void handle_gui_event(SDL_Event *ev, viewBoard* v) 
+{
+	switch (ev->type)
+	{
+	case SDL_QUIT:
+		HandleSystemEvent(EXIT, 0, 0);
+		break;
+	case SDL_MOUSEBUTTONUP:
+		if (ev->button.x > 0 && ev->button.x < 200)
+			if (ev->button.y>0 && ev->button.y<600)
+				button_click_side_panel(ev->button.x, ev->button.y);
+		break;
+	/*case SDL_KEYDOWN:
+		switch (ev->key.keysym.sym){
+		case SDLK_TAB:
+			tab_click(v);
+			break;
+		case SDLK_RETURN:
+			enter_click(v);
+			break;
+		case SDLK_UP:
+			if ((currentView->model->level != -1) && (v->model->marked_button == 1))
+				handale_up_level_button(v->screen->head->next, v);
+			break;
+		case SDLK_DOWN:
+			if ((currentView->model->level != -1) && (v->model->marked_button == 1))
+				handale_down_level_button(v->screen->head->next, v);
+			break;*/
+		
+	default:
+		break;
+	}
 }
 
+void button_click_side_panel(Uint16 x, Uint16 y)
+{
+	HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
+}
 
 Screen* create_topPanel()
 {
@@ -216,7 +251,6 @@ Screen* create_gridArea()
 	scr->screen = allBoards;
 
 	scr->head = create_panel(800, 200, 0, 0, NULL, PANEL, -1, scr, 1);
-	//apply_surfaceBoard(0, 100, scr->head->componentProps.surface, allBoards);
 
 	for (int i = 0; i < 7; i++)
 	{

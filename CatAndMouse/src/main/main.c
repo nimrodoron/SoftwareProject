@@ -14,8 +14,8 @@ int main()
 	atexit(SDL_Quit);
 
 
-	//mainviewboard();
-	//exit(1);
+	/*mainviewboard();
+	exit(1);*/
 
 	
 
@@ -25,14 +25,8 @@ int main()
 	currentView = states[currentStateIndex];
 	draw_screen("Cat&Mouse", currentView->screen);
 	//While the user hasn't quit
-	while (quit == 0)
-	{
-		//While there's events to handle
-		while (SDL_PollEvent(&event) != 0)
-		{
-			handle_event(&event, currentView);
-		}
-	}
+	while_handle_event();
+	
 
 	//SDL_FreeSurface(window);
 	SDL_Quit();

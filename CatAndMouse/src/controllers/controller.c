@@ -4,7 +4,7 @@
 #include "../models/ModelBoard.h"
 #include "ControllerBoard.h"
 
-
+int save_chages_mouse = 1;
 /*for main menu*/
 
 char* main_menu_buttons_image[NUMBER_BUTTONS_MAIN_MENU] = { "images/cat_mouse_title.bmp", "images/new_game.bmp", "images/load_game.bmp", "images/create_game.bmp", "images/edit_game.bmp", "images/quit.bmp" }; /*the images in the main menu*/
@@ -30,8 +30,8 @@ int stateId_choose_cat_skill_level[NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU] = { 3, 1
 /*for choose mouse skill level menu*/
 char* choose_mouse_skills_menu_buttons_image[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU + 9] = { "images/choose_mouse_skill_level_title.bmp", "images/skill_level5.bmp", "images/done.bmp", "images/back.bmp", "images/skill_level1.bmp", "images/skill_level2.bmp", "images/skill_level3.bmp", "images/skill_level4.bmp", "images/skill_level5.bmp", "images/skill_level6.bmp", "images/skill_level7.bmp", "images/skill_level8.bmp", "images/skill_level9.bmp" }; /*the images in the choose mouse menu menu*/
 char* choose_mouse_skills_menu_buttons_image_chosen[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU + 9] = { "images/choose_mouse_skill_level_title.bmp", "images/skill_level5_chosen.bmp", "images/done_chosen.bmp", "images/back_chosen.bmp", "images/skill_level1_chosen.bmp", "images/skill_level2_chosen.bmp", "images/skill_level3_chosen.bmp", "images/skill_level4_chosen.bmp","images/skill_level5_chosen.bmp", "images/skill_level6_chosen.bmp", "images/skill_level7_chosen.bmp", "images/skill_level8_chosen.bmp", "images/skill_level9_chosen.bmp" };
-int stateId_choose_mouse_skill_level[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU] = { 4, 10, 5, 2 };//change in the end- 5 should be the game screen and -1 should be up and down arrows!!!!!!!!!!!/
-// Hila change
+int stateId_choose_mouse_skill_level[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU] = { 4, 10, 5, 2 };
+
 void initialize_states(){
 	states[0] = build_all_view(main_menu_buttons_image, main_menu_buttons_image_chosen, stateId_main_menu, 1, -1, NUMBER_BUTTONS_MAIN_MENU);
 	states[1] = build_all_view(choose_your_cat_menu_buttons_image, choose_your_cat_menu_buttons_image_chosen, stateId_choose_your_cat_menu, 1, -1, NUMBER_BUTTONS_CHOOSE_CAT_MENU);
@@ -41,6 +41,17 @@ void initialize_states(){
 
 }
 
+void while_handle_event()
+{
+	while (quit == 0)
+	{
+		//While there's events to handle
+		while (SDL_PollEvent(&event) != 0)
+		{
+			handle_event(&event, currentView);
+		}
+	}
+}
 
 
 void handle_event(SDL_Event *ev, View* v)
@@ -212,8 +223,17 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		if (mouse == USER){
 			mouseLevel = -1;
 		}
-
 		mainviewboard(cat,mouse,catLevel,mouseLevel);
+		break;
+	case 12: //selecting back from type selection menu for the mouse in reconfigure mouse mode
+		quit = 1;
+		break;
+	case 14:
+		mouse = USER;
+	case 13://selecting done in mouse skil level menu in reconfigure mouse mode
+		//save_chages_mouse = 1;
+		updateModelBoardMouse(mouse, mouseLevel);
+		quit = 1;
 		break;
 	case 7: //quit was pressed
 		quit_main_menu();
@@ -231,7 +251,7 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		//currentStateIndex++;
 		draw_screen("Cat&Mouse", currentView->screen);
 		break;
-	case 4: //in 'choose your mouse menu' human was chosen
+	case 4: //in 'choose your mouse menu' machine was chosen
 		mouse = COMPUTER;
 		currentView = states[button->nextState];
 		//currentStateIndex++;
@@ -303,31 +323,65 @@ void handale_down_level_button(Panel* button, View* v)
 void mainviewboard(playerType catType, playerType mouseType, int catLevel, int mouseLevel)
 {
 	
-	player cat = createPlayer(catType, catLevel);
-	player mouse = createPlayer(mouseType, mouseLevel);
-	//allBoards = SDL_SetVideoMode(800, 800, 0, 0);
-	//SDL_Color color = { 255, 255, 255 };
-	//SDL_FillRect(allBoards, 0, SDL_MapRGB(allBoards->format, color.r, color.g, color.b));
-	/*viewBoard* view =  createViewBoard(NULL, NULL, NULL);
-	showViewBoard(view);*/
+	
+	
 
-	// createBoardController(EDIT, "hila", cat, mouse, CAT);
+	
 
 	// Example show board on edit mode (create)
+	//player cat = createPlayer(catType, catLevel);
+	//player mouse = createPlayer(mouseType, mouseLevel);
 	//player dummy;
-	createBoardController(EDIT,NULL,cat,mouse,NONE);
+	//createBoardController(EDIT,NULL,cat,mouse,NONE);
 
 	// Example show board on edit mode (edit)
 	//createBoardController(EDIT,"world_1.txt",dummy,dummy,NONE);
 
 	// Example of Load game (new game is the same with world_1.txt)
-	//player mouse;
-	//mouse.type = COMPUTER;
-	//mouse.level = 2;
-	//player cat;
-	//cat.type = USER;
-	//createBoardController(GAME, "world_2.txt", mouse, cat, MOUSE);
+	player mouse;
+	mouse.type = COMPUTER;
+	mouse.level = 2;
+	player cat;
+	cat.type = USER;
+	createBoardController(GAME, "world_2.txt", mouse, cat, MOUSE);
 
-//>>>>>>> 668d5af4fa942cd46b80fe3edc416fe1c93a4f74
 	 showView();
 }
+
+void reconfigureMouseFunction(int level, playerType type,modelBoard* model)
+{
+	quit = 0;
+	int marked_button_choose_menu;
+	// the global parameters of the mouse and level
+	mouseLevel = level; 
+	mouse = type;
+
+	if (type == COMPUTER)
+	{
+		currentView = states[4];
+		marked_button_choose_menu = 2;
+	}
+	else if (type == USER)
+	{
+		currentView = states[2];
+		marked_button_choose_menu = 1;
+	}
+	choose_mouse_skills_menu_buttons_image_chosen[1] = choose_mouse_skills_menu_buttons_image_chosen[level + 3];
+
+	int stateId_choose_your_mouse_menu_recon[NUMBER_BUTTONS_CHOOSE_MOUSE_MENU] = { 2, 14, 4, 12 };
+	int stateId_choose_mouse_skill_level_recon[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU] = { 4, 10, 13, 2 };
+	states[2] = build_all_view(choose_your_mouse_menu_buttons_image, choose_your_mouse_menu_buttons_image_chosen, stateId_choose_your_mouse_menu_recon, marked_button_choose_menu, -1, NUMBER_BUTTONS_CHOOSE_MOUSE_MENU);
+	states[4] = build_all_view(choose_mouse_skills_menu_buttons_image, choose_mouse_skills_menu_buttons_image_chosen, stateId_choose_mouse_skill_level_recon, 1, level, NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU);
+
+	if (type == COMPUTER)
+	{
+		currentView = states[4];
+	}
+	else if (type == USER)
+	{
+		currentView = states[2];
+	}
+	draw_screen("Cat&Mouse", currentView->screen);
+	while_handle_event();
+}
+

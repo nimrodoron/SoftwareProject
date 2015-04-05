@@ -1,3 +1,6 @@
+#ifndef MODEL_H_
+#define MODEL_H_
+
 #include "../infrastructure/gui/widgets.h"
 
 
@@ -13,3 +16,5 @@ typedef struct model{
 
 
 Model* create_model(char** imagesArr, char** imagesArrChosen, int* stateArr, int marked_button, int level);
+
+#endif

@@ -20,3 +20,5 @@ result freeModel(modelBoard** model) {
 	res.code = SUCCESS;
 	return res;
 }
+
+
