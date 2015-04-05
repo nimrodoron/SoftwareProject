@@ -45,7 +45,7 @@ extern int stateId_choose_mouse_skill_level[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MEN
 
  //int currentStateIndex;
 //char* currentState;
-#define NUMBER_MENUES 4
+#define NUMBER_MENUES 5
 View* states[NUMBER_MENUES];
 /*supposed to be {main_menu, choose your cat, choose your mouse, choose cat skill level, load game, create game, edit game, quit}*/
 

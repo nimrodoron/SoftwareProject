@@ -20,7 +20,7 @@ View* build_all_view(char** imagesArr, char** imagesArrChosen, int* stateArr, in
 	View* view;
 	Model* model = create_model(imagesArr, imagesArrChosen, stateArr,marked_button,level);
 	Screen* screen = build_main_menu(number_buttons, "Cat&Mouse", imagesArr, imagesArrChosen, stateArr,marked_button);
-	view = create_view(model, screen);
+	 view = create_view(model, screen);
 	return view;
 }
 

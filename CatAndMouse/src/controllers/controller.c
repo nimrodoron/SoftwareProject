@@ -228,15 +228,16 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 	case 12: //selecting back from type selection menu for the mouse in reconfigure mouse mode
 		quit = 1;
 		break;
-	case 15: //selecting human in choose your cat menu in reconfigure mode
-		cat = USER;
-		updateModelBoardCat(cat,catLevel);
-		quit = 1;
-		break;
 	case 14:
 		mouse = USER;
 	case 13://selecting done in mouse skill level menu in reconfigure mouse mode
 		updateModelBoardMouse(mouse, mouseLevel);
+		quit = 1;
+		break;
+	case 15: //selecting human in choose your cat menu in reconfigure mode
+			cat = USER;
+	case 17://selecting done in mouse skill level menu in reconfigure mouse mode
+		updateModelBoardCat(cat, catLevel);
 		quit = 1;
 		break;
 	case 7: //quit was pressed
@@ -408,10 +409,10 @@ void reconfigureCatFunction(int level, playerType type, modelBoard* model)
 	{
 		marked_button_choose_menu = 1;
 	}
-	int stateId_choose_your_cat_menu_recon[NUMBER_BUTTONS_CHOOSE_MOUSE_MENU] = { 1, 15, 16, 12 }; 
-	int stateId_choose_mouse_skill_level_recon[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU] = { 3, 11, 13, 1 }; 
+	int stateId_choose_your_cat_menu_recon[NUMBER_BUTTONS_CHOOSE_CAT_MENU] = { 1, 15, 16, 12 };
+	int stateId_choose_cat_skill_level_recon[NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU] = { 3, 11, 17, 1 };
 	states[1] = build_all_view(choose_your_cat_menu_buttons_image, choose_your_cat_menu_buttons_image_chosen, stateId_choose_your_cat_menu_recon, marked_button_choose_menu, -1, NUMBER_BUTTONS_CHOOSE_CAT_MENU);
-	states[3] = build_all_view(choose_cat_skills_menu_buttons_image, choose_cat_skills_menu_buttons_image_chosen, stateId_choose_mouse_skill_level_recon, 1,level, NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU);
+	states[3] = build_all_view(choose_cat_skills_menu_buttons_image, choose_cat_skills_menu_buttons_image_chosen, stateId_choose_cat_skill_level_recon, 1,level, NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU);
 
 	if (type == COMPUTER)
 	{
