@@ -222,9 +222,15 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 	switch(button->nextState){
 	case 0: // if the back was pressed from the choose your cat menu
 		if (loadGame == 0 && currentView == states[1]) // the load game menu was pressed before 
+		{
+			loadGame = 1;
 			currentView = states[5];
+		}
 		else
+		{
+			loadGame = 1;
 			currentView = states[0];
+		}
 		draw_screen("Cat&Mouse", currentView->screen);
 		break;
 	case 20: //load game was pressed, update the flag and then go to choose your cat menu
