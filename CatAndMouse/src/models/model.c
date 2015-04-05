@@ -5,10 +5,8 @@ Model* create_model(char** imagesArr, char** imagesArrChosen, int* stateArr, int
 	Model* mod = (Model*)malloc(sizeof(Model));
 	if (mod==NULL)
 	{
-		result res;
-		res.code = ERROR;
-		res.message = "images/failed_to_allocate_memory.bmp";
-		printMessages(res.message);
+		isError -1;
+		perror("ERROR: failed to allocate memory for model\n");
 		return NULL;
 	}
 	mod->chosen_images = imagesArrChosen;

@@ -80,6 +80,13 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 	int quit=0;
 	
 	allBoards = SDL_SetVideoMode(800, 800, 0, 0);
+	if (allBoards == NULL) {
+		result res;
+		res.code = ERROR;
+		res.message = "ERROR: failed to set video mode : %s\n";
+		printf("ERROR: failed to set video mode: %s\n", SDL_GetError());
+		return res;
+	}
 	SDL_Color color = { 255, 255, 255 };
 	SDL_FillRect(allBoards, 0, SDL_MapRGB(allBoards->format, color.r, color.g, color.b));
 	if (model->modelMode == GAME) //we are in the game board
@@ -553,7 +560,9 @@ void show_top_panel(Screen* scr, modelBoard* model)
 			break;
 		}
 	}
-	SDL_Flip(allBoards);
+	if (SDL_Flip(allBoards) != 0) {
+		perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+	}
 }
 
 Screen* create_sideBar(char** imagesArr)
@@ -590,7 +599,9 @@ void show_side_bar(Screen* scr)
 		currentHead = currentHead->next;
 	}
 
-	SDL_Flip(allBoards);
+	if (SDL_Flip(allBoards) != 0) {
+		perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+	}
 }
 
 
@@ -719,7 +730,9 @@ void show_grid_area(Screen* scr)
 
 	}
 
-	SDL_Flip(allBoards);
+	if (SDL_Flip(allBoards) != 0) {
+		perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+	}
 }
 
 
@@ -802,7 +815,9 @@ void show_CreateWorld_top_panel(Screen* scr)
 		apply_surfaceBoard(xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
 		currentHead = currentHead->next;
 	}
-	SDL_Flip(allBoards);
+	if (SDL_Flip(allBoards) != 0) {
+		perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+	}
 }
 void apply_surfaceBoard(int x, int y, SDL_Surface* source, SDL_Surface* destination)
 {
@@ -815,7 +830,9 @@ void apply_surfaceBoard(int x, int y, SDL_Surface* source, SDL_Surface* destinat
 
 	
 	//Blit the surface
-	SDL_BlitSurface(source, NULL, destination, &offset);
+	if (SDL_BlitSurface(source, NULL, destination, &offset) != 0) {
+		perror("ERROR: failed to blit image: %s\n", SDL_GetError());
+	}
 }
 
 result refreshTopPanel(viewBoard* view)
@@ -1051,7 +1068,9 @@ void createMessage(char* message)
 		apply_surfaceBoard(375, 210 + 50, currentHead->next->next->componentProps.surface, allBoards);
 		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 188, "images/back_chosen.bmp", BUTTON, 0, scr, 0), scr);
 		apply_surfaceBoard(385, 210 + 120, scr->head->next->next->next->componentProps.surface, allBoards);
-		SDL_Flip(allBoards);
+		if (SDL_Flip(allBoards) != 0) {
+			perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+		}
 		while (quit == 0)
 		{
 			//While there's events to handle

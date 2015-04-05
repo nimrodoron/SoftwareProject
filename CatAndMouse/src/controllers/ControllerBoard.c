@@ -12,8 +12,7 @@ result createBoardController(mode Mode, char* name, player mouse,
 		controller = (controllerBoard*)malloc(sizeof(controllerBoard));
 		if (controller == NULL) {
 			res.code = ERROR;
-			res.message = "images/failed_to_allocate_memory.bmp";
-			printMessages(res.message);
+			res.message = "Failed to malloc controller";
 			return res;
 		}
 	}
