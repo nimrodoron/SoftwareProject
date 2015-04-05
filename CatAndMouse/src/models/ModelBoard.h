@@ -3,6 +3,9 @@
 
 #include "../infrastructure/general/general.h"
 
+#define GRID_SIZE 7
+#define PLAYERS_NUM 2
+
 typedef enum mode {
 	EDIT,
 	GAME
@@ -16,29 +19,36 @@ typedef enum fillType {
 	CHEESE
 }type;
 
-typedef enum player {
+typedef enum playerType {
 	COMPUTER,
 	USER
+}playerType;
+
+typedef enum playerAnimal {
+	CAT,
+	MOUSE,
+	NONE
+}playerAnimal;
+
+typedef struct position {
+	int x;
+	int y;
+}pos;
+
+typedef struct player {
+	playerType type;
+	pos playerPos;
+	int level;
 }player;
 
-typedef enum currentAnimalPlayer {
-	CAT,
-	MOUSE
-}currentAnimalPlayer;
-
-typedef enum events {
-	MOUSE_MOVE,
-	CHEESE_MOVE
-}eventsType;
-
 typedef struct modelBoard {
-	type board[7][7];
-	currentAnimalPlayer currentPlayer;
-	player cat;
-	player mouse;
-	int Level;
-	player Winner;
+	mode modelMode;
+	type board[GRID_SIZE][GRID_SIZE];
+	player players[PLAYERS_NUM];
+	playerAnimal currentPlayer;
+	player winner;
 	int movesBeforeTie;
+	pos cheesePos;
 }modelBoard;
 
 result createEmptyModel(modelBoard** model);

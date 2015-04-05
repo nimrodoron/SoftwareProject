@@ -12,22 +12,6 @@ char* side_bar_images[NUMBER_BUTTONS_SIDE_BAR] = { "images/Reconfigue_mouse.bmp"
 
 
 
-//change to this after the fixes in cuntrollerBoard
-//result createViewBoard(viewBoard* view, void (*HandleSystemEvent) (viewBoardEvents event, int x, int y),
-//					   modelBoard* model) {
-//	result res;
-//	viewBoard* board = (viewBoard*)malloc(sizeof(viewBoard));
-//	if (board == NULL)
-//	{
-//		res.code = -1;
-//		res.message = "ERROR: failed to allocate memory for board\n";
-//		return res;
-//	}
-//	board->topPanel = create_topPanel();
-//	board->sideBar = create_sideBar();
-//	res.code = SUCCESS;
-//	return res;
-//}
 
 result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEvents event, int x, int y),
 	modelBoard* model) {
@@ -96,30 +80,6 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v) {
 
 }
 
-//viewBoard* create_boardView(Screen* topPanel, Screen* sideBar)
-//{
-//	viewBoard* board = (viewBoard*)malloc(sizeof(viewBoard));
-//	if (board == NULL)
-//	{
-//		isError - 1;
-//		printf("ERROR: failed to allocate memory for board\n");
-//		return NULL;
-//	}
-//	board->topPanel = topPanel;
-//	board->sideBar = sideBar;
-//	return board;
-//}
-
-//viewBoard* buildBord()
-//{
-//	viewBoard* board;
-//	Screen* topPanel = create_topPanel();
-//	Screen* sideBar = create_sideBar();
-//
-//	board =  create_boardView(topPanel, sideBar);
-//
-//	return board;
-//}
 
 Screen* create_topPanel()
 {

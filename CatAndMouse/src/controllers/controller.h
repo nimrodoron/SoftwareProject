@@ -6,8 +6,8 @@
 View* currentView;
 int currentStateIndex;
 
-player cat;
-player mouse;
+playerType cat;
+playerType mouse;
 int catLevel;
 int mouseLevel;
 

@@ -11,7 +11,7 @@
 #include "../models/ModelBoard.h"
 #include "../infrastructure/general/general.h"
 
-result LoadWorldFromFile(modelBoard* model, char* name);
+result LoadWorldFromFile(modelBoard** model, char* name);
 result SaveWorldToFile(modelBoard* model, char* name);
 
 #endif /* SRC_SERVICES_WORLDSMANAGER_H_ */

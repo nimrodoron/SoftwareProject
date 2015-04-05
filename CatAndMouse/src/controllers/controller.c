@@ -199,7 +199,7 @@ void quit_main_menu()
 
 void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 {
-	currentAnimalPlayer editedPlayer = MOUSE;
+	playerAnimal editedPlayer = MOUSE;
 
 
 	switch(button->nextState){
@@ -212,6 +212,7 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		if (mouse == USER){
 			mouseLevel = -1;
 		}
+
 		mainviewboard(cat,mouse,catLevel,mouseLevel);
 		break;
 	case 7: //quit was pressed
@@ -299,14 +300,34 @@ void handale_down_level_button(Panel* button, View* v)
 
 }
 
-void mainviewboard(player cat, player mouse, int catLevel, int mouseLevel)
+void mainviewboard(playerType catType, playerType mouseType, int catLevel, int mouseLevel)
 {
-
+	
+	player cat = createPlayer(catType, catLevel);
+	player mouse = createPlayer(mouseType, mouseLevel);
 	//allBoards = SDL_SetVideoMode(800, 800, 0, 0);
 	//SDL_Color color = { 255, 255, 255 };
 	//SDL_FillRect(allBoards, 0, SDL_MapRGB(allBoards->format, color.r, color.g, color.b));
 	/*viewBoard* view =  createViewBoard(NULL, NULL, NULL);
 	showViewBoard(view);*/
-	 createBoardController(EDIT, "hila", cat, mouse, catLevel);
+
+	// createBoardController(EDIT, "hila", cat, mouse, CAT);
+
+	// Example show board on edit mode (create)
+	//player dummy;
+	createBoardController(EDIT,NULL,cat,mouse,NONE);
+
+	// Example show board on edit mode (edit)
+	//createBoardController(EDIT,"world_1.txt",dummy,dummy,NONE);
+
+	// Example of Load game (new game is the same with world_1.txt)
+	//player mouse;
+	//mouse.type = COMPUTER;
+	//mouse.level = 2;
+	//player cat;
+	//cat.type = USER;
+	//createBoardController(GAME, "world_2.txt", mouse, cat, MOUSE);
+
+//>>>>>>> 668d5af4fa942cd46b80fe3edc416fe1c93a4f74
 	 showView();
 }

@@ -14,8 +14,8 @@ typedef struct controllerBoard {
 controllerBoard* controller;
 
 // Create new controller if not exist
-result createBoardController(mode Mode, char* name, player cat,
-		 	 	 	 	 	 player mouse, int Level);
+result createBoardController(mode Mode, char* name, player player1,
+		 	 	 	 	 	 player player2, playerAnimal currentPlayer);
 
 // Show the view of the controller
 result showView();
@@ -25,6 +25,9 @@ result freeBoardController();
 
 // function used to handle view events update the model and view accordingly
 void HandleSystemEvent (viewBoardEvents event, int x, int y);
+
+void createNewModel();
+player createPlayer(playerType type, int level);
 
 #endif
 

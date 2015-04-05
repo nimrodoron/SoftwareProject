@@ -5,11 +5,11 @@ all: main
 clean:
 	-rm Gui controller.o main.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o
 
-main: controller.o main.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o
-	gcc  -o main controller.o main.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o -lm -std=c99 -pedantic-errors -g `sdl-config --libs` -lSDL_image
+main: controller.o main.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o WorldsManager.o
+	gcc  -o main controller.o main.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o WorldsManager.o -lm -std=c99 -pedantic-errors -g `sdl-config --libs` -lSDL_image
 
-main.o: src/main/main.c src/controllers/controller.c src/models/model.c src/views/view.c src/infrastructure/gui/widgets.c src/controllers/ControllerBoard.c src/views/ViewBoard.c src/models/ModelBoard.c
-	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/main/main.c src/controllers/controller.c src/models/model.c src/views/view.c src/infrastructure/gui/widgets.c src/controllers/ControllerBoard.c src/views/ViewBoard.c src/models/ModelBoard.c `sdl-config --cflags`
+main.o: src/main/main.c src/controllers/controller.c src/models/model.c src/views/view.c src/infrastructure/gui/widgets.c src/controllers/ControllerBoard.c src/views/ViewBoard.c src/models/ModelBoard.c src/services/WorldsManager.c
+	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/main/main.c src/controllers/controller.c src/models/model.c src/views/view.c src/infrastructure/gui/widgets.c src/controllers/ControllerBoard.c src/views/ViewBoard.c src/models/ModelBoard.c src/services/WorldsManager.c `sdl-config --cflags`
 	
 widgets: widgets.o
 	gcc  -o widgets widgets.o -lm -std=c99 -pedantic-errors -g `sdl-config --libs` -lSDL_image
@@ -47,8 +47,14 @@ controller: controller.o view.o model.o widgets.o
 controller.o: src/controllers/controller.c src/views/view.c src/infrastructure/gui/widgets.c src/models/model.c
 	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/controllers/controller.c src/views/view.c src/infrastructure/gui/widgets.c src/models/model.c `sdl-config --cflags`	 
 	
-ControllerBoard: ControllerBoard.o ModelBoard.o ViewBoard.o widgets.o
-	gcc  -o ControllerBoard ControllerBoard.o ViewBoard.o ModelBoard.o widgets.o -lm -std=c99 -pedantic-errors -g `sdl-config --libs` -lSDL_image	
+ControllerBoard: ControllerBoard.o ModelBoard.o ViewBoard.o widgets.o WorldsManager.o
+	gcc  -o ControllerBoard ControllerBoard.o ViewBoard.o ModelBoard.o widgets.o WorldsManager.o -lm -std=c99 -pedantic-errors -g `sdl-config --libs` -lSDL_image	
 
-ControllerBoard.o: src/controllers/ControllerBoard.c src/views/ViewBoard.c src/infrastructure/gui/widgets.c src/models/ModelBoard.c
-	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/controllers/ControllerBoard.c src/views/ViewBoard.c src/infrastructure/gui/widgets.c src/models/ModelBoard.c `sdl-config --cflags`
+ControllerBoard.o: src/controllers/ControllerBoard.c src/views/ViewBoard.c src/infrastructure/gui/widgets.c src/models/ModelBoard.c src/services/WorldsManager.c
+	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/controllers/ControllerBoard.c src/views/ViewBoard.c src/infrastructure/gui/widgets.c src/models/ModelBoard.c src/services/WorldsManager.c `sdl-config --cflags`
+	
+WorldsManager: WorldsManager.o ModelBoard.o
+gcc  -o WorldsManager.o ModelBoard.o -lm -std=c99 -pedantic-errors -g `sdl-config --libs` -lSDL_image
+
+WorldsManager.o: src/services/WorldsManager.c src/models/ModelBoard.c
+gcc  -std=c99 -pedantic-errors -c -Wall -g -lm  src/services/WorldsManager.c src/models/ModelBoard.c `sdl-config --cflags`
