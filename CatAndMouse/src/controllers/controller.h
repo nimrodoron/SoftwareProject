@@ -1,3 +1,6 @@
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
+
 #include "../views/view.h"
 #include "../models/ModelBoard.h"
 
@@ -10,6 +13,7 @@ playerType cat;
 playerType mouse;
 int catLevel;
 int mouseLevel;
+int worldNumber;
 
 /*for main menu*/
 #define  NUMBER_BUTTONS_MAIN_MENU  6
@@ -40,12 +44,17 @@ char* choose_mouse_skills_menu_buttons_image[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_ME
 extern char* choose_mouse_skills_menu_buttons_image_chosen[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU+9];
 extern int stateId_choose_mouse_skill_level[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU];
 
+#define NUMBER_BUTTONS_LOAD_GAME_MENU 4
+char* load_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
+extern char* load_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
+extern int stateId_load_game[NUMBER_BUTTONS_LOAD_GAME_MENU];
+
 
  int quit;
 
  //int currentStateIndex;
 //char* currentState;
-#define NUMBER_MENUES 5
+#define NUMBER_MENUES 6
 View* states[NUMBER_MENUES];
 /*supposed to be {main_menu, choose your cat, choose your mouse, choose cat skill level, load game, create game, edit game, quit}*/
 
@@ -61,7 +70,10 @@ void handale_click(Panel* button, Uint16 x, Uint16 y, View* v);
 void handale_down_level_button(Panel* button, View* v);
 void handale_up_level_button(Panel* button, View* v);
 
-void mainviewboard();
+void mainviewboard(playerType catType, playerType mouseType, int catLevel, int mouseLevel, mode mod, char* filename);
 void reconfigureMouseFunction(int level, playerType type, modelBoard* model);
 void reconfigureCatFunction(int level, playerType type, modelBoard* model);
 void GoToMainMenu();
+
+
+#endif

@@ -54,7 +54,7 @@ result createBoardController(mode Mode, char* name, player mouse,
 }
 
 result showView() {
-	result res = showViewBoard(controller->view);
+	result res = showViewBoard(controller->view,controller->model);
 	return res;
 }
 result freeBoardController() {
@@ -80,14 +80,23 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 			break;
 		case (RECONFIGURE_MOUSE) :
 			reconfigureMouseFunction(controller->model->players[MOUSE].level, controller->model->players[MOUSE].type,controller->model);
-			showViewBoard(controller->view);
+			showViewBoard(controller->view,controller->model);
 			break;
 		case (RECONFIGURE_CAT) :
 			reconfigureCatFunction(controller->model->players[CAT].level, controller->model->players[CAT].type, controller->model);
-			showViewBoard(controller->view);
+			showViewBoard(controller->view, controller->model);
+			break;
+		case (RESTART_GAME) :
+			//nimrod fill - page 10 PDF
 			break;
 		case (GO_TO_MAIN_MENU):
-			GoToMainMenu(controller);
+			GoToMainMenu();
+			break;
+		case(SPACE):
+			//fill
+			break;
+		case (CLICK_ON_BOARD) :
+			//nimrod  fill
 			break;
 		default:
 			break;

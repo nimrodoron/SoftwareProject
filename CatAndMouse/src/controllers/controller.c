@@ -4,12 +4,12 @@
 #include "../models/ModelBoard.h"
 #include "ControllerBoard.h"
 
-int save_chages_mouse = 1;
+int loadGame = 1;
 /*for main menu*/
 
 char* main_menu_buttons_image[NUMBER_BUTTONS_MAIN_MENU] = { "images/cat_mouse_title.bmp", "images/new_game.bmp", "images/load_game.bmp", "images/create_game.bmp", "images/edit_game.bmp", "images/quit.bmp" }; /*the images in the main menu*/
 char* main_menu_buttons_image_chosen[NUMBER_BUTTONS_MAIN_MENU] = { "images/cat_mouse_title.bmp", "images/new_game_chosen.bmp", "images/load_game_chosen.bmp", "images/create_game_chosen.bmp", "images/edit_game_chosen.bmp", "images/quit_chosen.bmp" };
-int stateId_main_menu[NUMBER_BUTTONS_MAIN_MENU] = { 0, 1, 4, 5, 6, 7 };
+int stateId_main_menu[NUMBER_BUTTONS_MAIN_MENU] = { 0, 1, 19, 18, 19, 7 };
 
 /*for choose cat menu*/
 char* choose_your_cat_menu_buttons_image[NUMBER_BUTTONS_CHOOSE_CAT_MENU] = { "images/choose_your_cat_title.bmp", "images/human.bmp", "images/machine.bmp", "images/back.bmp" }; /*the images in the choose cat menu menu*/
@@ -32,13 +32,19 @@ char* choose_mouse_skills_menu_buttons_image[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_ME
 char* choose_mouse_skills_menu_buttons_image_chosen[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU + 9] = { "images/choose_mouse_skill_level_title.bmp", "images/skill_level5_chosen.bmp", "images/done_chosen.bmp", "images/back_chosen.bmp", "images/skill_level1_chosen.bmp", "images/skill_level2_chosen.bmp", "images/skill_level3_chosen.bmp", "images/skill_level4_chosen.bmp","images/skill_level5_chosen.bmp", "images/skill_level6_chosen.bmp", "images/skill_level7_chosen.bmp", "images/skill_level8_chosen.bmp", "images/skill_level9_chosen.bmp" };
 int stateId_choose_mouse_skill_level[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU] = { 4, 10, 5, 2 };
 
+
+/*for choose load game menu*/
+char* load_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/Load_game_title.bmp", "images/world_1.bmp", "images/done.bmp", "images/back.bmp", "images/world_1.bmp", "images/world_2.bmp", "images/world_3.bmp", "images/world_4.bmp", "images/world_5.bmp" };
+char* load_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/Load_game_title.bmp", "images/world_1_chosen.bmp", "images/done_chosen.bmp", "images/back_chosen.bmp", "images/world_1_chosen.bmp", "images/world_2_chosen.bmp", "images/world_3_chosen.bmp", "images/world_4_chosen.bmp", "images/world_5_chosen.bmp" };
+int stateId_load_game[NUMBER_BUTTONS_LOAD_GAME_MENU] = { 5, 20,20, 0 };
+
 void initialize_states(){
 	states[0] = build_all_view(main_menu_buttons_image, main_menu_buttons_image_chosen, stateId_main_menu, 1, -1, NUMBER_BUTTONS_MAIN_MENU);
 	states[1] = build_all_view(choose_your_cat_menu_buttons_image, choose_your_cat_menu_buttons_image_chosen, stateId_choose_your_cat_menu, 1, -1, NUMBER_BUTTONS_CHOOSE_CAT_MENU);
 	states[2] = build_all_view(choose_your_mouse_menu_buttons_image, choose_your_mouse_menu_buttons_image_chosen, stateId_choose_your_mouse_menu, 1, -1, NUMBER_BUTTONS_CHOOSE_MOUSE_MENU);
 	states[3] = build_all_view(choose_cat_skills_menu_buttons_image, choose_cat_skills_menu_buttons_image_chosen, stateId_choose_cat_skill_level, 1, 5, NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU);
 	states[4] = build_all_view(choose_mouse_skills_menu_buttons_image, choose_mouse_skills_menu_buttons_image_chosen, stateId_choose_mouse_skill_level, 1, 5, NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU);
-
+	states[5] = build_all_view(load_game_menu_buttons_image, load_game_menu_buttons_image_chosen, stateId_load_game, 1, 1, NUMBER_BUTTONS_LOAD_GAME_MENU);
 }
 
 void while_handle_event()
@@ -214,6 +220,26 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 
 
 	switch(button->nextState){
+	case 0: // if the back was pressed from the choose your cat menu
+		if (loadGame == 0 && currentView == states[1]) // the load game menu was pressed before 
+			currentView = states[5];
+		else
+			currentView = states[0];
+		draw_screen("Cat&Mouse", currentView->screen);
+		break;
+	case 20: //load game was pressed, update the flag and then go to choose your cat menu
+		loadGame = 0; 
+	case 1: // from main menu go he choose your cat menu
+		currentView = states[1];
+		draw_screen("Cat&Mouse", currentView->screen);
+		break;
+	case 19://load game was pressed
+		currentView = states[5];
+		draw_screen("Cat&Mouse", currentView->screen);
+		break;
+	case 18: //if create game was pressed from the main menu
+		mainviewboard(cat, mouse, catLevel, mouseLevel, EDIT, NULL);
+		break;
 	case 9: //in 'choose your mouse menu' human was chosen and then go to step 5 to the main game screen
 		mouse = USER;
 	case 5: //going to the main game
@@ -223,7 +249,7 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		if (mouse == USER){
 			mouseLevel = -1;
 		}
-		mainviewboard(cat,mouse,catLevel,mouseLevel);
+		mainviewboard(cat,mouse,catLevel,mouseLevel,GAME,NULL);
 		break;
 	case 12: //selecting back from type selection menu for the mouse in reconfigure mouse mode
 		quit = 1;
@@ -332,26 +358,33 @@ void handale_down_level_button(Panel* button, View* v)
 
 }
 
-void mainviewboard(playerType catType, playerType mouseType, int catLevel, int mouseLevel)
+void mainviewboard(playerType catType, playerType mouseType, int catLevel, int mouseLevel,mode mod,char* filename)
 {
 
 	// Example show board on edit mode (create)
-	//player cat = createPlayer(catType, catLevel);
-	//player mouse = createPlayer(mouseType, mouseLevel);
-	//player dummy;
-	//createBoardController(EDIT,NULL,cat,mouse,NONE);
-
-	// Example show board on edit mode (edit)
-	//createBoardController(EDIT,"world_1.txt",dummy,dummy,NONE);
-
-	// Example of Load game (new game is the same with world_1.txt)
+	player cat;
 	player mouse;
 	mouse.type = COMPUTER;
 	mouse.level = 2;
-	player cat;
 	cat.type = USER;
 	cat.level = -1;
-	createBoardController(GAME, "world_2.txt", mouse, cat, MOUSE);
+
+	// Example show board on edit mode (edit)
+	if (mod == EDIT)
+	{
+		createBoardController(EDIT, "world_1.txt", cat, mouse, NONE);
+
+	}// Example of Load game (new game is the same with world_1.txt)
+	else if (mod == GAME){
+		createBoardController(GAME, "world_2.txt", mouse, cat, MOUSE);
+	}
+	
+	
+
+	
+
+	
+	
 
 	 showView();
 }
@@ -434,6 +467,7 @@ void GoToMainMenu()
 
 	currentView = states[currentStateIndex];
 	draw_screen("Cat&Mouse", currentView->screen);
+	quit = 0;
 	//While the user hasn't quit
 	while_handle_event();
 }
