@@ -11,7 +11,17 @@
 #include "../models/ModelBoard.h"
 #include "../infrastructure/general/general.h"
 
-result LoadWorldFromFile(modelBoard** model, char* name);
+#define CAT_START "cat"
+#define MOUSE_START "mouse"
+#define EMPTY_CELL '#'
+#define WALL_CELL 'W'
+#define CAT_CELL 'C'
+#define MOUSE_CELL 'M'
+#define CHEESE_CELL 'P'
+
+#define FILE_NUM_OF_ROWS 9
+
+result LoadWorldFromFile(modelBoard* model, char* name);
 result SaveWorldToFile(modelBoard* model, char* name);
 
 #endif /* SRC_SERVICES_WORLDSMANAGER_H_ */

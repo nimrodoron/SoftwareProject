@@ -36,7 +36,7 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	{
 		sideBar = create_sideBar(side_bar_images);
 		topPanel = create_topPanel();
-		gridArea = create_gridArea();
+		gridArea = create_gridArea(model);
 
 	}
 	else // if mode==EDIT
@@ -399,23 +399,23 @@ void show_side_bar(Screen* scr)
 //	SDL_Flip(allBoards);
 //}
 
-Screen* create_gridArea()
+Screen* create_gridArea(modelBoard* model)
 {
-	type boardTemp[GRID_SIZE][GRID_SIZE];
-	for (int i = 0; i < GRID_SIZE; i++)
-	{
-		for (int j = 0; j < GRID_SIZE; j++)
-
-		{
-			if (i == j)
-				boardTemp[i][j] = WALL;
-			else
-				boardTemp[i][j] = EMPTY;
-		}
-	}
-	boardTemp[1][3] = CAT_PIC;
-	boardTemp[4][1] = MOUSE_PIC;
-	boardTemp[5][6] = CHEESE;
+//	type boardTemp[GRID_SIZE][GRID_SIZE];
+//	for (int i = 0; i < GRID_SIZE; i++)
+//	{
+//		for (int j = 0; j < GRID_SIZE; j++)
+//
+//		{
+//			if (i == j)
+//				boardTemp[i][j] = WALL;
+//			else
+//				boardTemp[i][j] = EMPTY;
+//		}
+//	}
+//	boardTemp[1][3] = CAT_PIC;
+//	boardTemp[4][1] = MOUSE_PIC;
+//	boardTemp[5][6] = CHEESE;
 
 	Screen* scr = (Screen*)malloc(sizeof(Screen));
 	if (scr == NULL)
@@ -433,7 +433,7 @@ Screen* create_gridArea()
 		for (int j = 0; j < GRID_SIZE; j++)
 
 		{
-			switch (boardTemp[i][j]){
+			switch (model->board[i][j]){
 			case(EMPTY) :
 				add_child(create_panel(70, 70, 70 * j, 70 * i, "images/square.bmp", BUTTON, 0, scr, 0), scr);
 				break;
@@ -496,7 +496,7 @@ result CreateNewWorldBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoard
 	(*view)->HandleSystemEvent = HandleSystemEvent;
 	sideBar = create_sideBar(createGame_side_bar_images);
 	topPanel = CreateWorld_topPanel();
-	gridArea = create_gridArea();
+	gridArea = create_gridArea(model);
 
 	if ((sideBar == NULL) || (topPanel == NULL) || (gridArea == NULL))
 	{

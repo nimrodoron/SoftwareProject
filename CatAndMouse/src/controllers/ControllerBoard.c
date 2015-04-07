@@ -28,13 +28,12 @@ result createBoardController(mode Mode, char* name, player mouse,
 		if (name == NULL)
 			createNewModel();
 		else
-			res = LoadWorldFromFile(&(controller->model), name);
+			res = LoadWorldFromFile(controller->model, name);
 	}
 	else {
 		controller->model->players[CAT] = cat;
 		controller->model->players[MOUSE] = mouse;
-		controller->model->currentPlayer = currentPlayer;
-		res = LoadWorldFromFile(&(controller->model), name);
+		res = LoadWorldFromFile(controller->model, name);
 		if (!res.code) {
 			freeBoardController();
 			return res;
@@ -57,6 +56,7 @@ result showView() {
 	result res = showViewBoard(controller->view,controller->model);
 	return res;
 }
+
 result freeBoardController() {
 	result res;
 	if (controller != NULL) {
@@ -120,8 +120,6 @@ player createPlayer(playerType type, int level)
 	ply.level = level;
 	return ply;
 }
-
-
 
 void updateModelBoard(playerType cat, int catLevel, playerType mouse, int mouseLevel)
 {
