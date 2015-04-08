@@ -27,14 +27,17 @@ result LoadWorldFromFile(modelBoard* model, char* name) {
 
     // read who start
     fscanf(fp,"%s", input);
-    if (strcmp(input,CAT_START))
+    if (input[0] = 'c')
     	model->currentPlayer = CAT;
     else
     	model->currentPlayer = MOUSE;
 
-    for (int row = 0; row < GRID_SIZE - 2; row++) {
+    for (int row = 0; row < GRID_SIZE; row++) {
+    	fscanf(fp,"%s", input);
+
     	for(int col = 0; col < GRID_SIZE; col++) {
-    		fscanf(fp,"%c", &c);
+    		c = input[col];
+
     		switch (c) {
     			case(WALL_CELL):
     				model->board[row][col] = WALL;
@@ -60,8 +63,6 @@ result LoadWorldFromFile(modelBoard* model, char* name) {
     		}
     	}
     }
-
-    //
 
    if(fclose(fp)) {
 		res.code = ERROR;

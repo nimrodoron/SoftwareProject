@@ -11,7 +11,7 @@
 #include "../models/ModelBoard.h"
 #include "../infrastructure/general/general.h"
 
-#define CAT_START "cat"
+#define CAT_START "cat\0"
 #define MOUSE_START "mouse"
 #define EMPTY_CELL '#'
 #define WALL_CELL 'W'
