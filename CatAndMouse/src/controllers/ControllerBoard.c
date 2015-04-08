@@ -23,7 +23,7 @@ result createBoardController(mode Mode, char* name, player mouse,
 	}
 
 	// Create the model
-	controller->model->modelMode = Mode;
+
 	if (Mode == EDIT) {
 		if (name == NULL)
 			createNewModel();
@@ -39,6 +39,8 @@ result createBoardController(mode Mode, char* name, player mouse,
 			return res;
 		}
 	}
+	controller->model->modelMode = Mode;
+	controller->model->name = name;
 
 	// create the view
 	res = createViewBoard(&(controller->view), HandleSystemEvent, controller->model);
@@ -137,4 +139,8 @@ void updateModelBoardCat(playerType cat, int catLevel)
 {
 	controller->model->players[CAT].type = cat;
 	controller->model->players[CAT].level = catLevel;
+}
+
+void restartGame() {
+	LoadWorldFromFile(controller->model, controller->model->name);
 }

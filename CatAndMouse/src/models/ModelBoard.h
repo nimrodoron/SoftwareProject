@@ -49,6 +49,7 @@ typedef struct modelBoard {
 	player winner;
 	int movesBeforeTie;
 	pos cheesePos;
+	char* name;
 }modelBoard;
 
 result createEmptyModel(modelBoard** model);
