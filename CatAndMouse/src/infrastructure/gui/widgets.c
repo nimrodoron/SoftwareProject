@@ -88,6 +88,10 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	return pan;
 }
 
+void update_panel_picture(Panel* item, char* path) {
+	item->componentProps.surface = SDL_LoadBMP(path);
+}
+
 /*to build the main menu*/
 Screen* build_main_menu(int number_buttons, char* title, char** imagesArr, char** imagesArrChosen, int* stateArr,int marked_button)
 {

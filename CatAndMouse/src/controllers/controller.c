@@ -378,7 +378,7 @@ void mainviewboard(playerType catType, playerType mouseType, int catLevel, int m
 	// Example show board on edit mode (edit)
 	if (mod == EDIT)
 	{
-		createBoardController(EDIT, "world_1.txt", cat, mouse, NONE);
+		createBoardController(EDIT, NULL, cat, mouse, NONE);
 
 	}// Example of Load game (new game is the same with world_1.txt)
 	else if (mod == GAME){

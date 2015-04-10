@@ -85,7 +85,7 @@ result SaveWorldToFile(modelBoard* model, char* name) {
     strcat(buf, "./worlds/");
     strcat(buf, name);
 
-    if((fp = fopen(buf, "r")) == NULL) {
+    if((fp = fopen(buf, "wt")) == NULL) {
         res.code = ERROR;
         res.message = "File not exist";
         return res;
@@ -100,37 +100,37 @@ result SaveWorldToFile(modelBoard* model, char* name) {
     	fprintf(fp, "%s", CAT_START);
     else
     	fprintf(fp, "%s", MOUSE_START);
-    fprintf(fp, "%c", '\n');
 
-    for (int row = 0; row < GRID_SIZE - 2; row++) {
+    for (int row = 0; row < GRID_SIZE; row++) {
+    	fprintf(fp, "%c", '\n');
     	for(int col = 0; col < GRID_SIZE; col++) {
-    		switch (model->board[row][col]) {
+    		switch (model->board[col][row]) {
     			case(WALL):
-					fprintf(fp, "%c", WALL);
+					fprintf(fp, "%c", 'W');
     				break;
     			case(CAT_PIC):
-					fprintf(fp, "%c", CAT_PIC);
+					fprintf(fp, "%c", 'C');
     				break;
     			case(MOUSE_PIC):
-					fprintf(fp, "%c", MOUSE_PIC);
+					fprintf(fp, "%c", 'M');
 					break;
     			case(CHEESE):
-					fprintf(fp, "%c", CHEESE);
+					fprintf(fp, "%c", 'P');
     				break;
     			default:
-    				fprintf(fp, "%c", EMPTY);
+    				fprintf(fp, "%c", '#');
     				break;
     		}
     	}
 	}
-//
-//    if(fclose(fp)) {
-// 		res.code = ERROR;
-// 		res.message = "Error closing file";
-// 		return res;
-//    }
-//
-//
+
+    if(fclose(fp)) {
+ 		res.code = ERROR;
+ 		res.message = "Error closing file";
+ 		return res;
+    }
+
+
 	res.code = SUCCESS;//to delete! it is just for compilation
 	res.message = "";
 	return res;

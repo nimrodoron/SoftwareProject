@@ -78,5 +78,6 @@ Screen* build_main_menu(int number_buttons, char* title, char** imagesArr, char*
 int calc_height(int size, int height, int gap);
 int calc_width(int width);
 void add_child(Panel* item, Screen* window);
+void update_panel_picture(Panel* item, char* path);
 
 #endif
