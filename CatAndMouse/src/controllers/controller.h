@@ -49,6 +49,13 @@ char* load_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
 extern char* load_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
 extern int stateId_load_game[NUMBER_BUTTONS_LOAD_GAME_MENU];
 
+char* save_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
+extern char* save_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
+extern int stateId_save_game[NUMBER_BUTTONS_LOAD_GAME_MENU];
+
+char* edit_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
+extern char* edit_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
+extern int stateId_edit_game[NUMBER_BUTTONS_LOAD_GAME_MENU];
 
  int quit;
 
