@@ -1,12 +1,16 @@
 #include "ViewBoard.h"
 
+//change it
+int pause = 0;
+
 //array for the displayed images
-char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL] = { "images/Mouse's _move.bmp", "images/2.bmp", "", "images/).bmp", "images/Machine_computing.bmp", "images/Pause Before Next Move.bmp" };
+char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL-2] = { "images/Mouse's _move.bmp", "images/2.bmp", "images/Machine_computing.bmp", "images/Pause Before Next Move.bmp" };
 //arrays for the images in the top panel
 char* top_panel_animal_move[2] = { "images/Cat_move.bmp", "images/Mouse's _move.bmp" };
-char* top_panel_numbers[11] = { "images/).bmp", "images/0.bmp", "images/1.bmp", "images/2.bmp", "images/3.bmp", "images/4.bmp", "images/5.bmp", "images/6.bmp", "images/7.bmp", "images/8.bmp", "images/9.bmp" };
+char* top_panel_numbers[11] = { "images/0.bmp", "images/1.bmp", "images/2.bmp", "images/3.bmp", "images/4.bmp", "images/5.bmp", "images/6.bmp", "images/7.bmp", "images/8.bmp", "images/9.bmp","images/).bmp" };
 char* top_panel_win_status[3] = { "images/Game Over , Cat Wins.bmp", "images/Game Over , Mouse Wins.bmp", "images/Game Over , Timeout.bmp" };
-char* top_panel_game_status[4] = { "images/Human-waiting for next move.bmp","images/Human-paused.bmp","images/Machine_computing.bmp","images/Machine-paused.bmp"};
+char* top_panel_game_status[4] = { "images/Human-waiting.bmp","images/Human-paused.bmp","images/Machine_computing.bmp","images/Machine-paused.bmp"};
+char* top_panel_pause[3] = { "images/Pause Before Next Move.bmp", "images/Pause.bmp", "images/Resume Game.bmp" };
 
 char* side_bar_images[NUMBER_BUTTONS_SIDE_BAR] = { "images/Reconfigue_mouse.bmp", "images/Reconfigue_cat.bmp", "images/Restart_game.bmp", "images/go_to_main_menu.bmp", "images/Quit_program.bmp" };
 char* side_bar_images_unable[NUMBER_BUTTONS_SIDE_BAR] = { "images/Reconfigue_mouse_unable.bmp", "images/Reconfigue_cat_unable.bmp", "images/Restart_game_unable.bmp", "images/go_to_main_menu_unable.bmp", "images/Quit_program_unable.bmp" };
@@ -35,10 +39,11 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	(*view)->HandleSystemEvent = HandleSystemEvent;
 	(*view)->markedSquare.x = UNVALID_POS;
 	(*view)->markedSquare.y = UNVALID_POS;
+	
 	if (model->modelMode == GAME)
 	{
 		sideBar = create_sideBar(side_bar_images);
-		topPanel = create_topPanel();
+		topPanel = create_topPanel(model);
 		gridArea = create_gridArea(model,*view);
 
 	}
@@ -76,7 +81,7 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 	if (model->modelMode == GAME) //we are in the game board
 	{
 		show_side_bar(view->sideBar);
-		show_top_panel(view->topPanel);
+		show_top_panel(view->topPanel,model);
 		show_grid_area(view->gridArea);
 	}
 	else if (model->modelMode == EDIT)//we are in creating a new world board
@@ -387,8 +392,9 @@ void button_click_game_board_game(Uint16 x, Uint16 y, viewBoard* v)
 
 
 
-Screen* create_topPanel()
+Screen* create_topPanel(modelBoard* model)
 {
+	int factor;
 	Screen* scr = (Screen*)malloc(sizeof(Screen));
 	if (scr == NULL)
 	{
@@ -404,72 +410,120 @@ Screen* create_topPanel()
 	Panel* currentHead = scr->head;
 	for (int i = 0; i < NUMBER_BUTTONS_TOP_PANEL; i++)
 	{
-		if (displayed_top_panel_images[i] == NULL)
-			i++;
+
 		switch (i)
 		{
-		case 1:
-			xOffset = 140;
+		case 0: //the <animal>move
+			add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_animal_move[model->currentPlayer], type, 0, scr, 0), scr);
+			break;
+		case 1: //the moves before tie
+			/*if (model->currentPlayer == MOUSE)
+				xOffset = 140;
+			else 
+				xOffset = 120;*/
+			factor = 1;
+			int moveBeforeTie = model->movesBeforeTie;
+			int temp = moveBeforeTie;
+			while (temp)
+			{
+				temp = temp / 10;
+				factor = factor * 10;
+			}
+			while (factor>1)
+			{
+				factor = factor / 10;
+				
+				add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_numbers[moveBeforeTie / factor], type, 0, scr, 0), scr);
+				moveBeforeTie = moveBeforeTie % factor;
+				xOffset += 7;
+			}
+			add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_numbers[10], type, 0, scr, 0), scr);
 				break;
-		case 2:
-			xOffset += 7;
-			break;
-		case 3:
-			xOffset +=10;
-			break;
-		case 4:
+		case 2: //the game status (sewcond line)
 			yOffset = 30;
 			xOffset = 0;
+			if (pause == 1)
+			{
+				if (model->players[model->currentPlayer].type == USER) //human and paused
+					add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_game_status[1], type, 0, scr, 0), scr);
+				else //machine and paused
+					add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_game_status[3], type, 0, scr, 0), scr);
+			}
+			else
+			{
+				if (model->players[model->currentPlayer].type == USER) //human and not paused
+					add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_game_status[0], type, 0, scr, 0), scr);
+				else //machine and not paused
+					add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_game_status[2], type, 0, scr, 0), scr);
+			}
 			break;
-		case 5:
+		case 3: //the third line
 			xOffset = 0;
 			yOffset += 30;
-			type--;
+			if (model->players[model->currentPlayer].type == COMPUTER) //if the current player is a machine
+				add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_pause[0], type, 0, scr, 0), scr);
+			else if (model->players[model->currentPlayer].type == USER)//if the current player is a human
+				add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_pause[1], type, 0, scr, 0), scr);
+			else if (pause == 1) // if the game is paused
+				add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_pause[2], type, 0, scr, 0), scr);
 			break;
 		default:
 			break;
 		}
-		
-		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, displayed_top_panel_images[i],type, 0, scr, 0), scr);	
 	}
 	
 	return scr;
 }
 
-void show_top_panel(Screen* scr)
+void show_top_panel(Screen* scr, modelBoard* model)
 {
 	int yOffset = 0;
 	int xOffset = 0;
+	int moveBeforeTie = 0;
 	Panel* currentHead = scr->head;
 	for (int i = 0; i < NUMBER_BUTTONS_TOP_PANEL; i++)
 	{
-		if (displayed_top_panel_images[i] == NULL)
-			i++;
+
 		switch (i)
 		{
-		case 1:
-			xOffset = 140;
+		case 0: //the <animal>move
+			apply_surfaceBoard(330 + xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
+			currentHead = currentHead->next;
 			break;
-		case 2:
+		case 1: //the moves before tie
+			moveBeforeTie = model->movesBeforeTie;
+
+			if (model->currentPlayer == MOUSE)
+				xOffset = 140;
+			else
+				xOffset = 120;
+
+			while (moveBeforeTie > 0)
+			{
+				apply_surfaceBoard(330 + xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
+				moveBeforeTie = moveBeforeTie / 10;
+				xOffset += 7;
+				currentHead = currentHead->next;
+			}
 			xOffset += 7;
+			apply_surfaceBoard(330 + xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
+			currentHead = currentHead->next;
 			break;
-		case 3:
-			xOffset += 10;
-			break;
-		case 4:
+		case 2: //the game status (sewcond line)
 			yOffset = 30;
 			xOffset = 0;
+			apply_surfaceBoard(330 + xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
+			currentHead = currentHead->next;
 			break;
-		case 5:
+		case 3: //the third line
 			xOffset = 0;
 			yOffset += 30;
+			apply_surfaceBoard(330 + xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
+			currentHead = currentHead->next;
 			break;
 		default:
 			break;
 		}
-
-		apply_surfaceBoard(330 + xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
-		currentHead = currentHead->next;
 	}
 	SDL_Flip(allBoards);
 }
@@ -636,40 +690,6 @@ void show_grid_area(Screen* scr)
 	SDL_Flip(allBoards);
 }
 
-////create the 'create game' board
-//result CreateNewWorldBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEvents event, int x, int y),
-//	modelBoard* model) {
-//
-//	result res;
-//	Screen* sideBar;
-//	Screen* topPanel;
-//	Screen* gridArea;
-//	*view = (viewBoard*)malloc(sizeof(viewBoard));
-//	if (view == NULL)
-//	{
-//		res.code = -1;
-//		res.message = "ERROR: failed to allocate memory for board\n";
-//		return res;
-//	}
-//	(*view)->model = model;
-//	(*view)->HandleSystemEvent = HandleSystemEvent;
-//	sideBar = create_sideBar(createGame_side_bar_images);
-//	topPanel = CreateWorld_topPanel();
-//	gridArea = create_gridArea(model,*view);
-//
-//	if ((sideBar == NULL) || (topPanel == NULL) || (gridArea == NULL))
-//	{
-//		res.code = -1;
-//		res.message = "ERROR: failed to allocate memory for create game window\n";
-//		return res;
-//	}
-//	(*view)->topPanel = topPanel;
-//	(*view)->sideBar = sideBar;
-//	(*view)->gridArea = gridArea;
-//
-//	res.code = SUCCESS;
-//	return res;
-//}
 
 //create the 'create game' top_panel
 Screen* CreateWorld_topPanel(int worldsndex)
@@ -764,15 +784,76 @@ void apply_surfaceBoard(int x, int y, SDL_Surface* source, SDL_Surface* destinat
 	SDL_BlitSurface(source, NULL, destination, &offset);
 }
 
-//convert the model to the right images to dispaly in the top panel
-void convert_model(viewBoard* view)
+result refreshTopPanel(viewBoard* view)
 {
-	char* try = top_panel_animal_move[view->model->currentPlayer];
-	displayed_top_panel_images[0] = try;
-
+	int factor;
+	// refresh the top panel
+	Panel* currentHead = view->topPanel->head;
+	modelBoard* model = view->model;
+	//Panel *item = view->topPanel->head->next;
+	int moveBeforeTie = 0;
+	for (int i = 0; i < NUMBER_BUTTONS_TOP_PANEL; i++)
+	{
+		switch (i)
+		{
+		case 0: //the <animal>move
+			update_panel_picture(currentHead, top_panel_animal_move[model->currentPlayer]);
+			currentHead = currentHead->next;
+			break;
+		case 1: //the moves before tie
+			/*if (model->currentPlayer == MOUSE)
+			xOffset = 140;
+			else
+			xOffset = 120;*/
+			factor = 1;
+			int moveBeforeTie = model->movesBeforeTie;
+			int temp = moveBeforeTie;
+			while (temp)
+			{
+				temp = temp / 10;
+				factor = factor * 10;
+			}
+			while (factor>1)
+			{
+				factor = factor / 10;
+				update_panel_picture(currentHead, top_panel_numbers[moveBeforeTie / factor]);
+				moveBeforeTie = moveBeforeTie % factor;
+				currentHead = currentHead->next;
+			}
+			update_panel_picture(currentHead, top_panel_numbers[10]);
+			currentHead = currentHead->next;
+			break;
+		case 2: //the game status (sewcond line)
+			if (pause == 1)
+			{
+				if (model->players[model->currentPlayer].type == USER) //human and paused
+					update_panel_picture(currentHead, top_panel_game_status[1]);
+				else //machine and paused
+					update_panel_picture(currentHead, top_panel_game_status[3]);
+			}
+			else
+			{
+				if (model->players[model->currentPlayer].type == USER) //human and not paused
+					update_panel_picture(currentHead, top_panel_game_status[0]);
+				else //machine and not paused
+					update_panel_picture(currentHead, top_panel_game_status[2]);
+			}
+			currentHead = currentHead->next;
+			break;
+		case 3: //the third line
+			if (model->players[model->currentPlayer].type == COMPUTER) //if the current player is a machine
+				update_panel_picture(currentHead, top_panel_pause[0]);
+			else if (model->players[model->currentPlayer].type == USER)//if the current player is a human
+				update_panel_picture(currentHead, top_panel_pause[1]);
+			else if (pause == 1) // if the game is paused
+				update_panel_picture(currentHead, top_panel_pause[2]);		
+			currentHead = currentHead->next;
+			break;
+		default:
+			break;
+		}
+	}
 }
-
-
 result refreshViewBoard(viewBoard* view) {
 
 	// refresh the grid

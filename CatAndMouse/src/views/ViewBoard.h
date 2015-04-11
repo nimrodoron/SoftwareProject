@@ -57,6 +57,7 @@ result showViewBoard(viewBoard* view, modelBoard* model);
 result freeViewBoard(viewBoard* view);
 
 result refreshViewBoard(viewBoard* view);
+result refreshTopPanel(viewBoard* view);
 
 
 // Those functions are for local use of the view
@@ -65,8 +66,8 @@ result refreshViewBoard(viewBoard* view);
 // translate SDL events to view events
 viewBoard* buildBord();
 viewBoard* create_boardView(Screen* topPanel, Screen* sideBar);
-Screen* create_topPanel();
-void show_top_panel(Screen* scr);
+Screen* create_topPanel(modelBoard* model);
+void show_top_panel(Screen* scr, modelBoard* model);
 void show_side_bar(Screen* scr);
 void show_grid_area(Screen* scr);
 Screen* create_sideBar(char** imagesArr);
