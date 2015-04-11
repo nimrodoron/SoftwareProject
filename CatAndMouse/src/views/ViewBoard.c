@@ -15,6 +15,7 @@ char* creatGame_top_panel[NUMBER_BUTTONS_TOP_PANEL_CREATE_GAME] = { "images/New_
 char* createGame_side_bar_images[NUMBER_BUTTONS_SIDE_BAR] = { "images/place_mouse.bmp", "images/place_cat.bmp", "images/place_cheese.bmp", "images/place_wall.bmp", "images/place_empty_space.bmp" };
 
 
+
 //create main game board
 result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEvents event, int x, int y),
 	modelBoard* model) {
