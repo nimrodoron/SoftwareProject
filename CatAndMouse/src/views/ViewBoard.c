@@ -13,12 +13,12 @@ char* side_bar_images_unable[NUMBER_BUTTONS_SIDE_BAR] = { "images/Reconfigue_mou
 
 char* creatGame_top_panel[NUMBER_BUTTONS_TOP_PANEL_CREATE_GAME] = { "images/New_World_title.bmp", "images/save_world.bmp", "images/go_to_main_menu_new_world_.bmp", "images/Quit_program_new_world.bmp"};
 char* createGame_side_bar_images[NUMBER_BUTTONS_SIDE_BAR] = { "images/place_mouse.bmp", "images/place_cat.bmp", "images/place_cheese.bmp", "images/place_wall.bmp", "images/place_empty_space.bmp" };
-
+char* creatGame_titels[NUMBER_WORLD_TITELS] = { "images/New_World_title.bmp", "images/world1_title.bmp", "images/world2_title.bmp", "images/world3_title.bmp", "images/world4_title.bmp", "images/world5_title.bmp" };
 
 
 //create main game board
 result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEvents event, int x, int y),
-	modelBoard* model) {
+	modelBoard* model, int worldsIndex) {
 	
 	result res;
 	Screen* sideBar;
@@ -34,19 +34,21 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	(*view)->model = model;
 	(*view)->HandleSystemEvent = HandleSystemEvent;
 	(*view)->markedSquare.x = UNVALID_POS;
-	(*view)->markedSquare.x = UNVALID_POS;
+	(*view)->markedSquare.y = UNVALID_POS;
 	if (model->modelMode == GAME)
 	{
 		sideBar = create_sideBar(side_bar_images);
 		topPanel = create_topPanel();
-		gridArea = create_gridArea(model);
+		gridArea = create_gridArea(model,*view);
 
 	}
 	else // if mode==EDIT
 	{
+		(*view)->markedSquare.x = 0;
+		(*view)->markedSquare.y = 0;
 		sideBar = create_sideBar(createGame_side_bar_images);
-		topPanel = CreateWorld_topPanel();
-		gridArea = create_gridArea(model);
+		topPanel = CreateWorld_topPanel(worldsIndex);
+		gridArea = create_gridArea(model, *view);
 	}
 
 
@@ -102,73 +104,210 @@ result freeViewBoard(viewBoard* view) {
 
 }
 
-
-void handle_gui_event(SDL_Event *ev, viewBoard* v,modelBoard* model) 
+void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 {
-	switch (ev->type)
+	if (model->modelMode == GAME)
 	{
-	case SDL_QUIT:
-		v->HandleSystemEvent(EXIT, 0, 0);
-		break;
-	case SDL_MOUSEBUTTONUP:
-		if (model->modelMode ==GAME)
+		switch (ev->type)
 		{
-			if ((ev->button.x > 0 && ev->button.x < 200) && (ev->button.y>0 && ev->button.y<600))
-				button_click_side_panel(ev->button.x, ev->button.y, v); 
+		case SDL_QUIT:
+			v->HandleSystemEvent(EXIT, 0, 0);
+			break;
+		case SDL_MOUSEBUTTONUP :
+				if ((ev->button.x > 0 && ev->button.x < 200) && (ev->button.y>0 && ev->button.y<600))
+					button_click_side_panel(ev->button.x, ev->button.y, v);
 				if ((ev->button.x > 200 && ev->button.x < 700) && (ev->button.y>0 && ev->button.y<110))
 					button_click_top_panel(ev->button.x, ev->button.y, v);
-		}
-		if (model->modelMode == EDIT)
-		{
-			if ((ev->button.x > 0 && ev->button.x < 200) && (ev->button.y>0 && ev->button.y<600))
-			button_click_side_panel_new_world(ev->button.x, ev->button.y, v);
-			if ((ev->button.x > 0 && ev->button.x < 800) && (ev->button.y>0 && ev->button.y<110))
-			button_click_top_panel_new_world(ev->button.x, ev->button.y, v);
-		}
-		if ((ev->button.x > 230 && ev->button.x < 720) && (ev->button.y>120 && ev->button.y<610))
-			button_click_game_board(ev->button.x, ev->button.y, v);
-		break;
-	case SDL_KEYDOWN:
-		if (model->modelMode == GAME)
-		{
+				if ((ev->button.x > 230 && ev->button.x < 720) && (ev->button.y>120 && ev->button.y<610))
+					button_click_game_board_game(ev->button.x, ev->button.y, v);
+				break;
+		case SDL_KEYDOWN:
+			switch (ev->key.keysym.sym)
 			{
-			case SDLK_F1:
-				v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
+			case (SDLK_SPACE):
+				//fill
 				break;
-			case SDLK_F2:
-				v->HandleSystemEvent(RECONFIGURE_CAT, 0, 0);
-				break;
-			case SDLK_F3:
-				v->HandleSystemEvent(RESTART_GAME, 0, 0);
-				break;
-			case SDLK_F4:
-				v->HandleSystemEvent(GO_TO_MAIN_MENU, 0, 0);
-				break;
-			case SDLK_ESCAPE:
-				v->HandleSystemEvent(EXIT, 0, 0);
-				break;
-			case SDLK_RSUPER:
-				//right key was pressed
-				break;
-			case SDLK_LSUPER:
-				//left key was pressed
-				break;
+				case SDLK_F1:
+					v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
+					break;
+				case SDLK_F2:
+					v->HandleSystemEvent(RECONFIGURE_CAT, 0, 0);
+					break;
+				case SDLK_F3:
+					v->HandleSystemEvent(RESTART_GAME, 0, 0);
+					break;
+				case SDLK_F4:
+					v->HandleSystemEvent(GO_TO_MAIN_MENU, 0, 0);
+					break;
+				case SDLK_ESCAPE:
+					v->HandleSystemEvent(EXIT, 0, 0);
+					break;
+				case SDLK_RIGHT://right key was pressed
+					if (model->players[model->currentPlayer].playerPos.y < 6)
+						v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x, model->players[model->currentPlayer].playerPos.y + 1);
+					break;
+				case SDLK_LEFT://left key was pressed
+					if (model->players[model->currentPlayer].playerPos.y > 0)
+						v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x, model->players[model->currentPlayer].playerPos.y - 1);
+					break;
+				case SDLK_UP:if (model->players[model->currentPlayer].playerPos.x > 0)
+					v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x - 1, model->players[model->currentPlayer].playerPos.y);;
+					break;
+				case SDLK_DOWN:
+					if (model->players[model->currentPlayer].playerPos.x < 6)
+						v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x + 1, model->players[model->currentPlayer].playerPos.y);
+					break;
+				default:
+					break;
 			}
+		default:
+			break;
 		}
-		
-		else if (model->modelMode==EDIT)
+	}
+	else if (model->modelMode == EDIT)
+	{
+		switch (ev->type)
 		{
+		case SDL_QUIT:
+			v->HandleSystemEvent(EXIT, 0, 0);
+			break;
+		case SDL_MOUSEBUTTONUP:
+			if ((ev->button.x > 0 && ev->button.x < 200) && (ev->button.y>0 && ev->button.y < 600))
+				button_click_side_panel_new_world(ev->button.x, ev->button.y, v);
+			if ((ev->button.x > 0 && ev->button.x < 800) && (ev->button.y>0 && ev->button.y < 110))
+				button_click_top_panel_new_world(ev->button.x, ev->button.y, v);
+			if ((ev->button.x > 230 && ev->button.x < 720) && (ev->button.y>120 && ev->button.y < 610))
+				button_click_game_board(ev->button.x, ev->button.y, v);
+			break;
+		case SDL_KEYDOWN:
 			switch (ev->key.keysym.sym)
 			{
 			case SDLK_F1:
 				v->HandleSystemEvent(GO_TO_MAIN_MENU, 0, 0);
 				break;
+			case SDLK_s:
+				v->HandleSystemEvent(SAVE_WORLD, 0, 0);
+				break;
+			case SDLK_m:
+				v->HandleSystemEvent(PLACE_MOUSE, v->markedSquare.x, v->markedSquare.y);
+				break;
+			case SDLK_c:
+				v->HandleSystemEvent(PLACE_CAT, v->markedSquare.x, v->markedSquare.y);
+				break;
+			case SDLK_p:
+				v->HandleSystemEvent(PLACE_CHEESE, v->markedSquare.x, v->markedSquare.y);
+				break;
+				case SDLK_w :
+				v->HandleSystemEvent(PLACE_WALL, v->markedSquare.x, v->markedSquare.y);
+				break;
+				case (SDLK_SPACE) :
+					v->HandleSystemEvent(PLACE_EMPTY_SPACE, v->markedSquare.x, v->markedSquare.y);
+					break;
+			case SDLK_ESCAPE:
+				v->HandleSystemEvent(EXIT, 0, 0);
+				break;
+			case SDLK_RIGHT://right key was pressed
+				if (v->markedSquare.y < 6){
+					v->markedSquare.y++;
+					refreshViewBoard(v);
+				}
+				break;
+			case SDLK_LEFT://left key was pressed
+				if (v->markedSquare.y > 0){
+					v->markedSquare.y--;
+					refreshViewBoard(v);
+				}
+				break;
+			case SDLK_UP:
+				if (v->markedSquare.x > 0){
+					v->markedSquare.x--;
+					refreshViewBoard(v);
+				}
+				break;
+			case SDLK_DOWN:
+				if (v->markedSquare.x  < 6){
+					v->markedSquare.x++;
+					refreshViewBoard(v);
+				}
+				break;
+			default:
+				break;
 			}
+		default:
+			break;
 		}
-	default:
-		break;
 	}
 }
+
+
+
+//void handle_gui_event(SDL_Event *ev, viewBoard* v,modelBoard* model) 
+//{
+//
+//	switch (ev->type)
+//	{
+//	case SDL_QUIT:
+//		v->HandleSystemEvent(EXIT, 0, 0);
+//		break;
+//	case SDL_MOUSEBUTTONUP:
+//		if (model->modelMode ==GAME)
+//		{
+//			if ((ev->button.x > 0 && ev->button.x < 200) && (ev->button.y>0 && ev->button.y<600))
+//				button_click_side_panel(ev->button.x, ev->button.y, v); 
+//				if ((ev->button.x > 200 && ev->button.x < 700) && (ev->button.y>0 && ev->button.y<110))
+//					button_click_top_panel(ev->button.x, ev->button.y, v);
+//		}
+//		if (model->modelMode == EDIT)
+//		{
+//			if ((ev->button.x > 0 && ev->button.x < 200) && (ev->button.y>0 && ev->button.y<600))
+//			button_click_side_panel_new_world(ev->button.x, ev->button.y, v);
+//			if ((ev->button.x > 0 && ev->button.x < 800) && (ev->button.y>0 && ev->button.y<110))
+//			button_click_top_panel_new_world(ev->button.x, ev->button.y, v);
+//		}
+//		if ((ev->button.x > 230 && ev->button.x < 720) && (ev->button.y>120 && ev->button.y<610))
+//			button_click_game_board(ev->button.x, ev->button.y, v);
+//		break;
+//	case SDL_KEYDOWN:
+//		if (model->modelMode == GAME)
+//		{
+//			{
+//			case SDLK_F1:
+//				v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
+//				break;
+//			case SDLK_F2:
+//				v->HandleSystemEvent(RECONFIGURE_CAT, 0, 0);
+//				break;
+//			case SDLK_F3:
+//				v->HandleSystemEvent(RESTART_GAME, 0, 0);
+//				break;
+//			case SDLK_F4:
+//				v->HandleSystemEvent(GO_TO_MAIN_MENU, 0, 0);
+//				break;
+//			case SDLK_ESCAPE:
+//				v->HandleSystemEvent(EXIT, 0, 0);
+//				break;
+//			case SDLK_RSUPER:
+//				//right key was pressed
+//				break;
+//			case SDLK_LSUPER:
+//				//left key was pressed
+//				break;
+//			}
+//		}
+//		
+//		else if (model->modelMode==EDIT)
+//		{
+//			switch (ev->key.keysym.sym)
+//			{
+//			case SDLK_F1:
+//				v->HandleSystemEvent(GO_TO_MAIN_MENU, 0, 0);
+//				break;
+//			}
+//		}
+//	default:
+//		break;
+//	}
+//}
 
 //checking where the left click was in the top panel and send to the controller the logical event
 void button_click_side_panel(Uint16 x, Uint16 y, viewBoard* v)
@@ -232,9 +371,21 @@ void button_click_top_panel_new_world(Uint16 x, Uint16 y, viewBoard* v)
 }
 void button_click_game_board(Uint16 x, Uint16 y, viewBoard* v)
 {
-	v->markedSquare.x =  (x-230) / 70;
-	v->markedSquare.y =   y = (y-120) / 70;
+	v->markedSquare.y =  (x-230) / 70;
+	v->markedSquare.x =   (y-120) / 70;
+	refreshViewBoard(v);
 }
+
+void button_click_game_board_game(Uint16 x, Uint16 y, viewBoard* v)
+{
+	int newX;
+	int newY;
+	newX = (y - 120) / 70;
+	newY = (x - 230) / 70;
+	v->HandleSystemEvent(PLAYER_MOVED_TO,newX, newY);
+}
+
+
 
 Screen* create_topPanel()
 {
@@ -401,7 +552,7 @@ void show_side_bar(Screen* scr)
 //	SDL_Flip(allBoards);
 //}
 
-Screen* create_gridArea(modelBoard* model)
+Screen* create_gridArea(modelBoard* model,viewBoard* v)
 {
 //	type boardTemp[GRID_SIZE][GRID_SIZE];
 //	for (int i = 0; i < GRID_SIZE; i++)
@@ -429,32 +580,38 @@ Screen* create_gridArea(modelBoard* model)
 	scr->screen = allBoards;
 
 	scr->head = create_panel(800, 200, 0, 0, NULL, PANEL, -1, scr, 1);
-
+	
 	for (int i = 0; i < GRID_SIZE; i++)
 	{
 		for (int j = 0; j < GRID_SIZE; j++)
 
 		{
-			switch (model->board[i][j]){
-			case(EMPTY) :
-				add_child(create_panel(70, 70, 70 * j, 70 * i, "images/square.bmp", BUTTON, 0, scr, 0), scr);
-				break;
-			case(CAT_PIC) :
-				add_child(create_panel(70, 70, 70 * j, 70 * i, "images/cat.bmp", BUTTON, 0, scr, 0), scr);
-				break;
-			case(MOUSE_PIC) :
-				add_child(create_panel(70, 70, 70 * j, 70 * i, "images/mouse.bmp", BUTTON, 0, scr, 0), scr);
-				break;
-			case(CHEESE) :
-				add_child(create_panel(70, 70, 70 * j, 70 * i, "images/cheese.bmp", BUTTON, 0, scr, 0), scr);
-				break;
-			case(WALL) :
-				add_child(create_panel(70, 70, 70 * j, 70 * i, "images/wall.bmp", BUTTON, 0, scr, 0), scr);
-				break;
-			default:
-				break;
+			if (i == v->markedSquare.x && j == v->markedSquare.y && model->board[i][j] == EMPTY)
+			{
+				add_child(create_panel(70, 70, 70 * i, 70 * j, "images/red_square.bmp", BUTTON, 0, scr, 0), scr);
 			}
-			
+			else
+			{
+				switch (model->board[i][j]){
+				case(EMPTY) :
+					add_child(create_panel(70, 70, 70 * i, 70 * j, "images/square.bmp", BUTTON, 0, scr, 0), scr);
+					break;
+				case(CAT_PIC) :
+					add_child(create_panel(70, 70, 70 * i, 70 * j, "images/cat.bmp", BUTTON, 0, scr, 0), scr);
+					break;
+				case(MOUSE_PIC) :
+					add_child(create_panel(70, 70, 70 * i, 70 * j, "images/mouse.bmp", BUTTON, 0, scr, 0), scr);
+					break;
+				case(CHEESE) :
+					add_child(create_panel(70, 70, 70 * i, 70 * j, "images/cheese.bmp", BUTTON, 0, scr, 0), scr);
+					break;
+				case(WALL) :
+					add_child(create_panel(70, 70, 70 * i, 70 * j, "images/wall.bmp", BUTTON, 0, scr, 0), scr);
+					break;
+				default:
+					break;
+				}
+			}
 		}
 
 	}
@@ -479,44 +636,45 @@ void show_grid_area(Screen* scr)
 	SDL_Flip(allBoards);
 }
 
-//create the 'create game' board
-result CreateNewWorldBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEvents event, int x, int y),
-	modelBoard* model) {
-
-	result res;
-	Screen* sideBar;
-	Screen* topPanel;
-	Screen* gridArea;
-	*view = (viewBoard*)malloc(sizeof(viewBoard));
-	if (view == NULL)
-	{
-		res.code = -1;
-		res.message = "ERROR: failed to allocate memory for board\n";
-		return res;
-	}
-	(*view)->model = model;
-	(*view)->HandleSystemEvent = HandleSystemEvent;
-	sideBar = create_sideBar(createGame_side_bar_images);
-	topPanel = CreateWorld_topPanel();
-	gridArea = create_gridArea(model);
-
-	if ((sideBar == NULL) || (topPanel == NULL) || (gridArea == NULL))
-	{
-		res.code = -1;
-		res.message = "ERROR: failed to allocate memory for create game window\n";
-		return res;
-	}
-	(*view)->topPanel = topPanel;
-	(*view)->sideBar = sideBar;
-	(*view)->gridArea = gridArea;
-
-	res.code = SUCCESS;
-	return res;
-}
+////create the 'create game' board
+//result CreateNewWorldBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEvents event, int x, int y),
+//	modelBoard* model) {
+//
+//	result res;
+//	Screen* sideBar;
+//	Screen* topPanel;
+//	Screen* gridArea;
+//	*view = (viewBoard*)malloc(sizeof(viewBoard));
+//	if (view == NULL)
+//	{
+//		res.code = -1;
+//		res.message = "ERROR: failed to allocate memory for board\n";
+//		return res;
+//	}
+//	(*view)->model = model;
+//	(*view)->HandleSystemEvent = HandleSystemEvent;
+//	sideBar = create_sideBar(createGame_side_bar_images);
+//	topPanel = CreateWorld_topPanel();
+//	gridArea = create_gridArea(model,*view);
+//
+//	if ((sideBar == NULL) || (topPanel == NULL) || (gridArea == NULL))
+//	{
+//		res.code = -1;
+//		res.message = "ERROR: failed to allocate memory for create game window\n";
+//		return res;
+//	}
+//	(*view)->topPanel = topPanel;
+//	(*view)->sideBar = sideBar;
+//	(*view)->gridArea = gridArea;
+//
+//	res.code = SUCCESS;
+//	return res;
+//}
 
 //create the 'create game' top_panel
-Screen* CreateWorld_topPanel()
+Screen* CreateWorld_topPanel(int worldsndex)
 {
+
 	Screen* scr = (Screen*)malloc(sizeof(Screen));
 	if (scr == NULL)
 	{
@@ -524,6 +682,7 @@ Screen* CreateWorld_topPanel()
 		printf("ERROR: failed to allocate memory for screen\n");
 		return NULL;
 	}
+	creatGame_top_panel[0] = creatGame_titels[worldsndex];
 	scr->screen = allBoards;
 	scr->head = create_panel(800, 200, 0, 0, NULL, PANEL, -1, scr, 1);
 	int yOffset = 0;
@@ -619,27 +778,33 @@ result refreshViewBoard(viewBoard* view) {
 	// refresh the grid
 	Panel *item = view->gridArea->head->next;
 
-	for (int j = 0 ; j < GRID_SIZE; j++) {
-		for (int i = 0; i < GRID_SIZE; i ++) {
-
-			switch (view->model->board[i][j]) {
+	for (int i = 0 ; i < GRID_SIZE; i++) {
+		for (int j = 0; j < GRID_SIZE; j ++) {
+			if (i == view->markedSquare.x && j == view->markedSquare.y && view->model->board[i][j] == EMPTY)
+			{
+				update_panel_picture(item, "images/red_square.bmp");
+			}
+			else
+			{
+				switch (view->model->board[i][j]) {
 				case(EMPTY) :
-					update_panel_picture(item,"images/square.bmp");
+					update_panel_picture(item, "images/square.bmp");
 					break;
 				case(CAT_PIC) :
-					update_panel_picture(item,"images/cat.bmp");
+					update_panel_picture(item, "images/cat.bmp");
 					break;
 				case(MOUSE_PIC) :
-					update_panel_picture(item,"images/mouse.bmp");
+					update_panel_picture(item, "images/mouse.bmp");
 					break;
 				case(CHEESE) :
-					update_panel_picture(item,"images/cheese.bmp");
+					update_panel_picture(item, "images/cheese.bmp");
 					break;
 				case(WALL) :
-					update_panel_picture(item,"images/wall.bmp");
+					update_panel_picture(item, "images/wall.bmp");
 					break;
 				default:
 					break;
+				}
 			}
 			item = item->next;
 		}

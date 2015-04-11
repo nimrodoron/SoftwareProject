@@ -4,9 +4,10 @@
 #include "../infrastructure/gui/widgets.h"
 
 
-#define  NUMBER_BUTTONS_TOP_PANEL  6
+#define NUMBER_BUTTONS_TOP_PANEL  6
 #define NUMBER_BUTTONS_SIDE_BAR 5
 #define NUMBER_BUTTONS_TOP_PANEL_CREATE_GAME 4
+#define NUMBER_WORLD_TITELS 6
 
 
 // all the possible events in the view
@@ -22,7 +23,8 @@ typedef enum {
 	PLACE_CAT,
 	PLACE_CHEESE,
 	PLACE_WALL,
-	PLACE_EMPTY_SPACE
+	PLACE_EMPTY_SPACE,
+	PLAYER_MOVED_TO,
 }viewBoardEvents;
 
 typedef struct viewBoard{
@@ -42,7 +44,7 @@ SDL_Surface* allBoards;
 // update the fields of the struct and return result
 // view parameter is NULL
 result createViewBoard(viewBoard** view, void (*HandleSystemEvent) (viewBoardEvents event, int x, int y),
-					   modelBoard* model);
+					   modelBoard* model,int worldsIndex);
 
 // This function show the view according to the model
 // and than wait for SDL events than pass them to the controller
@@ -68,7 +70,10 @@ void show_top_panel(Screen* scr);
 void show_side_bar(Screen* scr);
 void show_grid_area(Screen* scr);
 Screen* create_sideBar(char** imagesArr);
-Screen* create_gridArea();
+Screen* create_gridArea(modelBoard* model, viewBoard* v);
+result CreateNewWorldBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEvents event, int x, int y), modelBoard* model);
+Screen* CreateWorld_topPanel(int worldsIndex);
+void show_CreateWorld_top_panel(Screen* scr);
 void apply_surfaceBoard(int x, int y, SDL_Surface* source, SDL_Surface* destination);
 void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model);
 void mainviewboard();
@@ -77,6 +82,5 @@ void button_click_side_panel_new_world(Uint16 x, Uint16 y, viewBoard* v);
 void button_click_top_panel(Uint16 x, Uint16 y, viewBoard* v);
 void button_click_top_panel_new_world(Uint16 x, Uint16 y, viewBoard* v);
 void button_click_game_board(Uint16 x, Uint16 y, viewBoard* v);
-result CreateNewWorldBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEvents event, int x, int y),modelBoard* model);
-Screen* CreateWorld_topPanel();
-void show_CreateWorld_top_panel(Screen* scr);
+void button_click_game_board_game(Uint16 x, Uint16 y, viewBoard* v);
+

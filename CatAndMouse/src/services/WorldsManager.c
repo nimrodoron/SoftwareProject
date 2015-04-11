@@ -8,7 +8,7 @@ result LoadWorldFromFile(modelBoard* model, char* name) {
 
 
     FILE *fp = NULL;
-    char* input;
+	char input[100];
     char c;
 
     char buf[100] = "";
@@ -45,12 +45,12 @@ result LoadWorldFromFile(modelBoard* model, char* name) {
     			case(CAT_CELL):
     				model->board[row][col] = CAT_PIC;
     				model->players[CAT].playerPos.x = row;
-    				model->players[CAT].playerPos.x = col;
+    				model->players[CAT].playerPos.y = col;
     				break;
     			case(MOUSE_CELL):
 					model->board[row][col] = MOUSE_PIC;
 					model->players[MOUSE].playerPos.x = row;
-					model->players[MOUSE].playerPos.x = col;
+					model->players[MOUSE].playerPos.y = col;
 					break;
     			case(CHEESE_CELL):
     				model->board[row][col] = CHEESE;
@@ -104,7 +104,7 @@ result SaveWorldToFile(modelBoard* model, char* name) {
     for (int row = 0; row < GRID_SIZE; row++) {
     	fprintf(fp, "%c", '\n');
     	for(int col = 0; col < GRID_SIZE; col++) {
-    		switch (model->board[col][row]) {
+    		switch (model->board[row][col]) {
     			case(WALL):
 					fprintf(fp, "%c", 'W');
     				break;

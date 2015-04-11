@@ -2,7 +2,7 @@
 #include "../services/WorldsManager.h"
 
 result createBoardController(mode Mode, char* name, player mouse,
-							 player cat, playerAnimal currentPlayer) {
+							 player cat, playerAnimal currentPlayer, int worldsIndex) {
 	result res;
 
 	// Create singelton controller
@@ -43,7 +43,7 @@ result createBoardController(mode Mode, char* name, player mouse,
 	controller->model->name = name;
 
 	// create the view
-	res = createViewBoard(&(controller->view), HandleSystemEvent, controller->model);
+	res = createViewBoard(&(controller->view), HandleSystemEvent, controller->model,worldsIndex);
 	if (!res.code)
 	 {
 		freeBoardController();
@@ -112,11 +112,17 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 		  case(PLACE_EMPTY_SPACE):
 			placeEmpty(x,y);
 		  	break;
-		  case(SAVE_WORLD):
-			//TEMP
-				if (checkIfCanSaveModel(controller->model).code)
-					SaveWorldToFile(controller->model,"world_5.txt");
+		  case(SAVE_WORLD) :
+			  //TEMP
+			  if (checkIfCanSaveModel(controller->model).code)
+				  save_world(controller->model);
+			  showViewBoard(controller->view, controller->model);
+					//SaveWorldToFile(controller->model,"world_5.txt");
 		  	  	  break;
+		  case (PLAYER_MOVED_TO) :
+			  //nimrod fill
+			  break;
+	
 		default:
 			break;
 	}

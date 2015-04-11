@@ -15,6 +15,9 @@ int catLevel;
 int mouseLevel;
 int worldNumber;
 
+#define NUMBER_OF_WORLDS 6
+char* worlds[NUMBER_OF_WORLDS];
+
 /*for main menu*/
 #define  NUMBER_BUTTONS_MAIN_MENU  6
 extern char* main_menu_buttons_image[NUMBER_BUTTONS_MAIN_MENU];
@@ -61,7 +64,7 @@ extern int stateId_edit_game[NUMBER_BUTTONS_LOAD_GAME_MENU];
 
  //int currentStateIndex;
 //char* currentState;
-#define NUMBER_MENUES 6
+#define NUMBER_MENUES 8
 View* states[NUMBER_MENUES];
 /*supposed to be {main_menu, choose your cat, choose your mouse, choose cat skill level, load game, create game, edit game, quit}*/
 
@@ -81,6 +84,8 @@ void mainviewboard(playerType catType, playerType mouseType, int catLevel, int m
 void reconfigureMouseFunction(int level, playerType type, modelBoard* model);
 void reconfigureCatFunction(int level, playerType type, modelBoard* model);
 void GoToMainMenu();
+void save(int worldsIndex);
+void save_world(modelBoard* model);
 
 
 #endif

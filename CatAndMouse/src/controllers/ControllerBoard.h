@@ -16,7 +16,7 @@ controllerBoard* controller;
 
 // Create new controller if not exist
 result createBoardController(mode Mode, char* name, player player1,
-		 	 	 	 	 	 player player2, playerAnimal currentPlayer);
+		 	 	 	 	 	 player player2, playerAnimal currentPlayer,int worldsIndex);
 
 // Show the view of the controller
 result showView();

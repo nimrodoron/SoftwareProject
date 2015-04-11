@@ -4,12 +4,16 @@
 #include "../models/ModelBoard.h"
 #include "ControllerBoard.h"
 
-int loadGame = 1;
+int loadGame = 1; //indicate that we are/aren't in Load Game menu
+int WorldToOpen = 1; // indicate which world is loaded
+int worldsMenus = 1; //indicate that we are in worlds menus: save game, load game, edit game
 /*for main menu*/
+
+char* worlds[NUMBER_OF_WORLDS] = { NULL, "world_1.txt", "world_2.txt", "world_3.txt", "world_4.txt", "world_5.txt" };
 
 char* main_menu_buttons_image[NUMBER_BUTTONS_MAIN_MENU] = { "images/cat_mouse_title.bmp", "images/new_game.bmp", "images/load_game.bmp", "images/create_game.bmp", "images/edit_game.bmp", "images/quit.bmp" }; /*the images in the main menu*/
 char* main_menu_buttons_image_chosen[NUMBER_BUTTONS_MAIN_MENU] = { "images/cat_mouse_title.bmp", "images/new_game_chosen.bmp", "images/load_game_chosen.bmp", "images/create_game_chosen.bmp", "images/edit_game_chosen.bmp", "images/quit_chosen.bmp" };
-int stateId_main_menu[NUMBER_BUTTONS_MAIN_MENU] = { 0, 1, 19, 18, 19, 7 };
+int stateId_main_menu[NUMBER_BUTTONS_MAIN_MENU] = { 0, 1, 19, 18, 24, 7 };
 
 /*for choose cat menu*/
 char* choose_your_cat_menu_buttons_image[NUMBER_BUTTONS_CHOOSE_CAT_MENU] = { "images/choose_your_cat_title.bmp", "images/human.bmp", "images/machine.bmp", "images/back.bmp" }; /*the images in the choose cat menu menu*/
@@ -36,21 +40,23 @@ int stateId_choose_mouse_skill_level[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU] = { 
 /*for load game menu*/
 char* load_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/Load_game_title.bmp", "images/world_1.bmp", "images/done.bmp", "images/back.bmp", "images/world_1.bmp", "images/world_2.bmp", "images/world_3.bmp", "images/world_4.bmp", "images/world_5.bmp" };
 char* load_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/Load_game_title.bmp", "images/world_1_chosen.bmp", "images/done_chosen.bmp", "images/back_chosen.bmp", "images/world_1_chosen.bmp", "images/world_2_chosen.bmp", "images/world_3_chosen.bmp", "images/world_4_chosen.bmp", "images/world_5_chosen.bmp" };
-int stateId_load_game[NUMBER_BUTTONS_LOAD_GAME_MENU] = { 5, 20,20, 0 };
+int stateId_load_game[NUMBER_BUTTONS_LOAD_GAME_MENU] = { 5, 22,20, 0 };
 
 
 char* cant_save_world_images[5] = { "images/cant_save_invalid_world_title.bmp", "images/cat_is_missing.bmp", "images/mosue_is_missing.bmp", "images/cheese_is_missing.bmp", "images/back_chosen.bmp" };
-/*for save game menu*/
-char* save_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/save-world_title.bmp", "images/world_1.bmp", "images/done.bmp", "images/back.bmp", "images/world_1.bmp", "images/world_2.bmp", "images/world_3.bmp", "images/world_4.bmp", "images/world_5.bmp" };
-char* save_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/save-world_title.bmp", "images/world_1_chosen.bmp", "images/done_chosen.bmp", "images/back_chosen.bmp", "images/world_1_chosen.bmp", "images/world_2_chosen.bmp", "images/world_3_chosen.bmp", "images/world_4_chosen.bmp", "images/world_5_chosen.bmp" };
-//int stateId_save_game[NUMBER_BUTTONS_LOAD_GAME_MENU] = { 5, 20, 20, 0 };
 
 /*for edit game menu*/
 char* edit_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/edit_game_title.bmp", "images/world_1.bmp", "images/done.bmp", "images/back.bmp", "images/world_1.bmp", "images/world_2.bmp", "images/world_3.bmp", "images/world_4.bmp", "images/world_5.bmp" };
 char* edit_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/edit_game_title.bmp", "images/world_1_chosen.bmp", "images/done_chosen.bmp", "images/back_chosen.bmp", "images/world_1_chosen.bmp", "images/world_2_chosen.bmp", "images/world_3_chosen.bmp", "images/world_4_chosen.bmp", "images/world_5_chosen.bmp" };
-//int stateId_edit_game[NUMBER_BUTTONS_LOAD_GAME_MENU] = { 5, 20, 20, 0 };
+int stateId_edit_game[NUMBER_BUTTONS_LOAD_GAME_MENU] = { 6, 22, 23, 0 };
 
-//resize the array!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/*for save game menu*/
+char* save_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/save-world_title.bmp", "images/world_1.bmp", "images/done.bmp", "images/back.bmp", "images/world_1.bmp", "images/world_2.bmp", "images/world_3.bmp", "images/world_4.bmp", "images/world_5.bmp" };
+char* save_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/save-world_title.bmp", "images/world_1_chosen.bmp", "images/done_chosen.bmp", "images/back_chosen.bmp", "images/world_1_chosen.bmp", "images/world_2_chosen.bmp", "images/world_3_chosen.bmp", "images/world_4_chosen.bmp", "images/world_5_chosen.bmp" };
+int stateId_save_game[NUMBER_BUTTONS_LOAD_GAME_MENU] = { 7, 22, 25, 12 };
+
+
+
 
 void initialize_states(){
 	states[0] = build_all_view(main_menu_buttons_image, main_menu_buttons_image_chosen, stateId_main_menu, 1, -1, NUMBER_BUTTONS_MAIN_MENU);
@@ -59,6 +65,9 @@ void initialize_states(){
 	states[3] = build_all_view(choose_cat_skills_menu_buttons_image, choose_cat_skills_menu_buttons_image_chosen, stateId_choose_cat_skill_level, 1, 5, NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU);
 	states[4] = build_all_view(choose_mouse_skills_menu_buttons_image, choose_mouse_skills_menu_buttons_image_chosen, stateId_choose_mouse_skill_level, 1, 5, NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU);
 	states[5] = build_all_view(load_game_menu_buttons_image, load_game_menu_buttons_image_chosen, stateId_load_game, 1, 1, NUMBER_BUTTONS_LOAD_GAME_MENU);
+	states[6] = build_all_view(edit_game_menu_buttons_image, edit_game_menu_buttons_image_chosen, stateId_edit_game, 1, 1, NUMBER_BUTTONS_LOAD_GAME_MENU);
+	states[7] = build_all_view(save_game_menu_buttons_image, save_game_menu_buttons_image_chosen, stateId_save_game, 1, 1, NUMBER_BUTTONS_LOAD_GAME_MENU);
+	
 }
 
 void while_handle_event()
@@ -181,17 +190,6 @@ void button_click(Uint16 x, Uint16 y,View* v)
 							for (int i = 0; i < markedButton; i++){
 								current = current->next;
 							}
-							//if ((level =!-1) && (markedButtonIndex == 1)){
-							//	
-							//	current->componentProps.surface = SDL_LoadBMP(v->model->images[markedButton + level + 1]); //update the button that was 'chosen' to regular
-							//	//button->componentProps.surface = SDL_LoadBMP(v->model->chosen_images[markedButtonIndex++]); //update the button that was regular to 'chosen'
-							//}
-							//else
-							//{
-							//	current->componentProps.surface = SDL_LoadBMP(v->model->images[markedButton]); //update the button that was 'chosen' to regular
-							//	button->componentProps.surface = SDL_LoadBMP(v->model->chosen_images[markedButtonIndex++]); //update the button that was regular to 'chosen'
-							//}
-
 							if (level != -1)
 							{
 								if ((markedButton == 1)&&(markedButtonIndex !=1))//the skill button was pressed
@@ -231,7 +229,7 @@ void quit_main_menu()
 void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 {
 	playerAnimal editedPlayer = MOUSE;
-
+	
 
 	switch(button->nextState){
 	case 0: // if the back was pressed from the choose your cat menu
@@ -245,10 +243,12 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 			loadGame = 1;
 			currentView = states[0];
 		}
+		worldsMenus = 1;
 		draw_screen("Cat&Mouse", currentView->screen);
 		break;
 	case 20: //load game was pressed, update the flag and then go to choose your cat menu
 		loadGame = 0; 
+		worldsMenus = 1;
 	case 1: // from main menu go he choose your cat menu
 		currentView = states[1];
 		draw_screen("Cat&Mouse", currentView->screen);
@@ -256,9 +256,18 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 	case 19://load game was pressed
 		currentView = states[5];
 		draw_screen("Cat&Mouse", currentView->screen);
+		worldsMenus =0;
+		break;
+	case 23://fi the done button was pressed from the edit mode menu
+		mainviewboard(cat, mouse, catLevel, mouseLevel, EDIT, WorldToOpen);
+		break;
+	case 24: //the edit game was preesed from the main menu 
+		currentView = states[6];
+		draw_screen("Cat&Mouse", currentView->screen);
+		worldsMenus = 0;
 		break;
 	case 18: //if create game was pressed from the main menu
-		mainviewboard(cat, mouse, catLevel, mouseLevel, EDIT, NULL);
+		mainviewboard(cat, mouse, catLevel, mouseLevel, EDIT,0);
 		break;
 	case 9: //in 'choose your mouse menu' human was chosen and then go to step 5 to the main game screen
 		mouse = USER;
@@ -269,7 +278,7 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		if (mouse == USER){
 			mouseLevel = -1;
 		}
-		mainviewboard(cat,mouse,catLevel,mouseLevel,GAME,NULL);
+		mainviewboard(cat, mouse, catLevel, mouseLevel, GAME, WorldToOpen);
 		break;
 	case 12: //selecting back from type selection menu for the mouse in reconfigure mouse mode
 		quit = 1;
@@ -316,29 +325,31 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		currentView->model->level = 5;
 		draw_screen("Cat&Mouse", currentView->screen);
 		break;
+	case 22: //we are in the worlds menus: load game, save game, edit game
+		worldsMenus = 0;
 	case 11: //level button was pressed from 'choose your cat skill level menu'
 		editedPlayer = CAT;
 	case 10: //level button was pressed for 'choose your mouse skill level menu'
 		if (v->model->level!=-1)
 		{
 			if (x >= button->componentProps.dest_rect->x+147)
-							if (x <= button->componentProps.dest_rect->x + button->componentProps.dest_rect->w)
-							{
-								if (y >= button->componentProps.dest_rect->y)
-									if (y <= button->componentProps.dest_rect->y + button->componentProps.dest_rect->h -36)
-									{
+				if (x <= button->componentProps.dest_rect->x + button->componentProps.dest_rect->w)
+				{
+					if (y >= button->componentProps.dest_rect->y)
+						if (y <= button->componentProps.dest_rect->y + button->componentProps.dest_rect->h - 36)
+						{
 
-										handale_up_level_button(button,v);
-									}
-									else
-									{
-									if(y >= button->componentProps.dest_rect->y+26)
-										if (y <= button->componentProps.dest_rect->y + button->componentProps.dest_rect->h)
-									{
-										handale_down_level_button(button,v);
-									}
-									}
+							handale_up_level_button(button, v);
+						}
+						else
+						{
+							if (y >= button->componentProps.dest_rect->y + 26)
+								if (y <= button->componentProps.dest_rect->y + button->componentProps.dest_rect->h)
+								{
+									handale_down_level_button(button, v);
 								}
+						}
+				}
 			if (editedPlayer == CAT)
 			{
 				catLevel = v->model->level;
@@ -347,6 +358,11 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 			{
 				mouseLevel = v->model->level;
 			}
+			if (worldsMenus == 0)
+				WorldToOpen = v->model->level;
+		break;
+	case 25://if the done button was pressed in the save world menu
+		save(WorldToOpen);
 		break;
 	default:
 	currentView = states[button->nextState];
@@ -359,12 +375,25 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 
 void handale_up_level_button(Panel* button,View* v)
 {
-	if(v->model->level<9){
-		v->model->level++;
-		char* chosenImagePath = v->model->chosen_images [currentView->model->level +4-1];
-		v->screen->head->next->next->componentProps.surface = SDL_LoadBMP(chosenImagePath);// the next chosen image from the array
-		draw_screen("Cat&Mouse", v->screen);
-}
+	if (worldsMenus == 0)
+	{
+		if (v->model->level<5){
+			v->model->level++;
+			char* chosenImagePath = v->model->chosen_images[currentView->model->level + 4 - 1];
+			v->screen->head->next->next->componentProps.surface = SDL_LoadBMP(chosenImagePath);// the next chosen image from the array
+			draw_screen("Cat&Mouse", v->screen);
+		}
+	}
+	else
+	{
+		if (v->model->level<9){
+			v->model->level++;
+			char* chosenImagePath = v->model->chosen_images[currentView->model->level + 4 - 1];
+			v->screen->head->next->next->componentProps.surface = SDL_LoadBMP(chosenImagePath);// the next chosen image from the array
+			draw_screen("Cat&Mouse", v->screen);
+		}
+	}
+	
 
 }
 void handale_down_level_button(Panel* button, View* v)
@@ -378,34 +407,29 @@ void handale_down_level_button(Panel* button, View* v)
 
 }
 
-void mainviewboard(playerType catType, playerType mouseType, int catLevel, int mouseLevel,mode mod,char* filename)
+void mainviewboard(playerType catType, playerType mouseType, int catLevel, int mouseLevel,mode mod,int worldsIndex)
 {
-
+	char* filename = worlds[worldsIndex];
 	// Example show board on edit mode (create)
 	player cat;
 	player mouse;
-	mouse.type = COMPUTER;
-	mouse.level = 2;
-	cat.type = USER;
-	cat.level = -1;
+	mouse.type = mouseType;
+	mouse.level = mouseLevel;
+	cat.type = catType;
+	cat.level = catLevel;
 
 	// Example show board on edit mode (edit)
+	//creat need to get NULL
+	//edit will get the text file
 	if (mod == EDIT)
 	{
-		createBoardController(EDIT, NULL, cat, mouse, NONE);
+		createBoardController(EDIT, filename, cat, mouse, NONE,worldsIndex);
 
 	}// Example of Load game (new game is the same with world_1.txt)
 	else if (mod == GAME){
-		createBoardController(GAME, "world_2.txt", mouse, cat, MOUSE);
+		createBoardController(GAME, filename, mouse, cat, MOUSE, worldsIndex);
 	}
 	
-	
-
-	
-
-	
-	
-
 	 showView();
 }
 
@@ -487,8 +511,31 @@ void GoToMainMenu()
 
 	currentView = states[currentStateIndex];
 	draw_screen("Cat&Mouse", currentView->screen);
+	//restore the defult states
 	quit = 0;
+	WorldToOpen = 1;
+	loadGame = 1; 
+	worldsMenus = 1;
+
 	//While the user hasn't quit
 	while_handle_event();
+}
+
+void save_world(modelBoard* model)
+{
+	quit = 0;
+	WorldToOpen = 1;
+	//loadGame = 1;
+	worldsMenus = 0;
+	states[7] = build_all_view(save_game_menu_buttons_image, save_game_menu_buttons_image_chosen, stateId_save_game, 1, 1, NUMBER_BUTTONS_LOAD_GAME_MENU);
+	currentView = states[7];
+	draw_screen("Cat&Mouse", currentView->screen);
+	while_handle_event();
+}
+void save(int worldsIndex)
+{
+	char* filename = worlds[worldsIndex];
+	SaveWorldToFile(controller->model, filename);
+	mainviewboard(cat, mouse, catLevel, mouseLevel, EDIT, worldsIndex);
 }
 
