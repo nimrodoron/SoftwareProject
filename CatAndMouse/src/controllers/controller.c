@@ -33,10 +33,24 @@ char* choose_mouse_skills_menu_buttons_image_chosen[NUMBER_BUTTONS_MOUSE_SKILL_L
 int stateId_choose_mouse_skill_level[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU] = { 4, 10, 5, 2 };
 
 
-/*for choose load game menu*/
+/*for load game menu*/
 char* load_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/Load_game_title.bmp", "images/world_1.bmp", "images/done.bmp", "images/back.bmp", "images/world_1.bmp", "images/world_2.bmp", "images/world_3.bmp", "images/world_4.bmp", "images/world_5.bmp" };
 char* load_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/Load_game_title.bmp", "images/world_1_chosen.bmp", "images/done_chosen.bmp", "images/back_chosen.bmp", "images/world_1_chosen.bmp", "images/world_2_chosen.bmp", "images/world_3_chosen.bmp", "images/world_4_chosen.bmp", "images/world_5_chosen.bmp" };
 int stateId_load_game[NUMBER_BUTTONS_LOAD_GAME_MENU] = { 5, 20,20, 0 };
+
+
+char* cant_save_world_images[5] = { "images/cant_save_invalid_world_title.bmp", "images/cat_is_missing.bmp", "images/mosue_is_missing.bmp", "images/cheese_is_missing.bmp", "images/back_chosen.bmp" };
+/*for save game menu*/
+char* save_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/save-world_title.bmp", "images/world_1.bmp", "images/done.bmp", "images/back.bmp", "images/world_1.bmp", "images/world_2.bmp", "images/world_3.bmp", "images/world_4.bmp", "images/world_5.bmp" };
+char* save_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/save-world_title.bmp", "images/world_1_chosen.bmp", "images/done_chosen.bmp", "images/back_chosen.bmp", "images/world_1_chosen.bmp", "images/world_2_chosen.bmp", "images/world_3_chosen.bmp", "images/world_4_chosen.bmp", "images/world_5_chosen.bmp" };
+//int stateId_save_game[NUMBER_BUTTONS_LOAD_GAME_MENU] = { 5, 20, 20, 0 };
+
+/*for edit game menu*/
+char* edit_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/edit_game_title.bmp", "images/world_1.bmp", "images/done.bmp", "images/back.bmp", "images/world_1.bmp", "images/world_2.bmp", "images/world_3.bmp", "images/world_4.bmp", "images/world_5.bmp" };
+char* edit_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/edit_game_title.bmp", "images/world_1_chosen.bmp", "images/done_chosen.bmp", "images/back_chosen.bmp", "images/world_1_chosen.bmp", "images/world_2_chosen.bmp", "images/world_3_chosen.bmp", "images/world_4_chosen.bmp", "images/world_5_chosen.bmp" };
+//int stateId_edit_game[NUMBER_BUTTONS_LOAD_GAME_MENU] = { 5, 20, 20, 0 };
+
+//resize the array!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 void initialize_states(){
 	states[0] = build_all_view(main_menu_buttons_image, main_menu_buttons_image_chosen, stateId_main_menu, 1, -1, NUMBER_BUTTONS_MAIN_MENU);
