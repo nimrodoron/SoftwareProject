@@ -97,9 +97,26 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 		case(SPACE):
 			//fill
 			break;
-		case (CLICK_ON_BOARD) :
-			//nimrod  fill
+		case (PLACE_MOUSE):
+			placeMouse(x,y);
 			break;
+		case (PLACE_CAT):
+			placeCat(x,y);
+			break;
+		case(PLACE_CHEESE):
+			placeCheese(x,y);
+			break;
+		 case(PLACE_WALL):
+			placeWall(x,y);
+		 	break;
+		  case(PLACE_EMPTY_SPACE):
+			placeEmpty(x,y);
+		  	break;
+		  case(SAVE_WORLD):
+			//TEMP
+				if (checkIfCanSaveModel(controller->model).code)
+					SaveWorldToFile(controller->model,"world_5.txt");
+		  	  	  break;
 		default:
 			break;
 	}
@@ -113,6 +130,14 @@ void createNewModel() {
 			controller->model->board[i][j] = EMPTY;
 		}
 	}
+	controller->model->cheesePos.x = UNVALID_POS;
+	controller->model->cheesePos.y = UNVALID_POS;
+	controller->model->players[MOUSE].playerPos.x = UNVALID_POS;
+	controller->model->players[MOUSE].playerPos.y = UNVALID_POS;
+	controller->model->players[CAT].playerPos.x = UNVALID_POS;
+	controller->model->players[CAT].playerPos.y = UNVALID_POS;
+	controller->model->currentPlayer = -1;
+	controller->model->movesBeforeTie = 20;
 }
 
 player createPlayer(playerType type, int level)
@@ -144,3 +169,133 @@ void updateModelBoardCat(playerType cat, int catLevel)
 void restartGame() {
 	LoadWorldFromFile(controller->model, controller->model->name);
 }
+
+void placeMouse(int x, int y) {
+
+	checkCurrentPos(x,y);
+
+	if (x != UNVALID_POS && y != UNVALID_POS) {
+		controller->model->board[x][y] = MOUSE_PIC;
+
+		if (controller->model->players[MOUSE].playerPos.x != x ||
+				controller->model->players[MOUSE].playerPos.y != y) {
+
+			if (controller->model->players[MOUSE].playerPos.x != UNVALID_POS &&
+					controller->model->players[MOUSE].playerPos.y != UNVALID_POS)
+				controller->model->board[controller->model->players[MOUSE].playerPos.x][controller->model->players[MOUSE].playerPos.y] = EMPTY;
+
+			controller->model->players[MOUSE].playerPos.x = x;
+			controller->model->players[MOUSE].playerPos.y = y;
+		}
+	}
+
+	controller->model->currentPlayer = MOUSE;
+	controller->view->model = controller->model;
+	refreshViewBoard(controller->view);
+}
+
+void placeCat(int x, int y) {
+
+	checkCurrentPos(x,y);
+
+	if (x != UNVALID_POS && y != UNVALID_POS) {
+		controller->model->board[x][y] = CAT_PIC;
+
+		if (controller->model->players[CAT].playerPos.x != x ||
+				controller->model->players[CAT].playerPos.y != y) {
+
+			if (controller->model->players[CAT].playerPos.x != UNVALID_POS &&
+					controller->model->players[CAT].playerPos.y != UNVALID_POS)
+				controller->model->board[controller->model->players[CAT].playerPos.x][controller->model->players[CAT].playerPos.y] = EMPTY;
+
+			controller->model->players[CAT].playerPos.x = x;
+			controller->model->players[CAT].playerPos.y = y;
+		}
+	}
+
+	controller->model->currentPlayer = CAT;
+	controller->view->model = controller->model;
+	refreshViewBoard(controller->view);
+}
+
+void checkCurrentPos(int x,int y) {
+	if (controller->model->board[x][y] == MOUSE_PIC) {
+		controller->model->players[MOUSE].playerPos.x = UNVALID_POS;
+		controller->model->players[MOUSE].playerPos.y = UNVALID_POS;
+		if (controller->model->currentPlayer == MOUSE)
+			controller->model->currentPlayer = -1;
+	}
+	if (controller->model->board[x][y] == CAT_PIC) {
+		controller->model->players[CAT].playerPos.x = UNVALID_POS;
+		controller->model->players[CAT].playerPos.y = UNVALID_POS;
+		if (controller->model->currentPlayer == CAT)
+			controller->model->currentPlayer = -1;
+	}
+	if (controller->model->board[x][y] == CHEESE) {
+		controller->model->cheesePos.x = UNVALID_POS;
+		controller->model->cheesePos.y = UNVALID_POS;
+	}
+}
+
+void placeCheese(int x, int y) {
+	checkCurrentPos(x,y);
+
+	if (x != UNVALID_POS && y != UNVALID_POS) {
+		controller->model->board[x][y] = CHEESE;
+
+		if (controller->model->cheesePos.x != x ||
+				controller->model->cheesePos.y != y) {
+
+			if (controller->model->cheesePos.x != UNVALID_POS &&
+					controller->model->cheesePos.y != UNVALID_POS)
+				controller->model->board[controller->model->cheesePos.x][controller->model->cheesePos.y] = EMPTY;
+
+			controller->model->cheesePos.x = x;
+			controller->model->cheesePos.y = y;
+		}
+	}
+
+	controller->view->model = controller->model;
+	refreshViewBoard(controller->view);
+}
+void placeWall(int x, int y) {
+	checkCurrentPos(x,y);
+
+	controller->model->board[x][y] = WALL;
+
+	controller->view->model = controller->model;
+	refreshViewBoard(controller->view);
+}
+void placeEmpty(int x, int y) {
+	checkCurrentPos(x,y);
+
+	controller->model->board[x][y] = EMPTY;
+
+	controller->view->model = controller->model;
+	refreshViewBoard(controller->view);
+}
+
+result checkIfCanSaveModel(modelBoard* model) {
+	result res;
+	res.code = ERROR;
+
+	if (model->currentPlayer == -1) {
+		res.message = "No Current Player";
+		return res;
+	}
+	if (model->cheesePos.x == UNVALID_POS || model->cheesePos.y == UNVALID_POS) {
+		res.message = "No Cheese";
+	}
+	if (model->players[MOUSE].playerPos.x == UNVALID_POS || model->players[MOUSE].playerPos.y == UNVALID_POS) {
+		res.message = "No Mouse";
+	}
+
+	if (model->players[CAT].playerPos.x == UNVALID_POS || model->players[CAT].playerPos.y == UNVALID_POS) {
+		res.message = "No Cat";
+	}
+
+	res.code = SUCCESS;
+	return res;
+}
+
+

@@ -33,6 +33,8 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	}
 	(*view)->model = model;
 	(*view)->HandleSystemEvent = HandleSystemEvent;
+	(*view)->markedSquare.x = UNVALID_POS;
+	(*view)->markedSquare.x = UNVALID_POS;
 	if (model->modelMode == GAME)
 	{
 		sideBar = create_sideBar(side_bar_images);
@@ -44,7 +46,7 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	{
 		sideBar = create_sideBar(createGame_side_bar_images);
 		topPanel = CreateWorld_topPanel();
-		gridArea = create_gridArea();
+		gridArea = create_gridArea(model);
 	}
 
 
@@ -129,7 +131,6 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v,modelBoard* model)
 	case SDL_KEYDOWN:
 		if (model->modelMode == GAME)
 		{
-			switch (ev->key.keysym.sym)
 			{
 			case SDLK_F1:
 				v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
@@ -194,15 +195,15 @@ void button_click_side_panel_new_world(Uint16 x, Uint16 y, viewBoard* v)
 	if (x > 15 && x < 197)
 	{
 		if (y>150 && y < 210)
-			v->HandleSystemEvent(PLACE_MOUSE, x, y);
+			v->HandleSystemEvent(PLACE_MOUSE, v->markedSquare.x, v->markedSquare.y);
 		else if (y>150 + 88 && y < 210 + 88)
-			v->HandleSystemEvent(PLACE_CAT, x, y);
+			v->HandleSystemEvent(PLACE_CAT, v->markedSquare.x, v->markedSquare.y);
 		else if (y>150 + 88 * 2 && y < 210 + 88 * 2)
-			v->HandleSystemEvent(PLACE_CHEESE, x, y);
+			v->HandleSystemEvent(PLACE_CHEESE, v->markedSquare.x, v->markedSquare.y);
 		else if (y>150 + 88 * 3 && y < 210 + 88 * 3)
-			v->HandleSystemEvent(PLACE_WALL, x, y);
+			v->HandleSystemEvent(PLACE_WALL, v->markedSquare.x, v->markedSquare.y);
 		else if (y>150 + 88 * 4 && y < 210 + 88 * 4)
-			v->HandleSystemEvent(PLACE_EMPTY_SPACE, x, y);
+			v->HandleSystemEvent(PLACE_EMPTY_SPACE, v->markedSquare.x, v->markedSquare.y);
 	}
 
 }
@@ -231,8 +232,8 @@ void button_click_top_panel_new_world(Uint16 x, Uint16 y, viewBoard* v)
 }
 void button_click_game_board(Uint16 x, Uint16 y, viewBoard* v)
 {
-	v->HandleSystemEvent(CLICK_ON_BOARD, x, y);
-	//fill
+	v->markedSquare.x =  (x-230) / 70;
+	v->markedSquare.y =   y = (y-120) / 70;
 }
 
 Screen* create_topPanel()
@@ -610,5 +611,39 @@ void convert_model(viewBoard* view)
 	char* try = top_panel_animal_move[view->model->currentPlayer];
 	displayed_top_panel_images[0] = try;
 
+}
+
+
+result refreshViewBoard(viewBoard* view) {
+
+	// refresh the grid
+	Panel *item = view->gridArea->head->next;
+
+	for (int j = 0 ; j < GRID_SIZE; j++) {
+		for (int i = 0; i < GRID_SIZE; i ++) {
+
+			switch (view->model->board[i][j]) {
+				case(EMPTY) :
+					update_panel_picture(item,"images/square.bmp");
+					break;
+				case(CAT_PIC) :
+					update_panel_picture(item,"images/cat.bmp");
+					break;
+				case(MOUSE_PIC) :
+					update_panel_picture(item,"images/mouse.bmp");
+					break;
+				case(CHEESE) :
+					update_panel_picture(item,"images/cheese.bmp");
+					break;
+				case(WALL) :
+					update_panel_picture(item,"images/wall.bmp");
+					break;
+				default:
+					break;
+			}
+			item = item->next;
+		}
+	}
+	show_grid_area(view->gridArea);
 }
 

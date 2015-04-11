@@ -5,6 +5,7 @@
 
 #define GRID_SIZE 7
 #define PLAYERS_NUM 2
+#define UNVALID_POS -1
 
 typedef enum mode {
 	EDIT,

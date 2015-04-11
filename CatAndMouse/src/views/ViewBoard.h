@@ -16,7 +16,6 @@ typedef enum {
 	RECONFIGURE_CAT,
 	RESTART_GAME,
 	GO_TO_MAIN_MENU,
-	CLICK_ON_BOARD,
 	SPACE,
 	SAVE_WORLD,
 	PLACE_MOUSE,
@@ -32,6 +31,7 @@ typedef struct viewBoard{
 	Screen* gridArea;
 	void (*HandleSystemEvent) (viewBoardEvents event, int x, int y);
 	modelBoard* model;
+	pos markedSquare;
 }viewBoard;
 
 SDL_Surface* allBoards;
@@ -53,6 +53,8 @@ result showViewBoard(viewBoard* view, modelBoard* model);
 // also the loop waiting for events should stop
 // thus function free the memory of the view
 result freeViewBoard(viewBoard* view);
+
+result refreshViewBoard(viewBoard* view);
 
 
 // Those functions are for local use of the view

@@ -29,10 +29,18 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y);
 
 void createNewModel();
 player createPlayer(playerType type, int level);
+void checkCurrentPos(int x,int y);
+result checkIfCanSaveModel(modelBoard* model);
+
+// Events
+void placeMouse(int x, int y);
+void placeCat(int x, int y);
+void placeCheese(int x, int y);
+void placeWall(int x, int y);
+void placeEmpty(int x, int y);
 void updateModelBoard(playerType cat, int catLevel, playerType mouse, int mouseLevel);
 void updateModelBoardMouse(playerType mouse, int mouseLevel);
 void updateModelBoardCat(playerType cat, int catLevel);
-
 
 #endif
 
