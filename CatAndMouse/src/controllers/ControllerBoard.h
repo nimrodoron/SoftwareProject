@@ -38,6 +38,7 @@ void placeCat(int x, int y);
 void placeCheese(int x, int y);
 void placeWall(int x, int y);
 void placeEmpty(int x, int y);
+void playerMoveTo(int x, int y);
 void updateModelBoard(playerType cat, int catLevel, playerType mouse, int mouseLevel);
 void updateModelBoardMouse(playerType mouse, int mouseLevel);
 void updateModelBoardCat(playerType cat, int catLevel);

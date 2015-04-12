@@ -1,13 +1,13 @@
 #include "CatAndMouseMiniMax.h"
 
-const int constantVector[CONST_VECTOR_SIZE] = {-5,-2,-1,0,1,2,5};
+//const int constantVector[CONST_VECTOR_SIZE] = {-5,-2,-1,0,1,2,5};
 
 /* this function gets the best move for the current player 
 according the current state of the game and set_number_steps*/
-int getBestMove(StateOfBoard currentState,int numSteps) {
+int getBestMove(modelBoard* currentState,int numSteps) {
 	int isMaxPlayer =0;
-	if (currentState.player==MAX_PLAYER) isMaxPlayer=1;
-	return (getBestChild(&currentState,numSteps,getChildren,FreeState,evaluate,isMaxPlayer).index);
+	if (currentState.currentPlayer==MAX_PLAYER) isMaxPlayer=1;
+	return (getBestChild(currentState,numSteps,getChildren,FreeState,evaluate,isMaxPlayer).index);
 	}
 
 /*this function evaluates the score of the game */
@@ -106,52 +106,65 @@ int evaluate(void* state) {
 /*this function returns the children of the current node, as a list*/
 ListRef getChildren(void* state) {
 
-//	// this may actually return NULL if inner malloc call fails!
-//	ListRef list = newList(NULL);
-//	ListRef tempList = NULL;
-//	bool isFirstAppend = true;
-//	StateOfBoard *childstateRef;
-//	if (((StateOfBoard*)state)->isValid) {
-//	for (int col=1; col<=MAT_COLS; col++)
-//	{
-//		// Check if we can add to this col
-//		// if yes create new matrix copy the data and add the disc
-//
-//			childstateRef = (StateOfBoard*)malloc(sizeof(StateOfBoard));
-//			childstateRef->boradMatrix = buildBoardMatrix();
-//			childstateRef->player = (((StateOfBoard*)state)->player)*(-1);
-//			copyBoardsMatrix(((StateOfBoard*)state)->boradMatrix,childstateRef->boradMatrix);
-//			if (CheckIfDiscCanAdded(col,((StateOfBoard*)state)->boradMatrix).success) {
-//				add_disc_to_board(col,((StateOfBoard*)state)->player,childstateRef->boradMatrix);
-//				childstateRef->isValid = true;
-//			}
-//			else
-//			{
-//				childstateRef->isValid = false;
-//			}
-//
-//			if (isFirstAppend) {
-//				tempList = append(list,childstateRef);
-//				isFirstAppend = false;
-//			}
-//			else {
-//				tempList = append(tempList,childstateRef);
-//			}
-//		}
-//	}
-//	return list;
+	// this may actually return NULL if inner malloc call fails!
+	ListRef list = newList(NULL);
+	ListRef tempList = NULL;
+	modelBoard *childstateRef;
+	if (((modelBoard*)state)->isValid) {
+
+	    int x = ((modelBoard*)state)->players[((modelBoard*)state)->currentPlayer].playerPos.x;
+		int y = ((modelBoard*)state)->players[((modelBoard*)state)->currentPlayer].playerPos.y;
+
+	    // try move up
+	    copyModel(&childstateRef,state);
+	    childstateRef->isValid = false;
+	    childstateRef->currentPlayer = !childstateRef->currentPlayer;
+	    if (movePlayerTo(x-1,y)) {
+	    	childstateRef->isValid = true;
+	    }
+	    tempList = append(list,childstateRef);
+
+	    // try move down
+	    copyModel(&childstateRef,state);
+	    childstateRef->isValid = false;
+	    childstateRef->currentPlayer = !childstateRef->currentPlayer;
+	    if (movePlayerTo(x+1,y)) {
+	    	childstateRef->isValid = true;
+	    }
+	    tempList = append(tempList,childstateRef);
+
+	    // try move left
+	    copyModel(&childstateRef,state);
+	    childstateRef->isValid = false;
+	    childstateRef->currentPlayer = !childstateRef->currentPlayer;
+	    if (movePlayerTo(x,y-1)) {
+	    	childstateRef->isValid = true;
+	    }
+	    tempList = append(tempList,childstateRef);
+
+	    // try move right
+	    copyModel(&childstateRef,state);
+	    childstateRef->isValid = false;
+	    childstateRef->currentPlayer = !childstateRef->currentPlayer;
+	    if (movePlayerTo(x,y+1)) {
+	    	childstateRef->isValid = true;
+	    }
+	    tempList = append(tempList,childstateRef);
+	}
+
+	return list;
 }
 
 void FreeState(void* state) {
-//	FreeBoardMatrix(((StateOfBoard*)state)->boradMatrix);
-//	free((StateOfBoard*)state);
+	freeModel(&state);
+	free((modelBoard*)state);
 }
 
 /*this function checking if there is a winner */
-int checkForWinner(StateOfBoard currentState) {
-//	if (evaluate(&currentState) == MAX_EVALUATION) return 1;
-//	if (evaluate(&currentState) == MIN_EVALUATION) return -1;
-//	return 0;
+playerAnimal checkForWinner(modelBoard* currentState) {
+	//if (evaluate(currentState) == MAX_EVALUATION) return MAX_PLAYER;
+	//if (evaluate(currentState) == MIN_EVALUATION) return MIN_PLAYER;
+	return NONE;
 }
 
 

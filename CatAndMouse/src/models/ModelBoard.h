@@ -2,6 +2,7 @@
 #define GAMEBOARDMODEL_H_
 
 #include "../infrastructure/general/general.h"
+#include <stdbool.h>
 
 #define GRID_SIZE 7
 #define PLAYERS_NUM 2
@@ -44,18 +45,20 @@ typedef struct player {
 
 typedef struct modelBoard {
 	mode modelMode;
-	type board[GRID_SIZE][GRID_SIZE];
+	type** board;
 	player players[PLAYERS_NUM];
 	playerAnimal currentPlayer;
-	player winner;
+	playerAnimal winner;
 	int movesBeforeTie;
 	pos cheesePos;
 	char* name;
+	bool isValid;
 }modelBoard;
 
 result createEmptyModel(modelBoard** model);
+result copyModel(modelBoard** toModel,modelBoard* fromModel);
 result freeModel(modelBoard** model);
-
+bool movePlayerTo(modelBoard* model, int x, int y);
 
 #endif
 

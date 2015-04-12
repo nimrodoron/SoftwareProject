@@ -1,7 +1,7 @@
 #ifndef MINIMAX_H_
 #define MINIMAX_H_
 
-#include "ListUtils.h"
+#include "../general/ListUtils.h"
 
 /**
  * The maximum allowed value to be returned by any evaluation function.

@@ -1,36 +1,30 @@
 #ifndef CATANDMOUSEMINIMAX_H_
 #define CATANDMOUSEMINIMAX_H_
 
-#include "MiniMax.h"
+#include "../infrastructure/minimax/MiniMax.h"
+#include "../models/ModelBoard.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 #define MAX_PLAYER 1
-#define MIN_PLAYER -1
-#define SCORES_TABLES_SIZE 9
-#define MIN_4_SCORE -4
-#define MAX_4_SCORE 4
-#define WIN_SEQ_SIZE 4
-#define CONST_VECTOR_SIZE 7
+#define MIN_PLAYER 0
 
-extern const int constantVector[CONST_VECTOR_SIZE];
+typedef enum MOVE {
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
+}MOVE;
 
-typedef struct boardstate {
-	int** boradMatrix;
-	int player;
-	bool isValid;
-}StateOfBoard;
+int getBestMove(modelBoard* currentState,int numSteps);
 
-int getBestMove(StateOfBoard currentState,int numSteps);
-
-int checkForWinner(StateOfBoard currentState);
+playerAnimal checkForWinner(modelBoard* currentState);
 
 int evaluate(void* state);
 
 ListRef getChildren(void* state);
 
-StateOfBoard buildBoard();
+modelBoard buildBoard();
 
 void FreeState(void* state);
 

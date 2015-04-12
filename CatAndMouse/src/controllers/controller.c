@@ -324,8 +324,10 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		break;
 	case 22: //we are in the worlds menus: load game, save game, edit game
 		worldsMenus = 0;
+		break;
 	case 11: //level button was pressed from 'choose your cat skill level menu'
 		editedPlayer = CAT;
+		break;
 	case 10: //level button was pressed for 'choose your mouse skill level menu'
 		if (v->model->level!=-1)
 		{

@@ -1,5 +1,6 @@
 #include "ControllerBoard.h"
 #include "../services/WorldsManager.h"
+#include "../minimax/CatAndMouseMiniMax.h"
 
 result createBoardController(mode Mode, char* name, player mouse,
 							 player cat, playerAnimal currentPlayer, int worldsIndex) {
@@ -120,7 +121,7 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 					//SaveWorldToFile(controller->model,"world_5.txt");
 		  	  	  break;
 		  case (PLAYER_MOVED_TO) :
-			  //nimrod fill
+			  playerMoveTo(x,y);
 			  break;
 	
 		default:
@@ -304,4 +305,28 @@ result checkIfCanSaveModel(modelBoard* model) {
 	return res;
 }
 
+void playerMoveTo(int x, int y) {
+	MOVE pmove;
+
+	// move the player if possiable
+	if(movePlayerTo(controller->model,x,y)) {
+
+
+
+		 // check for winner
+		 //controller->model->winner = checkForWinner(controller->model);
+
+		 // switch player
+		 controller->model->currentPlayer = !controller->model->currentPlayer;
+
+		 // make computer turn
+		 if (controller->model->players[controller->model->currentPlayer].type == COMPUTER) {
+			 controller->model->movesBeforeTie--;
+			 // pmove = getBestMove(controller->model,controller->model->players[controller->model->currentPlayer].level);
+		 }
+
+		controller->view->model = controller->model;
+		refreshViewBoard(controller->view);
+	}
+}
 
