@@ -134,13 +134,17 @@ void tab_click(View* v)
 		if ((v->model->level != -1) && (markedButton == 3)) //for update the skill-level button 
 		{
 			current->componentProps.surface = SDL_LoadBMP(v->model->images[markedButton]);
+			current->enabled = false;
 			v->screen->head->next->next->componentProps.surface = SDL_LoadBMP(v->model->chosen_images[v->model->level+3]);
+			v->screen->head->next->next->enabled = true;
 			v->model->marked_button = 1;
 		}
 		else
 		{
 			current->componentProps.surface = SDL_LoadBMP(v->model->images[markedButton]);
+			current->enabled = false;
 			v->screen->head->next->next->componentProps.surface = SDL_LoadBMP(v->model->chosen_images[1]);
+			v->screen->head->next->next->enabled = true;
 			v->model->marked_button = 1;
 		}
 		
@@ -151,13 +155,17 @@ void tab_click(View* v)
 		if ((v->model->level != -1) && (markedButton == 1)) //if the skill-level button is the 'chosen'
 		{
 			current->componentProps.surface = SDL_LoadBMP(v->model->images[v->model->level + 3]);
+			current->enabled = false;
 			current->next->componentProps.surface = SDL_LoadBMP(v->model->chosen_images[markedButton + 1]);
+			current->next->enabled = true;
 			v->model->marked_button += 1;
 		}
 		else
 		{
 			current->componentProps.surface = SDL_LoadBMP(v->model->images[markedButton]);
+			current->enabled = false;
 			current->next->componentProps.surface = SDL_LoadBMP(v->model->chosen_images[markedButton + 1]);
+			current->next->enabled = true;
 			v->model->marked_button += 1;
 		}
 		
@@ -166,7 +174,7 @@ void tab_click(View* v)
 }
 
 void button_click(Uint16 x, Uint16 y,View* v)
-{
+	{
 	int markedButtonIndex = 0;
 	int markedButton = v->model->marked_button;
 	Panel *button = v->screen->head->next;
@@ -174,8 +182,8 @@ void button_click(Uint16 x, Uint16 y,View* v)
 	int level = v->model->level;
 	while (button != NULL)
 	{
-		if (button->enabled == 1)
-		{
+		//if (button->enabled == 1)
+		
 			if (x >= button->componentProps.dest_rect->x)
 				if (x <= button->componentProps.dest_rect->x + button->componentProps.dest_rect->w)
 				{
@@ -192,17 +200,35 @@ void button_click(Uint16 x, Uint16 y,View* v)
 								if ((markedButton == 1)&&(markedButtonIndex !=1))//the skill button was pressed
 								{
 									current->componentProps.surface = SDL_LoadBMP(v->model->images[markedButton + level + 2]); //update the button that was 'chosen' to regular
+									current->enabled = false;
 									button->componentProps.surface = SDL_LoadBMP(v->model->chosen_images[markedButtonIndex++]); //update the button that was regular to 'chosen'
+									button->enabled = true;
 								}
-								else if ((markedButton!=1)&&(markedButtonIndex==1)){
+								else if ((markedButton!=1)&&(markedButtonIndex==1)){//the skill button was pressed
 									current->componentProps.surface = SDL_LoadBMP(v->model->images[markedButton]); //update the button that was 'chosen' to regular
+									current->enabled = false;
 									button->componentProps.surface = SDL_LoadBMP(v->model->chosen_images[level+3]); //update the button that was regular to 'chosen'
+									if (x >= button->componentProps.dest_rect->x + 147){ // if the press was in the levels buttons 
+										if (x <= button->componentProps.dest_rect->x + button->componentProps.dest_rect->w)
+										{
+											if (y >= button->componentProps.dest_rect->y){
+												if (y <= button->componentProps.dest_rect->y + button->componentProps.dest_rect->h - 36)
+												{
+													button->enabled = false;
+												}
+											}
+										}
+									}
+									else //  the press was on the button itself 
+									button->enabled = true;
 								}
 							}
 							else //the regulear screen
 							{
 								current->componentProps.surface = SDL_LoadBMP(v->model->images[markedButton]); //update the button that was 'chosen' to regular
+								current->enabled = false;
 								button->componentProps.surface = SDL_LoadBMP(v->model->chosen_images[markedButtonIndex++]); //update the button that was regular to 'chosen'
+								button->enabled = true;
 							}
 							
 						
@@ -211,7 +237,7 @@ void button_click(Uint16 x, Uint16 y,View* v)
 
 						}
 				}
-		}
+		
 		button = button->next;
 		markedButtonIndex++;
 	}
@@ -324,10 +350,10 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		break;
 	case 22: //we are in the worlds menus: load game, save game, edit game
 		worldsMenus = 0;
-		break;
+		//break;
 	case 11: //level button was pressed from 'choose your cat skill level menu'
 		editedPlayer = CAT;
-		break;
+		//break;
 	case 10: //level button was pressed for 'choose your mouse skill level menu'
 		if (v->model->level!=-1)
 		{
@@ -337,18 +363,28 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 					if (y >= button->componentProps.dest_rect->y)
 						if (y <= button->componentProps.dest_rect->y + button->componentProps.dest_rect->h - 36)
 						{
-
-							handale_up_level_button(button, v);
+							if (button->enabled == true)
+								handale_up_level_button(button, v);
+							else 
+							{
+								button->enabled = true;
+							}
 						}
 						else
 						{
 							if (y >= button->componentProps.dest_rect->y + 26)
 								if (y <= button->componentProps.dest_rect->y + button->componentProps.dest_rect->h)
 								{
-									handale_down_level_button(button, v);
+									if (button->enabled == true)
+										handale_down_level_button(button, v);
+									else 
+									{
+										button->enabled = true;
+									}
 								}
 						}
 				}
+				
 			if (editedPlayer == CAT)
 			{
 				catLevel = v->model->level;

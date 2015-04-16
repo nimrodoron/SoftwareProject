@@ -58,7 +58,7 @@ result freeViewBoard(viewBoard* view);
 
 result refreshViewBoard(viewBoard* view);
 result refreshTopPanel(viewBoard* view);
-
+result refreshSidePanel(viewBoard* view);
 
 // Those functions are for local use of the view
 
@@ -84,4 +84,6 @@ void button_click_top_panel(Uint16 x, Uint16 y, viewBoard* v);
 void button_click_top_panel_new_world(Uint16 x, Uint16 y, viewBoard* v);
 void button_click_game_board(Uint16 x, Uint16 y, viewBoard* v);
 void button_click_game_board_game(Uint16 x, Uint16 y, viewBoard* v);
+void printWinnerTopPaenl(playerAnimal winner, viewBoard* view);
+void pauseWasPressed(viewBoard* view);
 

@@ -8,7 +8,7 @@ char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL-2] = { "images/Mouse's
 //arrays for the images in the top panel
 char* top_panel_animal_move[2] = { "images/Cat_move.bmp", "images/Mouse's _move.bmp" };
 char* top_panel_numbers[11] = { "images/0.bmp", "images/1.bmp", "images/2.bmp", "images/3.bmp", "images/4.bmp", "images/5.bmp", "images/6.bmp", "images/7.bmp", "images/8.bmp", "images/9.bmp","images/).bmp" };
-char* top_panel_win_status[3] = { "images/Game Over , Cat Wins.bmp", "images/Game Over , Mouse Wins.bmp", "images/Game Over , Timeout.bmp" };
+char* top_panel_win_status[3] = { "images/Game Over – Cat Wins.bmp", "images/Game Over – Mouse Wins.bmp", "images/Game Over – Timeout.bmp" };
 char* top_panel_game_status[4] = { "images/Human-waiting.bmp","images/Human-paused.bmp","images/Machine_computing.bmp","images/Machine-paused.bmp"};
 char* top_panel_pause[3] = { "images/Pause Before Next Move.bmp", "images/Pause.bmp", "images/Resume Game.bmp" };
 
@@ -24,6 +24,8 @@ char* creatGame_titels[NUMBER_WORLD_TITELS] = { "images/New_World_title.bmp", "i
 result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEvents event, int x, int y),
 	modelBoard* model, int worldsIndex) {
 	
+	pause = 0;
+
 	result res;
 	Screen* sideBar;
 	Screen* topPanel;
@@ -113,6 +115,7 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 {
 	if (model->modelMode == GAME)
 	{
+	if (pause == 0) {
 		switch (ev->type)
 		{
 		case SDL_QUIT:
@@ -129,8 +132,8 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 		case SDL_KEYDOWN:
 			switch (ev->key.keysym.sym)
 			{
-			case (SDLK_SPACE):
-				//fill
+			case (SDLK_SPACE) :
+				pauseWasPressed(v);
 				break;
 				case SDLK_F1:
 					v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
@@ -168,7 +171,18 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 		default:
 			break;
 		}
+		}
+	else {
+		if (ev->type == SDL_MOUSEBUTTONUP){
+			if ((ev->button.x > 200 && ev->button.x < 700) && (ev->button.y>0 && ev->button.y<110))
+				button_click_top_panel(ev->button.x, ev->button.y, v);
+		}
+		else if (ev->type == SDL_KEYDOWN){
+			if (ev->key.keysym.sym == SDLK_SPACE)
+				pauseWasPressed(v);
+		}
 	}
+}
 	else if (model->modelMode == EDIT)
 	{
 		switch (ev->type)
@@ -356,8 +370,17 @@ void button_click_side_panel_new_world(Uint16 x, Uint16 y, viewBoard* v)
 void button_click_top_panel(Uint16 x, Uint16 y, viewBoard* v)
 {
 	if ((x>230 && x < 616) && (y>60 && y < 97)){
-		v->HandleSystemEvent(SPACE, 0, 0);
-		// fill!
+		//v->HandleSystemEvent(SPACE, 0, 0);
+		//if (pause == 0) // the pause wasn't clicked before
+		//{
+		//	pause = 1;
+		//	pauseGame(v);
+		//}
+		//else //the pause was clicked before
+		//{
+		//	unpauseGame(v);
+		//}
+		pauseWasPressed(v);
 	}
 }
 
@@ -408,7 +431,7 @@ Screen* create_topPanel(modelBoard* model)
 	int xOffset = 0;
 	int type = 1;
 	Panel* currentHead = scr->head;
-	for (int i = 0; i < NUMBER_BUTTONS_TOP_PANEL; i++)
+	for (int i = 0; i < NUMBER_BUTTONS_TOP_PANEL-2; i++)
 	{
 
 		switch (i)
@@ -429,16 +452,24 @@ Screen* create_topPanel(modelBoard* model)
 				temp = temp / 10;
 				factor = factor * 10;
 			}
-			while (factor>1)
+			for (int j = 0; j <3;j++)
+			//while (factor>1)
 			{
-				factor = factor / 10;
-				
-				add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_numbers[moveBeforeTie / factor], type, 0, scr, 0), scr);
-				moveBeforeTie = moveBeforeTie % factor;
+				if (factor >1)
+				{
+					factor = factor / 10;
+
+					add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_numbers[moveBeforeTie / factor], type, 0, scr, 0), scr);
+					moveBeforeTie = moveBeforeTie % factor;
+				}
+				else {
+					add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, "images/empty_number.bmp", type, 0, scr, 0), scr);
+				}
 				xOffset += 7;
+
 			}
 			add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_numbers[10], type, 0, scr, 0), scr);
-				break;
+			break;
 		case 2: //the game status (sewcond line)
 			yOffset = 30;
 			xOffset = 0;
@@ -481,7 +512,7 @@ void show_top_panel(Screen* scr, modelBoard* model)
 	int xOffset = 0;
 	int moveBeforeTie = 0;
 	Panel* currentHead = scr->head;
-	for (int i = 0; i < NUMBER_BUTTONS_TOP_PANEL; i++)
+	for (int i = 0; i < NUMBER_BUTTONS_TOP_PANEL-2; i++)
 	{
 
 		switch (i)
@@ -498,11 +529,12 @@ void show_top_panel(Screen* scr, modelBoard* model)
 			else
 				xOffset = 120;
 
-			while (moveBeforeTie > 0)
+			//while (moveBeforeTie > 0)
+			for (int j = 0; j < 3;j++)
 			{
 				apply_surfaceBoard(330 + xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
-				moveBeforeTie = moveBeforeTie / 10;
-				xOffset += 7;
+				//moveBeforeTie = moveBeforeTie / 10;
+				xOffset += 9;
 				currentHead = currentHead->next;
 			}
 			xOffset += 7;
@@ -792,7 +824,7 @@ result refreshTopPanel(viewBoard* view)
 	modelBoard* model = view->model;
 	//Panel *item = view->topPanel->head->next;
 	int moveBeforeTie = 0;
-	for (int i = 0; i < NUMBER_BUTTONS_TOP_PANEL; i++)
+	for (int i = 0; i < NUMBER_BUTTONS_TOP_PANEL-2; i++)
 	{
 		switch (i)
 		{
@@ -813,15 +845,23 @@ result refreshTopPanel(viewBoard* view)
 				temp = temp / 10;
 				factor = factor * 10;
 			}
-			while (factor>1)
+			for (int j = 0; j < 3; j++)
+			//while (factor>1)
 			{
-				factor = factor / 10;
-				update_panel_picture(currentHead, top_panel_numbers[moveBeforeTie / factor]);
-				moveBeforeTie = moveBeforeTie % factor;
+				if (factor > 1) {
+					factor = factor / 10;
+					update_panel_picture(currentHead, top_panel_numbers[moveBeforeTie / factor]);
+					moveBeforeTie = moveBeforeTie % factor;
+				}
+				else {
+					update_panel_picture(currentHead, "images/empty_number.bmp");
+				}
+				
 				currentHead = currentHead->next;
 			}
 			update_panel_picture(currentHead, top_panel_numbers[10]);
 			currentHead = currentHead->next;
+			//i = i + 2;
 			break;
 		case 2: //the game status (sewcond line)
 			if (pause == 1)
@@ -853,17 +893,39 @@ result refreshTopPanel(viewBoard* view)
 			break;
 		}
 	}
+	show_top_panel(view->topPanel, model); // hila - check if this is the right model
 }
 result refreshViewBoard(viewBoard* view) {
+	//refresh the top panel
+	if (view->model->modelMode == GAME)
+	{
+		refreshTopPanel(view,view->model);
+		//create_topPanel(view->model);
+		//show_top_panel(view->topPanel,view->model);		
+	}		
 
 	// refresh the grid
 	Panel *item = view->gridArea->head->next;
 
 	for (int i = 0 ; i < GRID_SIZE; i++) {
 		for (int j = 0; j < GRID_SIZE; j ++) {
-			if (i == view->markedSquare.x && j == view->markedSquare.y && view->model->board[i][j] == EMPTY)
+			if (i == view->markedSquare.x && j == view->markedSquare.y)
 			{
-				update_panel_picture(item, "images/red_square.bmp");
+				switch (view->model->board[i][j]){
+				case EMPTY:
+					update_panel_picture(item, "images/red_square.bmp");
+					break;
+				case MOUSE_PIC:
+					update_panel_picture(item, "images/red_square_mouse.bmp");
+					break;
+				case CHEESE:
+					update_panel_picture(item, "images/red_square_cheese.bmp");
+					break;
+				case CAT_PIC:
+					update_panel_picture(item, "images/red_square_cat.bmp");
+					break;
+
+				}
 			}
 			else
 			{
@@ -893,3 +955,69 @@ result refreshViewBoard(viewBoard* view) {
 	show_grid_area(view->gridArea);
 }
 
+
+//nimrod add it when there is a winner to the game
+void printWinnerTopPaenl(playerAnimal winner,viewBoard* view)
+{
+	//freeTopPanel_List(view->topPanel);
+	if (winner == CAT)
+	{
+		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[0], 1, 0, view->topPanel, 0), view->topPanel);
+	}
+	else if (winner == MOUSE)
+	{
+		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[1], 1, 0, view->topPanel, 0), view->topPanel);
+	}
+	else
+	{
+		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[2], 1, 0, view->topPanel, 0), view->topPanel);
+	}
+	show_top_panel(view, view->model);
+	//pauseGame(view);
+}
+
+//void pauseGame(viewBoard* view)
+//{
+//	refreshSidePanel(view);
+//}
+//
+//void unpauseGame(viewBoard* view)
+//{
+//
+//}
+void pauseWasPressed(viewBoard* view)
+{
+	if (pause == 0) // the pause wasn't clicked before
+	{
+		pause = 1;
+	}
+	else if (pause == 1) //the pause was clicked before
+	{
+		pause = 0;
+	}
+	refreshSidePanel(view);
+}
+
+result refreshSidePanel(viewBoard* view) {
+	SDL_Color color = { 60, 60, 60 };
+	SDL_Color colorWhite = { 255, 255, 255 };
+	Panel *item = view->sideBar->head->next;
+		if (pause == 0) // if the game is not paused (mean that it was paused before and the puase button was pressed
+		{
+			for (int i = 0; i < NUMBER_BUTTONS_SIDE_BAR; i++)
+			{
+				update_panel_picture(item, side_bar_images[i]);
+				item = item->next;
+			}
+			
+		}
+		else if (pause == 1){ //if the game is paused (mean that it was not paused before and the puase button was pressed
+			for (int i = 0; i < NUMBER_BUTTONS_SIDE_BAR; i++)
+			{
+				update_panel_picture(item, side_bar_images_unable[i]);
+				item = item->next;
+			}
+		}
+		refreshTopPanel(view);
+	show_side_bar(view->sideBar);
+}
