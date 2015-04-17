@@ -123,8 +123,7 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 			  }
 			  else 
 			  {
-				  //printMessages(checkIfCanSaveModel(controller->model).message);
-				  printMessages("images/failed_to_create_game.bmp");
+				  printMessages(checkIfCanSaveModel(controller->model).message);
 				  showViewBoard(controller->view, controller->model);
 			  }
 					

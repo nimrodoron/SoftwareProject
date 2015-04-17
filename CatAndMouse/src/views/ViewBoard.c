@@ -1,6 +1,6 @@
-#include "ViewBoard.h"
+#include "../views/ViewBoard.h"
 
-//change it
+
 int pause = 0;
 
 //array for the displayed images

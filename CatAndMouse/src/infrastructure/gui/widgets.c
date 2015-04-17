@@ -12,10 +12,8 @@ Screen* create_screen()
 	Screen* scr = (Screen*)malloc(sizeof(Screen));
 	if (scr == NULL)
 	{
-		result res;
-		res.code = ERROR;
-		res.message = "images/failed_to_allocate_memory.bmp";
-		printMessages(res.message);
+		isError -1;
+		perror("ERROR: failed to allocate memory for screen\n");
 		return NULL;
 	}
 	scr->head = NULL;
@@ -33,10 +31,8 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	dest_rect = (SDL_Rect*)malloc(sizeof(SDL_Rect));
 	if (dest_rect == NULL)
 	{
-		result res;
-		res.code = ERROR;
-		res.message = "images/failed_to_allocate_memory.bmp";
-		printMessages(res.message);
+		isError -1;
+		perror("ERROR: failed to allocate struct while creating destination rectangle\n");
 		return NULL;
 	}
 	dest_rect->w = width;
@@ -46,12 +42,9 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	Panel* pan = (Panel*)malloc(sizeof(Panel));
 	if (pan == NULL)
 	{
-
-		result res;
-		res.code = ERROR;
-		res.message = "images/failed_to_allocate_memory.bmp";
-		printMessages(res.message);
-		//free(dest_rect);
+		isError -1;
+		perror("ERROR: failed to allocate memory for component\n");
+		free(dest_rect);
 		return NULL;
 	}
 	pan->type = type;
@@ -111,10 +104,8 @@ Screen* build_main_menu(int number_buttons, char* title, char** imagesArr, char*
 	
 	window->screen = SDL_SetVideoMode(screen_width, screen_height, 0, 0);
 	if (window == NULL) {
-		result res;
-		res.code = ERROR;
-		res.message = "images/failed_to_create_game.bmp";
-		printMessages(res.message);
+		isError -1;
+		printf("ERROR: failed to set video mode: %s\n", SDL_GetError());
 		return NULL;
 	}
 	window->head = create_panel(screen_width, screen_height, 0, 0, NULL, PANEL, -1 ,window, number_buttons);
