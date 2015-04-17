@@ -7,10 +7,8 @@ View* create_view(Model* model, Screen* screen){
 
 	if (view == NULL)
 	{
-		result res;
-		res.code = ERROR;
-		res.message = "images/failed_to_allocate_memory.bmp";
-		printMessages(res.message);
+		isError - 1;
+		perror("ERROR: failed to allocate memory for view\n");
 		return NULL;
 	}
 	view->model = model;
@@ -36,7 +34,12 @@ int draw_screen(char* title, Screen* window)
 	SDL_BlitSurface(window->screen, NULL, window->screen, NULL);
 
 	SDL_Color color = window->head->componentProps.background_color;
-	SDL_FillRect(window->screen, 0, SDL_MapRGB(window->screen->format, color.r, color.g, color.b));
+	//SDL_FillRect(window->screen, 0, SDL_MapRGB(window->screen->format, color.r, color.g, color.b));
+	if (SDL_FillRect(window->screen, 0, SDL_MapRGB(window->screen->format, color.r, color.g, color.b)) != 0) {
+		isError - 1;
+		perror("ERROR: failed to draw rect: %s\n", SDL_GetError());
+		return NULL;
+	}
 	draw_components(window->head->next, window);
 }
 
@@ -56,7 +59,9 @@ void draw_components(Panel* comp, Screen* window){
 		comp = comp->next;
 		i++;
 	}
-	SDL_Flip(window->screen);
+	if (SDL_Flip(window->screen) != 0) {
+		perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+	}
 }
 
 
@@ -70,6 +75,9 @@ void apply_surface(SDL_Surface* comp, int x, int y, SDL_Rect* clip, Screen* wind
 	offset.y = y;
 
 	//Blit
-	SDL_BlitSurface(comp, clip, window->screen, &offset);
+	if (SDL_BlitSurface(comp, clip, window->screen, &offset) != 0) {
+		isError - 1;
+		printf("ERROR: failed to blit image: %s\n", SDL_GetError());
+	}
 }
 

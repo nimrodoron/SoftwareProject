@@ -59,11 +59,19 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	if (type == BUTTON)
 	{
 		pan->componentProps.surface = SDL_LoadBMP(path);
+		if (pan->componentProps.surface == NULL) {
+			perror("ERROR: failed to load image: %s\n", SDL_GetError());
+			return 1;
+		}
 		pan->enabled = true;
 	}
 	else if (type == IMAGE)
 	{
 		pan->componentProps.surface = SDL_LoadBMP(path);
+		if (pan->componentProps.surface == NULL) {
+			perror("ERROR: failed to load image: %s\n", SDL_GetError());
+			return 1;
+		}
 		pan->enabled = false;
 	}
 	else if (type == PANEL)
@@ -90,6 +98,10 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 
 void update_panel_picture(Panel* item, char* path) {
 	item->componentProps.surface = SDL_LoadBMP(path);
+	if (item->componentProps.surface == NULL) {
+		perror("ERROR: failed to load image: %s\n", SDL_GetError());
+		return 1;
+	}
 }
 
 /*to build the main menu*/
