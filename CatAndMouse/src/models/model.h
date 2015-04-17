@@ -2,7 +2,7 @@
 #define MODEL_H_
 
 #include "../infrastructure/gui/widgets.h"
-
+#include "../infrastructure/general/general.h"
 
 typedef struct model{
 	char** images; // an array for the images for the buttons in this screen

@@ -2,7 +2,7 @@
 #define CONTROLLERBOARD_H_
 
 #include <stdlib.h>
-//#include "../infrastructure/general/general.h"
+#include "../infrastructure/general/general.h"
 #include "../models/ModelBoard.h"
 #include "../views/ViewBoard.h"
 #include "../controllers/controller.h"

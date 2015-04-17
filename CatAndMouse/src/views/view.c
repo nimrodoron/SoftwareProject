@@ -7,8 +7,10 @@ View* create_view(Model* model, Screen* screen){
 
 	if (view == NULL)
 	{
-		isError - 1;
-		printf("ERROR: failed to allocate memory for view\n");
+		result res;
+		res.code = ERROR;
+		res.message = "images/failed_to_allocate_memory.bmp";
+		printMessages(res.message);
 		return NULL;
 	}
 	view->model = model;
@@ -38,7 +40,7 @@ int draw_screen(char* title, Screen* window)
 	draw_components(window->head->next, window);
 }
 
-/*complete to all the components in the list!*/
+
 /*draws all the component in the tree */
 void draw_components(Panel* comp, Screen* window){
 	SDL_Rect frame[1];
@@ -57,7 +59,7 @@ void draw_components(Panel* comp, Screen* window){
 	SDL_Flip(window->screen);
 }
 
-/*something with the window display...*/
+
 void apply_surface(SDL_Surface* comp, int x, int y, SDL_Rect* clip, Screen* window)
 {
 	//Holds offsets

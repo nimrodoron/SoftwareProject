@@ -33,8 +33,10 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	*view = (viewBoard*)malloc(sizeof(viewBoard));
 	if (view == NULL)
 	{
-		res.code= -1;
-		res.message = "ERROR: failed to allocate memory for board\n";
+		result res;
+		res.code = ERROR;
+		res.message = "images/failed_to_allocate_memory.bmp";
+		printMessages(res.message);
 		return res;
 	}
 	(*view)->model = model;
@@ -369,17 +371,8 @@ void button_click_side_panel_new_world(Uint16 x, Uint16 y, viewBoard* v)
 //checking where the left click was in the top panel and send to the controller the logical event
 void button_click_top_panel(Uint16 x, Uint16 y, viewBoard* v)
 {
+	//if (win == 1) // the game cant be paused if the game ends
 	if ((x>230 && x < 616) && (y>60 && y < 97)){
-		//v->HandleSystemEvent(SPACE, 0, 0);
-		//if (pause == 0) // the pause wasn't clicked before
-		//{
-		//	pause = 1;
-		//	pauseGame(v);
-		//}
-		//else //the pause was clicked before
-		//{
-		//	unpauseGame(v);
-		//}
 		pauseWasPressed(v);
 	}
 }
@@ -421,8 +414,11 @@ Screen* create_topPanel(modelBoard* model)
 	Screen* scr = (Screen*)malloc(sizeof(Screen));
 	if (scr == NULL)
 	{
-		isError - 1;
-		printf("ERROR: failed to allocate memory for screen\n");
+
+		result res;
+		res.code = ERROR;
+		res.message = "images/failed_to_allocate_memory.bmp";
+		printMessages(res.message);
 		return NULL;
 	}
 	scr->screen = allBoards;
@@ -565,13 +561,15 @@ Screen* create_sideBar(char** imagesArr)
 	Screen* scr = (Screen*)malloc(sizeof(Screen));
 	if (scr == NULL)
 	{
-		isError - 1;
-		printf("ERROR: failed to allocate memory for screen\n");
+		result res;
+		res.code = ERROR;
+		res.message = "images/failed_to_allocate_memory.bmp";
+		printMessages(res.message);
 		return NULL;
 	}
 	scr->screen = allBoards;
 	
-	scr->head = create_panel(200, 600, 0, 0, "side_bar.bmp", IMAGE, -1, scr, 1);
+	scr->head = create_panel(200, 600, 0, 0, "images/side_bar.bmp", IMAGE, -1, scr, 1);
 	apply_surfaceBoard(0, 100 , scr->head->componentProps.surface, allBoards);
 
 	for (int i = 0; i < NUMBER_BUTTONS_SIDE_BAR; i++)
@@ -659,8 +657,10 @@ Screen* create_gridArea(modelBoard* model,viewBoard* v)
 	Screen* scr = (Screen*)malloc(sizeof(Screen));
 	if (scr == NULL)
 	{
-		isError - 1;
-		printf("ERROR: failed to allocate memory for grid\n");
+		result res;
+		res.code = ERROR;
+		res.message = "images/failed_to_allocate_memory.bmp";
+		printMessages(res.message);
 		return NULL;
 	}
 	scr->screen = allBoards;
@@ -730,8 +730,10 @@ Screen* CreateWorld_topPanel(int worldsndex)
 	Screen* scr = (Screen*)malloc(sizeof(Screen));
 	if (scr == NULL)
 	{
-		isError - 1;
-		printf("ERROR: failed to allocate memory for screen\n");
+		result res;
+		res.code = ERROR;
+		res.message = "images/failed_to_allocate_memory.bmp";
+		printMessages(res.message);
 		return NULL;
 	}
 	creatGame_top_panel[0] = creatGame_titels[worldsndex];
@@ -973,18 +975,11 @@ void printWinnerTopPaenl(playerAnimal winner,viewBoard* view)
 		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[2], 1, 0, view->topPanel, 0), view->topPanel);
 	}
 	show_top_panel(view, view->model);
-	//pauseGame(view);
+	pause = 1; //  the game enters to the pause state
+	refreshSidePanel(view);
 }
 
-//void pauseGame(viewBoard* view)
-//{
-//	refreshSidePanel(view);
-//}
-//
-//void unpauseGame(viewBoard* view)
-//{
-//
-//}
+
 void pauseWasPressed(viewBoard* view)
 {
 	if (pause == 0) // the pause wasn't clicked before
@@ -999,8 +994,6 @@ void pauseWasPressed(viewBoard* view)
 }
 
 result refreshSidePanel(viewBoard* view) {
-	SDL_Color color = { 60, 60, 60 };
-	SDL_Color colorWhite = { 255, 255, 255 };
 	Panel *item = view->sideBar->head->next;
 		if (pause == 0) // if the game is not paused (mean that it was paused before and the puase button was pressed
 		{
@@ -1018,6 +1011,67 @@ result refreshSidePanel(viewBoard* view) {
 				item = item->next;
 			}
 		}
-		refreshTopPanel(view);
-	show_side_bar(view->sideBar);
+		//if (win == 1) //  if the game doesnt end then refresh the top panel
+			refreshTopPanel(view);
+		show_side_bar(view->sideBar);
 }
+
+void printMessages(char* message) 
+{
+	createMessage(message);
+}
+
+void createMessage(char* message)
+{
+	int quit = 0;
+	Screen* scr = (Screen*)malloc(sizeof(Screen));
+	if (scr == NULL)
+	{
+		result res;
+		res.code = ERROR;
+		res.message = "images/failed_to_allocate_memory.bmp";
+		printMessages(res.message);
+		return NULL;
+	}
+	scr->screen = allBoards;
+
+	scr->head = create_panel(300, 200, 0, 0, "images/message_white.bmp", IMAGE, -1, scr, 1);
+	Panel* currentHead = scr->head;
+	apply_surfaceBoard(300, 200, currentHead->componentProps.surface, allBoards);
+	if (!strcmp(message, "images/no_current_player.bmp") || !strcmp(message, "images/cheese_is_missing.bmp") || !strcmp(message, "images/mosue_is_missing.bmp") || !strcmp(message, "images/cat_is_missing.bmp"))
+	{
+		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY +108, "images/cant_save_invalid_world_title.bmp", IMAGE, 0, scr, 0), scr);
+		apply_surfaceBoard(345, 210, currentHead->next->componentProps.surface, allBoards);
+	}
+	else {
+		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 108, "images/erroe_title.bmp", IMAGE, 0, scr, 0), scr);
+		apply_surfaceBoard(345, 210, currentHead->next->componentProps.surface, allBoards);
+	}
+		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 138, message, IMAGE, 0, scr, 0), scr);
+		apply_surfaceBoard(375, 210 + 50, currentHead->next->next->componentProps.surface, allBoards);
+		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 188, "images/back_chosen.bmp", BUTTON, 0, scr, 0), scr);
+		apply_surfaceBoard(385, 210 + 120, scr->head->next->next->next->componentProps.surface, allBoards);
+		SDL_Flip(allBoards);
+		while (quit == 0)
+		{
+			//While there's events to handle
+			while (SDL_PollEvent(&event) != 0)
+			{
+				if ((&event)->type == SDL_MOUSEBUTTONUP){
+					if ((&event)->button.x >= 385)
+						if ((&event)->button.x <= 385 + 175 )
+						{
+							if ((&event)->button.y >= 330)
+								if ((&event)->button.y <= 330 + 58)
+								{
+									quit = 1;
+									break;
+								}
+						}
+				}
+			}
+		}
+
+	
+}
+

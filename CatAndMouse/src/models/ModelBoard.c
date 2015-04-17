@@ -7,8 +7,9 @@ result createEmptyModel(modelBoard** model) {
 		*model = (modelBoard*)malloc(sizeof(modelBoard));
 		if (model == NULL)
 		{
-			res.code = -1;
-			res.message = "ERROR: failed to allocate memory for model\n";
+			res.code = ERROR;
+			res.message = "images/failed_to_allocate_memory.bmp";
+			printMessages(res.message);
 			return res;
 		}
 		(*model)->board = (type**)malloc(GRID_SIZE*sizeof(type*));
@@ -26,11 +27,18 @@ result createEmptyModel(modelBoard** model) {
 					free((*model)->board);
 					free(model);
 
-					res.code = -1;
-					res.message = "ERROR: failed to allocate memory for model\n";
+					res.code = ERROR;
+					res.message = "images/failed_to_allocate_memory.bmp";
+					printMessages(res.message);
 					return res;
 				}
 			}
+		}
+		else if ((*model)->board == NULL){
+			res.code = ERROR;
+			res.message = "images/failed_to_allocate_memory.bmp";
+			printMessages(res.message);
+			return res;
 		}
 
 	(*model)->isValid = true;

@@ -4,7 +4,7 @@
 int BUTTON_WIDTH = 175;
 int  BUTTON_HEIGHT = 58;
 int MENUGAP = 58 + 30;
-int button_offsetX = offsetX + 87.5;
+int button_offsetX = 300;
 int button_offsetY = offsetY + 10;
 
 Screen* create_screen()
@@ -12,8 +12,10 @@ Screen* create_screen()
 	Screen* scr = (Screen*)malloc(sizeof(Screen));
 	if (scr == NULL)
 	{
-		isError -1;
-		printf("ERROR: failed to allocate memory for screen\n");
+		result res;
+		res.code = ERROR;
+		res.message = "images/failed_to_allocate_memory.bmp";
+		printMessages(res.message);
 		return NULL;
 	}
 	scr->head = NULL;
@@ -31,8 +33,10 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	dest_rect = (SDL_Rect*)malloc(sizeof(SDL_Rect));
 	if (dest_rect == NULL)
 	{
-		isError -1;
-		printf("ERROR: failed to allocate struct while creating destination rectangle\n");
+		result res;
+		res.code = ERROR;
+		res.message = "images/failed_to_allocate_memory.bmp";
+		printMessages(res.message);
 		return NULL;
 	}
 	dest_rect->w = width;
@@ -42,9 +46,12 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	Panel* pan = (Panel*)malloc(sizeof(Panel));
 	if (pan == NULL)
 	{
-		isError -1;
-		printf("ERROR: failed to allocate memory for component\n");
-		free(dest_rect);
+
+		result res;
+		res.code = ERROR;
+		res.message = "images/failed_to_allocate_memory.bmp";
+		printMessages(res.message);
+		//free(dest_rect);
 		return NULL;
 	}
 	pan->type = type;
@@ -95,20 +102,22 @@ void update_panel_picture(Panel* item, char* path) {
 /*to build the main menu*/
 Screen* build_main_menu(int number_buttons, char* title, char** imagesArr, char** imagesArrChosen, int* stateArr,int marked_button)
 {
-	int screen_width;
-	int screen_height;
-	screen_width = calc_width(BUTTON_WIDTH);
-	screen_height = calc_height(number_buttons, BUTTON_HEIGHT, MENUGAP);
+	int screen_width=800;
+	int screen_height=800;
+	//screen_width = calc_width(BUTTON_WIDTH);
+	//screen_height = calc_height(number_buttons, BUTTON_HEIGHT, MENUGAP);
 
 	Screen* window = create_screen();
 	
-	window->screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
+	window->screen = SDL_SetVideoMode(screen_width, screen_height, 0, 0);
 	if (window == NULL) {
-		isError -1;
-		printf("ERROR: failed to set video mode: %s\n", SDL_GetError());
+		result res;
+		res.code = ERROR;
+		res.message = "images/failed_to_create_game.bmp";
+		printMessages(res.message);
 		return NULL;
 	}
-	window->head = create_panel(screen_width, screen_height, 0, 0, NULL, PANEL, -1,window,number_buttons);
+	window->head = create_panel(screen_width, screen_height, 0, 0, NULL, PANEL, -1 ,window, number_buttons);
 
 	for (int i = 0; i < number_buttons; i++)
 	{

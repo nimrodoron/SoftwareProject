@@ -12,7 +12,8 @@ result createBoardController(mode Mode, char* name, player mouse,
 		controller = (controllerBoard*)malloc(sizeof(controllerBoard));
 		if (controller == NULL) {
 			res.code = ERROR;
-			res.message = "Failed to malloc controller";
+			res.message = "images/failed_to_allocate_memory.bmp";
+			printMessages(res.message);
 			return res;
 		}
 	}
@@ -96,7 +97,7 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 			GoToMainMenu();
 			break;
 		case(SPACE):
-			//fill
+			//fill - ?
 			break;
 		case (PLACE_MOUSE):
 			placeMouse(x,y);
@@ -116,9 +117,17 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 		  case(SAVE_WORLD) :
 			  //TEMP
 			  if (checkIfCanSaveModel(controller->model).code)
+			  {
 				  save_world(controller->model);
-			  showViewBoard(controller->view, controller->model);
-					//SaveWorldToFile(controller->model,"world_5.txt");
+				  showViewBoard(controller->view, controller->model);
+			  }
+			  else 
+			  {
+				  //printMessages(checkIfCanSaveModel(controller->model).message);
+				  printMessages("images/failed_to_create_game.bmp");
+				  showViewBoard(controller->view, controller->model);
+			  }
+					
 		  	  	  break;
 		  case (PLAYER_MOVED_TO) :
 			  playerMoveTo(x,y);
@@ -287,21 +296,23 @@ result checkIfCanSaveModel(modelBoard* model) {
 	res.code = ERROR;
 
 	if (model->currentPlayer == -1) {
-		res.message = "No Current Player";
+		res.message = "images/no_current_player.bmp";
 		return res;
 	}
-	if (model->cheesePos.x == UNVALID_POS || model->cheesePos.y == UNVALID_POS) {
-		res.message = "No Cheese";
+	else if (model->cheesePos.x == UNVALID_POS || model->cheesePos.y == UNVALID_POS) {
+		res.message = "images/cheese_is_missing.bmp";
 	}
-	if (model->players[MOUSE].playerPos.x == UNVALID_POS || model->players[MOUSE].playerPos.y == UNVALID_POS) {
-		res.message = "No Mouse";
-	}
-
-	if (model->players[CAT].playerPos.x == UNVALID_POS || model->players[CAT].playerPos.y == UNVALID_POS) {
-		res.message = "No Cat";
+	else if (model->players[MOUSE].playerPos.x == UNVALID_POS || model->players[MOUSE].playerPos.y == UNVALID_POS) {
+		res.message = "images/mosue_is_missing.bmp";
 	}
 
-	res.code = SUCCESS;
+	else if (model->players[CAT].playerPos.x == UNVALID_POS || model->players[CAT].playerPos.y == UNVALID_POS) {
+		res.message = "images/cat_is_missing.bmp";
+	}
+
+	else {
+		res.code = SUCCESS;
+	}
 	return res;
 }
 

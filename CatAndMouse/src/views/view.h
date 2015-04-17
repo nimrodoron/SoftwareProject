@@ -2,6 +2,7 @@
 #define VIEW_H_
 
 #include "../models/model.h"
+#include "../infrastructure/general/general.h"
 
 
 
