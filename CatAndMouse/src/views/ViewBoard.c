@@ -1070,7 +1070,7 @@ void createMessage(char* message)
 		apply_surfaceBoard(385, 210 + 120, scr->head->next->next->next->componentProps.surface, allBoards);
 		if (SDL_Flip(allBoards) != 0) {
 			perror("ERROR: failed to flip buffer: %s\n", SDL_GetError());
-		}
+	}
 		while (quit == 0)
 		{
 			//While there's events to handle
