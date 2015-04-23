@@ -2,12 +2,22 @@
 #include "../models/ModelBoard.h"
 #include "../infrastructure/general/general.h"
 #include "../infrastructure/gui/widgets.h"
+#include "../infrastructure/general/ListUtils.h"
 
 
 #define NUMBER_BUTTONS_TOP_PANEL  6
 #define NUMBER_BUTTONS_SIDE_BAR 5
 #define NUMBER_BUTTONS_TOP_PANEL_CREATE_GAME 4
 #define NUMBER_WORLD_TITELS 6
+
+#define TOP_PANEL_WIDGET_NAME "topPanelWidget"
+#define TURNS_WIDGET_NAME "turnsWidget"
+#define THIRD_DIGIT_WIDGET_NAME "thirdDigitWidget"
+#define SECOND_DIGIT_WIDGET_NAME "secondDigitWidget"
+#define FIRST_DIGIT_WIDGET_NAME "firstDigitWidget"
+#define BRACE_CLOSE_WIDGET_NAME "braceCloseWidget"
+#define FREE_TEXT_WIDGET_NAME	"freeTextWidget"
+#define PAUSE_BUTTON_NAME		"pause"
 
 
 // all the possible events in the view
@@ -28,6 +38,7 @@ typedef enum {
 }viewBoardEvents;
 
 typedef struct viewBoard{
+	ListRef GameTopPanel;
 	Screen* topPanel;
 	Screen* sideBar;
 	Screen* gridArea;
@@ -66,8 +77,9 @@ result refreshSidePanel(viewBoard* view);
 // translate SDL events to view events
 viewBoard* buildBord();
 viewBoard* create_boardView(Screen* topPanel, Screen* sideBar);
-Screen* create_topPanel(modelBoard* model);
-void show_top_panel(Screen* scr, modelBoard* model);
+void create_topPanel(viewBoard* view);
+void free_top_pnael(viewBoard* view);
+void show_top_panel(viewBoard* view);
 void show_side_bar(Screen* scr);
 void show_grid_area(Screen* scr);
 Screen* create_sideBar(char** imagesArr);

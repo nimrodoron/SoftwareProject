@@ -12,8 +12,7 @@
 #include "../infrastructure/general/general.h"
 
 #define CAT_START "cat\0"
-#define MOUSE_START "mouse"
-#define EMPTY_CELL '#'
+#define MOUSE_START "mouse\0"
 #define WALL_CELL 'W'
 #define CAT_CELL 'C'
 #define MOUSE_CELL 'M'

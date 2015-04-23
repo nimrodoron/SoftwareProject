@@ -168,3 +168,59 @@ void add_child(Panel* item, Screen* window)
 		}
 	}
 }
+
+widget* createNewWidget(ComponentType widgetType, char* name) {
+
+	widget* newWidget = (widget*)malloc(sizeof(widget));
+
+	if (newWidget == NULL)
+	{
+		return NULL;
+	}
+
+	newWidget->dest_rect = (SDL_Rect*)malloc(sizeof(SDL_Rect));
+
+	if (newWidget->dest_rect == NULL)
+	{
+		return NULL;
+	}
+
+	newWidget->widgetType = widgetType;
+	newWidget->name = name;
+	return newWidget;
+}
+void drawWidget(widget* wg, SDL_Surface* surface) {
+
+	//Make a temporary rectangle to hold the offsets
+	SDL_Rect offset;
+
+	//Give the offsets to the rectangle
+	offset.x = wg->x;
+	offset.y = wg->y;
+	offset.h = 0;
+	offset.w = 0;
+
+	wg->dest_rect->x = 0;
+	wg->dest_rect->y = 0;
+	wg->dest_rect->h = wg->height;
+	wg->dest_rect->w = wg->width;
+
+	//Blit the surface
+	SDL_BlitSurface(wg->widget_surface, wg->dest_rect, surface, &offset);
+}
+
+bool checkClick(widget* wg, int x, int y) {
+	if (wg->widgetType == BUTTON)
+		if ((x > wg->x) && (x < wg->x + wg->width) && (y > wg->y) && (y < wg->y+wg->height))
+			return true;
+	return false;
+}
+
+void freeWidget(void* wgv) {
+	widget* wg = (widget*)wgv;
+	if (wg->dest_rect != NULL) {
+		free(wg->dest_rect);
+	}
+	if (wg != NULL)
+		free(wg);
+}

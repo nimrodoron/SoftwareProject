@@ -17,7 +17,12 @@ int evaluate(void* state) {
 //	int value;
 //	int result;
 //
-//	if (((StateOfBoard*)state)->isValid) {
+	if (((modelBoard*)state)->isValid) {
+
+		// If it is the min player (Cat)
+		if (((modelBoard*)state)->currentPlayer == CAT) {
+
+		}
 //		for (int row=0; row<MAT_ROWS; row++) {
 //			for (int col=0; col<MAT_COLS; col++) {
 //
@@ -94,13 +99,13 @@ int evaluate(void* state) {
 //		{
 //			if ((i+1) != WIN_SEQ_SIZE) result += scoresTable[i+1]*constantVector[i];
 //		}
-//	}
-//	else { // In case the board is not valid (couldn't add disc)
-//		if (((StateOfBoard*)state)->player == MIN_PLAYER) result = MIN_EVALUATION;
-//		if (((StateOfBoard*)state)->player == MAX_PLAYER) result = MAX_EVALUATION;
-//	}
-//
-//	return result;
+	}
+	else { // In case the board is not valid
+		if (((modelBoard*)state)->currentPlayer == MIN_PLAYER) result = MIN_EVALUATION;
+		if (((modelBoard*)state)->currentPlayer == MAX_PLAYER) result = MAX_EVALUATION;
+	}
+
+	return result;
 }
 
 /*this function returns the children of the current node, as a list*/
@@ -162,8 +167,8 @@ void FreeState(void* state) {
 
 /*this function checking if there is a winner */
 playerAnimal checkForWinner(modelBoard* currentState) {
-	//if (evaluate(currentState) == MAX_EVALUATION) return MAX_PLAYER;
-	//if (evaluate(currentState) == MIN_EVALUATION) return MIN_PLAYER;
+	if (evaluate(currentState) == MAX_EVALUATION) return MAX_PLAYER;
+	if (evaluate(currentState) == MIN_EVALUATION) return MIN_PLAYER;
 	return NONE;
 }
 
