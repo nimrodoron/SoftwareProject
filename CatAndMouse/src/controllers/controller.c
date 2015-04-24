@@ -246,6 +246,7 @@ void button_click(Uint16 x, Uint16 y,View* v)
 void quit_main_menu()
 {
 	quit = 1;
+	atexit(SDL_Quit);
 }
 
 void freeStates()
@@ -289,6 +290,7 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		worldsMenus =0;
 		break;
 	case 23://if the done button was pressed from the edit mode menu
+		quit = 1;
 		mainviewboard(cat, mouse, catLevel, mouseLevel, EDIT, WorldToOpen);
 		break;
 	case 24: //the edit game was preesed from the main menu 
@@ -297,6 +299,7 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		worldsMenus = 0;
 		break;
 	case 18: //if create game was pressed from the main menu
+		quit = 1;
 		mainviewboard(cat, mouse, catLevel, mouseLevel, EDIT,0);
 		break;
 	case 9: //in 'choose your mouse menu' human was chosen and then go to step 5 to the main game screen
@@ -308,6 +311,7 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		if (mouse == USER){
 			mouseLevel = -1;
 		}
+		quit = 1;
 		mainviewboard(cat, mouse, catLevel, mouseLevel, GAME, WorldToOpen);
 		break;
 	case 12: //selecting back from type selection menu for the mouse in reconfigure mouse mode
