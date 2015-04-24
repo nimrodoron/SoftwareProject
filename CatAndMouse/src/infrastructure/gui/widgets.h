@@ -99,4 +99,6 @@ void freeWidget(void* wg);
 void freeScreen(Screen* screen);
 void freePanel(Panel* panel);
 void setWidgetImage(widget* wg, char* path);
+void setImage(Panel* panel, char* path);
+
 #endif

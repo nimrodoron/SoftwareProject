@@ -61,7 +61,6 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	{
 		pan->componentProps.surface = SDL_LoadBMP(path);
 		if (pan->componentProps.surface == NULL) {
-
 			printf("ERROR: failed to load image: %s\n", SDL_GetError());
 			return NULL;
 		}
@@ -235,6 +234,13 @@ void setWidgetImage(widget* wg, char* path)
 		SDL_FreeSurface(wg);
 	}
 	wg->widget_surface = SDL_LoadBMP(path);
+}
+
+void setImage(Panel* panel, char* path)
+{
+	if (panel->componentProps.surface != NULL)
+		SDL_FreeSurface(panel->componentProps.surface);
+	panel->componentProps.surface = SDL_LoadBMP(path);
 }
 
 void freeWidget(void* wgv) {
