@@ -225,8 +225,10 @@ void button_click(Uint16 x, Uint16 y,View* v)
 							}
 							else //the regulear screen
 							{
+								SDL_FreeSurface(current->componentProps.surface);
 								current->componentProps.surface = SDL_LoadBMP(v->model->images[markedButton]); //update the button that was 'chosen' to regular
 								current->enabled = false;
+								SDL_FreeSurface(button->componentProps.surface);
 								button->componentProps.surface = SDL_LoadBMP(v->model->chosen_images[markedButtonIndex++]); //update the button that was regular to 'chosen'
 								button->enabled = true;
 							}

@@ -512,55 +512,55 @@ void show_top_panel(viewBoard* view)
 
 		if (!strcmp(currentWidget->name,TURNS_WIDGET_NAME)) {
 				if (view->model->currentPlayer == MOUSE)
-					currentWidget->widget_surface = SDL_LoadBMP(top_panel_animal_move[1]);
+					setWidgetImage(currentWidget,top_panel_animal_move[1]);
 				else if (view->model->currentPlayer == CAT)
-					currentWidget->widget_surface = SDL_LoadBMP(top_panel_animal_move[0]);
+					setWidgetImage(currentWidget, top_panel_animal_move[0]);
 		}
 
 		if (!strcmp(currentWidget->name,THIRD_DIGIT_WIDGET_NAME)) {
 			int i = (view->model->movesBeforeTie) / 100;
-			currentWidget->widget_surface = SDL_LoadBMP(top_panel_numbers[i]);
+			setWidgetImage(currentWidget, top_panel_numbers[i]);
 		}
 
 		if (!strcmp(currentWidget->name,SECOND_DIGIT_WIDGET_NAME)) {
 			int i = (view->model->movesBeforeTie) / 10;
-			currentWidget->widget_surface = SDL_LoadBMP(top_panel_numbers[i]);
+			setWidgetImage(currentWidget, top_panel_numbers[i]);
 		}
 
 		if (!strcmp(currentWidget->name,FIRST_DIGIT_WIDGET_NAME)) {
 			int i = (view->model->movesBeforeTie) % 10;
-			currentWidget->widget_surface = SDL_LoadBMP(top_panel_numbers[i]);
+			setWidgetImage(currentWidget, top_panel_numbers[i]);
 		}
 
 		if (!strcmp(currentWidget->name,BRACE_CLOSE_WIDGET_NAME)) {
-			currentWidget->widget_surface = SDL_LoadBMP(top_panel_numbers[10]);
+			setWidgetImage(currentWidget, top_panel_numbers[10]);
 		}
 
 		if (!strcmp(currentWidget->name,FREE_TEXT_WIDGET_NAME)) {
 			if (!pause &&
 				(view->model->players[view->model->currentPlayer].type == USER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[0]);
+				setWidgetImage(currentWidget, top_panel_game_status[0]);
 			if (!pause &&
 				(view->model->players[view->model->currentPlayer].type == COMPUTER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[2]);
+				setWidgetImage(currentWidget, top_panel_game_status[2]);
 			if (pause &&
 				(view->model->players[view->model->currentPlayer].type == USER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[1]);
+				setWidgetImage(currentWidget, top_panel_game_status[1]);
 			if (pause &&
 				(view->model->players[view->model->currentPlayer].type == COMPUTER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[3]);
+				setWidgetImage(currentWidget, top_panel_game_status[3]);
 		}
 
 		if (!strcmp(currentWidget->name,PAUSE_BUTTON_NAME)) {
 			if (!pause &&
 				(view->model->players[view->model->currentPlayer].type == USER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_pause[0]);
+				setWidgetImage(currentWidget, top_panel_pause[0]);
 			if (pause &&
 				(view->model->players[view->model->currentPlayer].type == USER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_pause[1]);
+				setWidgetImage(currentWidget, top_panel_pause[1]);
 			if (pause &&
 				(view->model->players[view->model->currentPlayer].type == COMPUTER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[1]);;
+				setWidgetImage(currentWidget, top_panel_game_status[1]);;
 		}
 
 		drawWidget(currentWidget,allBoards);

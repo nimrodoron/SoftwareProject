@@ -19,5 +19,6 @@ Model* create_model(char** imagesArr, char** imagesArrChosen, int* stateArr, int
 
 void freeModelMenus(Model* model)
 {
-	free(model);
+	if (model!=NULL)
+		free(model);
 }

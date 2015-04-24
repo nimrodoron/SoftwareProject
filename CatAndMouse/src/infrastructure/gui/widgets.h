@@ -98,4 +98,5 @@ void drawWidget(widget* wg,  SDL_Surface* surface);
 void freeWidget(void* wg);
 void freeScreen(Screen* screen);
 void freePanel(Panel* panel);
+void setWidgetImage(widget* wg, char* path);
 #endif

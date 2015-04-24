@@ -229,12 +229,21 @@ bool checkClick(widget* wg, int x, int y) {
 	return false;
 }
 
+void setWidgetImage(widget* wg, char* path)
+{
+	if (wg->widget_surface != NULL){
+		SDL_FreeSurface(wg);
+	}
+	wg->widget_surface = SDL_LoadBMP(path);
+}
+
 void freeWidget(void* wgv) {
+	;
 	widget* wg = (widget*)wgv;
 	if (wg->dest_rect != NULL) {
 		free(wg->dest_rect);
 	}
-	free(wg->widget_surface);
+	SDL_FreeSurface(wg->widget_surface);
 	if (wg != NULL)
 		free(wg);
 }
@@ -251,7 +260,10 @@ void freeScreen(Screen* screen)
 }
 void freePanel(Panel* panel)
 {
-	free(panel->componentProps.dest_rect);
-	free(panel->componentProps.surface);
-	free(panel);
+	if (panel->componentProps.dest_rect!=NULL)
+		free(panel->componentProps.dest_rect);
+	if (panel->componentProps.surface != NULL)
+		SDL_FreeSurface(panel->componentProps.surface);
+	if (panel!=NULL)
+		free(panel);
 }
