@@ -46,8 +46,9 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	
 	if (model->modelMode == GAME)
 	{
+		sideBar = create_sideBar(side_bar_images);
+		create_topPanel(*view);
 		sideBar = create_sideBar(side_bar_images_unable);
-		topPanel = create_topPanel(model);
 		gridArea = create_gridArea(model,*view);
 
 	}
@@ -61,13 +62,13 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	}
 
 
-	if ((sideBar == NULL) || (topPanel == NULL)|| (gridArea==NULL))
+	if ((sideBar == NULL) || (gridArea==NULL))
 	{
 		res.code = -1;
 		res.message = "ERROR: failed to allocate memory for game window\n";
 		return res;
 	}
-	(*view)->topPanel = topPanel;
+	//(*view)->GameTopPanel = topPanel;
 	(*view)->sideBar = sideBar;
 	(*view)->gridArea = gridArea;
 
@@ -92,7 +93,7 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 	if (model->modelMode == GAME) //we are in the game board
 	{
 		show_side_bar(view->sideBar);
-		show_top_panel(view->topPanel,model);
+		show_top_panel(view);
 		show_grid_area(view->gridArea);
 	}
 	else if (model->modelMode == EDIT)//we are in creating a new world board
@@ -117,6 +118,10 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 }
 
 result freeViewBoard(viewBoard* view) {
+
+	if (view->GameTopPanel != NULL)
+		// free top panel
+		destroyList(view->GameTopPanel,freeWidget);
 
 }
 
@@ -383,11 +388,16 @@ void button_click_side_panel_new_world(Uint16 x, Uint16 y, viewBoard* v)
 //checking where the left click was in the top panel and send to the controller the logical event
 void button_click_top_panel(Uint16 x, Uint16 y, viewBoard* v)
 {
-	//if (win == 1) // the game cant be paused if the game ends
-	if ((x>230 && x < 616) && (y>60 && y < 97)){
-		pauseWasPressed(v);
-	}
+	ListRef childrenlistTemp = v->GameTopPanel;
+
+	do {
+			widget* currentWidget= (widget*)headData(childrenlistTemp);
+			if ((!strcmp(currentWidget->name,PAUSE_BUTTON_NAME)) && (checkClick(currentWidget,x,y)))
+				pauseWasPressed(v);
+			childrenlistTemp = tail(childrenlistTemp);
+	} while (childrenlistTemp != NULL);
 }
+
 
 //checking where the left click was in the top panel in the new world menu and send to the controller the logical event
 void button_click_top_panel_new_world(Uint16 x, Uint16 y, viewBoard* v)
@@ -420,154 +430,144 @@ void button_click_game_board_game(Uint16 x, Uint16 y, viewBoard* v)
 
 
 
-Screen* create_topPanel(modelBoard* model)
+void create_topPanel(viewBoard* view)
 {
-	int factor;
-	Screen* scr = (Screen*)malloc(sizeof(Screen));
-	if (scr == NULL)
-	{
+	// Create empty widget that contain the panel
+	widget* emptyPanelWidget = createNewWidget(PANEL,TOP_PANEL_WIDGET_NAME);
+	emptyPanelWidget->x = 0;
+	emptyPanelWidget->y = 0;
+	emptyPanelWidget->width = 800;
+	emptyPanelWidget->height = 200;
 
-		result res;
-		res.code = ERROR;
-		res.message = "images/failed_to_allocate_memory.bmp";
-		printMessages(res.message);
-		return NULL;
-	}
-	scr->screen = allBoards;
-	scr->head = create_panel(800, 200, 0, 0, NULL, PANEL, -1, scr, 1);
-	int yOffset = 0;
-	int xOffset = 0;
-	int type = 1;
-	Panel* currentHead = scr->head;
-	for (int i = 0; i < NUMBER_BUTTONS_TOP_PANEL-2; i++)
-	{
+	// Create who turns widget
+	widget* turnsWidget = createNewWidget(IMAGE,TURNS_WIDGET_NAME);
+	turnsWidget->x = 300;
+	turnsWidget->y = 10;
+	turnsWidget->width = 150;
+	turnsWidget->height = 30;
 
-		switch (i)
-		{
-		case 0: //the <animal>move
-			add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_animal_move[model->currentPlayer], type, 0, scr, 0), scr);
-			break;
-		case 1: //the moves before tie
-			/*if (model->currentPlayer == MOUSE)
-				xOffset = 140;
-			else 
-				xOffset = 120;*/
-			factor = 1;
-			int moveBeforeTie = model->movesBeforeTie;
-			int temp = moveBeforeTie;
-			while (temp)
-			{
-				temp = temp / 10;
-				factor = factor * 10;
-			}
-			for (int j = 0; j <3;j++)
-			//while (factor>1)
-			{
-				if (factor >1)
-				{
-					factor = factor / 10;
+	// Create Hundreds digit widget
+	widget* HundredsDigitWidget = createNewWidget(IMAGE,THIRD_DIGIT_WIDGET_NAME);
+	HundredsDigitWidget->x = 300+150;
+	HundredsDigitWidget->y = 10;
+	HundredsDigitWidget->width = 10;
+	HundredsDigitWidget->height = 50;
 
-					add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_numbers[moveBeforeTie / factor], type, 0, scr, 0), scr);
-					moveBeforeTie = moveBeforeTie % factor;
-				}
-				else {
-					add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, "images/empty_number.bmp", type, 0, scr, 0), scr);
-				}
-				xOffset += 7;
+	// Create Hundreds digit widget
+	widget* TensDigitWidget = createNewWidget(IMAGE,SECOND_DIGIT_WIDGET_NAME);
+	TensDigitWidget->x = 300+150+10;
+	TensDigitWidget->y = 10;
+	TensDigitWidget->width = 10;
+	TensDigitWidget->height = 50;
 
-			}
-			add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_numbers[10], type, 0, scr, 0), scr);
-			break;
-		case 2: //the game status (sewcond line)
-			yOffset = 30;
-			xOffset = 0;
-			if (pause == 1)
-			{
-				if (model->players[model->currentPlayer].type == USER) //human and paused
-					add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_game_status[1], type, 0, scr, 0), scr);
-				else //machine and paused
-					add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_game_status[3], type, 0, scr, 0), scr);
-			}
-			else
-			{
-				if (model->players[model->currentPlayer].type == USER) //human and not paused
-					add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_game_status[0], type, 0, scr, 0), scr);
-				else //machine and not paused
-					add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_game_status[2], type, 0, scr, 0), scr);
-			}
-			break;
-		case 3: //the third line
-			xOffset = 0;
-			yOffset += 30;
-			if (model->players[model->currentPlayer].type == COMPUTER) //if the current player is a machine
-				add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_pause[0], type, 0, scr, 0), scr);
-			else if (model->players[model->currentPlayer].type == USER)//if the current player is a human
-				add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_pause[1], type, 0, scr, 0), scr);
-			else if (pause == 1) // if the game is paused
-				add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + yOffset, top_panel_pause[2], type, 0, scr, 0), scr);
-			break;
-		default:
-			break;
-		}
-	}
-	
-	return scr;
+	// Create last digit widget
+	widget* DigitWidget = createNewWidget(IMAGE,FIRST_DIGIT_WIDGET_NAME);
+	DigitWidget->x = 300+150+10+10;
+	DigitWidget->y = 10;
+	DigitWidget->width = 10;
+	DigitWidget->height = 50;
+
+	// Create brace close widget
+	widget* braceCloseWiget = createNewWidget(IMAGE,BRACE_CLOSE_WIDGET_NAME);
+	braceCloseWiget->x = 300+150+10+10+20;
+	braceCloseWiget->y = 10;
+	braceCloseWiget->width = 10;
+	braceCloseWiget->height = 50;
+
+	// Create free text widget
+	widget* freeTextWidget = createNewWidget(IMAGE,FREE_TEXT_WIDGET_NAME);
+	freeTextWidget->x = 250;
+	freeTextWidget->y = 35;
+	freeTextWidget->width = 300;
+	freeTextWidget->height = 50;
+
+	// Create pause button widget
+	widget* pauseButtonWodget = createNewWidget(BUTTON,PAUSE_BUTTON_NAME);
+	pauseButtonWodget->x = 230;
+	pauseButtonWodget->y = 65;
+	pauseButtonWodget->width = 500;
+	pauseButtonWodget->height = 50;
+
+	// Create the list and save in the view
+	ListRef tempListRef;
+	view->GameTopPanel = newList(emptyPanelWidget);
+	tempListRef = append(view->GameTopPanel,turnsWidget);
+	tempListRef = append(tempListRef,HundredsDigitWidget);
+	tempListRef = append(tempListRef,TensDigitWidget);
+	tempListRef = append(tempListRef,DigitWidget);
+	tempListRef = append(tempListRef,braceCloseWiget);
+	tempListRef = append(tempListRef,freeTextWidget);
+	tempListRef = append(tempListRef,pauseButtonWodget);
 }
 
-void show_top_panel(Screen* scr, modelBoard* model)
+void show_top_panel(viewBoard* view)
 {
-	int yOffset = 0;
-	int xOffset = 0;
-	int moveBeforeTie = 0;
-	Panel* currentHead = scr->head;
-	for (int i = 0; i < NUMBER_BUTTONS_TOP_PANEL-2; i++)
-	{
+	ListRef childrenlistTemp = view->GameTopPanel;
 
-		switch (i)
-		{
-		case 0: //the <animal>move
-			apply_surfaceBoard(330 + xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
-			currentHead = currentHead->next;
-			break;
-		case 1: //the moves before tie
-			moveBeforeTie = model->movesBeforeTie;
+	do {
+		widget* currentWidget= (widget*)headData(childrenlistTemp);
 
-			if (model->currentPlayer == MOUSE)
-				xOffset = 140;
-			else
-				xOffset = 120;
+		if (!strcmp(currentWidget->name,TOP_PANEL_WIDGET_NAME))
+				currentWidget->widget_surface = allBoards;
 
-			//while (moveBeforeTie > 0)
-			for (int j = 0; j < 3;j++)
-			{
-				apply_surfaceBoard(330 + xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
-				//moveBeforeTie = moveBeforeTie / 10;
-				xOffset += 9;
-				currentHead = currentHead->next;
-			}
-			xOffset += 7;
-			apply_surfaceBoard(330 + xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
-			currentHead = currentHead->next;
-			break;
-		case 2: //the game status (sewcond line)
-			yOffset = 30;
-			xOffset = 0;
-			apply_surfaceBoard(330 + xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
-			currentHead = currentHead->next;
-			break;
-		case 3: //the third line
-			xOffset = 0;
-			yOffset += 30;
-			apply_surfaceBoard(330 + xOffset, yOffset, currentHead->next->componentProps.surface, allBoards);
-			currentHead = currentHead->next;
-			break;
-		default:
-			break;
+		if (!strcmp(currentWidget->name,TURNS_WIDGET_NAME)) {
+				if (view->model->currentPlayer == MOUSE)
+					currentWidget->widget_surface = SDL_LoadBMP(top_panel_animal_move[1]);
+				else if (view->model->currentPlayer == CAT)
+					currentWidget->widget_surface = SDL_LoadBMP(top_panel_animal_move[0]);
 		}
-	}
-	if (SDL_Flip(allBoards) != 0) {
-		printf("ERROR: failed to flip buffer: %s\n", SDL_GetError());
-	}
+
+		if (!strcmp(currentWidget->name,THIRD_DIGIT_WIDGET_NAME)) {
+			int i = (view->model->movesBeforeTie) / 100;
+			currentWidget->widget_surface = SDL_LoadBMP(top_panel_numbers[i]);
+		}
+
+		if (!strcmp(currentWidget->name,SECOND_DIGIT_WIDGET_NAME)) {
+			int i = (view->model->movesBeforeTie) / 10;
+			currentWidget->widget_surface = SDL_LoadBMP(top_panel_numbers[i]);
+		}
+
+		if (!strcmp(currentWidget->name,FIRST_DIGIT_WIDGET_NAME)) {
+			int i = (view->model->movesBeforeTie) % 10;
+			currentWidget->widget_surface = SDL_LoadBMP(top_panel_numbers[i]);
+		}
+
+		if (!strcmp(currentWidget->name,BRACE_CLOSE_WIDGET_NAME)) {
+			currentWidget->widget_surface = SDL_LoadBMP(top_panel_numbers[10]);
+		}
+
+		if (!strcmp(currentWidget->name,FREE_TEXT_WIDGET_NAME)) {
+			if (!pause &&
+				(view->model->players[view->model->currentPlayer].type == USER))
+				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[0]);
+			if (!pause &&
+				(view->model->players[view->model->currentPlayer].type == COMPUTER))
+				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[2]);
+			if (pause &&
+				(view->model->players[view->model->currentPlayer].type == USER))
+				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[1]);
+			if (pause &&
+				(view->model->players[view->model->currentPlayer].type == COMPUTER))
+				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[3]);
+		}
+
+		if (!strcmp(currentWidget->name,PAUSE_BUTTON_NAME)) {
+			if (!pause &&
+				(view->model->players[view->model->currentPlayer].type == USER))
+				currentWidget->widget_surface = SDL_LoadBMP(top_panel_pause[0]);
+			if (pause &&
+				(view->model->players[view->model->currentPlayer].type == USER))
+				currentWidget->widget_surface = SDL_LoadBMP(top_panel_pause[1]);
+			if (pause &&
+				(view->model->players[view->model->currentPlayer].type == COMPUTER))
+				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[1]);;
+		}
+
+		drawWidget(currentWidget,allBoards);
+		childrenlistTemp = tail(childrenlistTemp);
+	} while (childrenlistTemp != NULL);
+
+	SDL_Flip(allBoards);
 }
 
 Screen* create_sideBar(char** imagesArr)
@@ -840,7 +840,7 @@ void apply_surfaceBoard(int x, int y, SDL_Surface* source, SDL_Surface* destinat
 	}
 }
 
-result refreshTopPanel(viewBoard* view)
+/*result refreshTopPanel(viewBoard* view)
 {
 	int factor;
 	// refresh the top panel
@@ -857,10 +857,10 @@ result refreshTopPanel(viewBoard* view)
 			currentHead = currentHead->next;
 			break;
 		case 1: //the moves before tie
-			/*if (model->currentPlayer == MOUSE)
+			if (model->currentPlayer == MOUSE)
 			xOffset = 140;
 			else
-			xOffset = 120;*/
+			xOffset = 120;
 			factor = 1;
 			int moveBeforeTie = model->movesBeforeTie;
 			int temp = moveBeforeTie;
@@ -918,14 +918,13 @@ result refreshTopPanel(viewBoard* view)
 		}
 	}
 	show_top_panel(view->topPanel, model); // hila - check if this is the right model
-}
+}*/
 result refreshViewBoard(viewBoard* view) {
 	//refresh the top panel
 	if (view->model->modelMode == GAME)
 	{
-		refreshTopPanel(view);
 		//create_topPanel(view->model);
-		//show_top_panel(view->topPanel,view->model);		
+		show_top_panel(view);
 	}		
 
 	// refresh the grid
@@ -996,7 +995,7 @@ void printWinnerTopPaenl(playerAnimal winner,viewBoard* view)
 	{
 		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[2], 1, 0, view->topPanel, 0), view->topPanel);
 	}
-	show_top_panel(view->topPanel, view->model);
+	//show_top_panel(view->topPanel, view->model);
 	pause = 1; //  the game enters to the pause state
 	refreshSidePanel(view);
 }
@@ -1013,6 +1012,7 @@ void pauseWasPressed(viewBoard* view)
 		pause = 0;
 	}
 	refreshSidePanel(view);
+	show_top_panel(view);
 }
 
 result refreshSidePanel(viewBoard* view) {
@@ -1033,8 +1033,6 @@ result refreshSidePanel(viewBoard* view) {
 				item = item->next;
 			}
 		}
-		//if (win == 1) //  if the game doesnt end then refresh the top panel
-			refreshTopPanel(view);
 		show_side_bar(view->sideBar);
 }
 
@@ -1075,6 +1073,8 @@ void createMessage(char* message)
 		if (SDL_Flip(allBoards) != 0) {
 			printf("ERROR: failed to flip buffer: %s\n", SDL_GetError());
 		}
+
+
 		while (quit == 0)
 		{
 			//While there's events to handle
@@ -1095,6 +1095,5 @@ void createMessage(char* message)
 			}
 		}
 
-	
 }
 

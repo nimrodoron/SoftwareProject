@@ -67,6 +67,16 @@ typedef struct Screen
 	SDL_Surface* screen;
 }Screen;
 
+typedef struct widget {
+	SDL_Surface*			widget_surface;
+	SDL_Rect*               dest_rect;
+	char*					name;
+	ComponentType			widgetType;
+	int						x;
+	int						y;
+	int						height;
+	int						width;
+}widget;
 
 
 
@@ -81,5 +91,10 @@ int calc_height(int size, int height, int gap);
 int calc_width(int width);
 void add_child(Panel* item, Screen* window);
 void update_panel_picture(Panel* item, char* path);
+
+widget* createNewWidget(ComponentType widgetType, char* name);
+bool checkClick(widget* wg, int x, int y);
+void drawWidget(widget* wg,  SDL_Surface* surface);
+void freeWidget(void* wg);
 
 #endif

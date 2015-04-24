@@ -28,6 +28,9 @@ struct MiniMaxResult {
 	int value;
 };
 
+#define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
+#define MAX(X, Y) (((X) > (Y)) ? (X) : (Y))
+
 /**
  * Returns the best child of the given state, resulting from the MiniMax computation up to maxDepth.
  * The getChildren function will be used to get each state's children.

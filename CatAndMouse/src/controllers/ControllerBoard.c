@@ -319,7 +319,7 @@ void playerMoveTo(int x, int y) {
 
 	// move the player if possiable
 	if(movePlayerTo(controller->model,x,y)) {
-
+		controller->model->movesBeforeTie--;
 
 
 		 // check for winner
