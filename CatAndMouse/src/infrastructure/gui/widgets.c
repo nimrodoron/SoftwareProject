@@ -232,7 +232,7 @@ bool checkClick(widget* wg, int x, int y) {
 void setWidgetImage(widget* wg, char* path)
 {
 	if (wg->widget_surface != NULL){
-		SDL_FreeSurface(wg);
+		SDL_FreeSurface(wg->widget_surface);
 	}
 	wg->widget_surface = SDL_LoadBMP(path);
 }
