@@ -17,5 +17,6 @@ View* build_all_view(char** imagesArr, char** imagesArrChosen, int* stateArr, in
 int draw_screen(char* title, Screen* window);
 void draw_components(Panel* comp, Screen* window);
 void apply_surface(SDL_Surface* comp, int x, int y, SDL_Rect* clip, Screen* window);
+void freeView(View* view);
 
 #endif

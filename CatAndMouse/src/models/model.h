@@ -15,5 +15,6 @@ typedef struct model{
 
 
 Model* create_model(char** imagesArr, char** imagesArrChosen, int* stateArr, int marked_button, int level);
+void freeModelMenus(Model* model);
 
 #endif

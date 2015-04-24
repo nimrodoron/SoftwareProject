@@ -96,5 +96,6 @@ widget* createNewWidget(ComponentType widgetType, char* name);
 bool checkClick(widget* wg, int x, int y);
 void drawWidget(widget* wg,  SDL_Surface* surface);
 void freeWidget(void* wg);
-
+void freeScreen(Screen* screen);
+void freePanel(Panel* panel);
 #endif

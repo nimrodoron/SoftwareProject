@@ -246,9 +246,16 @@ void button_click(Uint16 x, Uint16 y,View* v)
 void quit_main_menu()
 {
 	quit = 1;
-	//free_UI_Tree(currentWindow);
 }
 
+void freeStates()
+{
+	for (int i = 0; i < 8; i++)
+	{
+		if (states[i] != NULL)
+			freeView(states[i]);
+	}
+}
 void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 {
 	playerAnimal editedPlayer = MOUSE;
@@ -456,6 +463,7 @@ void mainviewboard(playerType catType, playerType mouseType, int catLevel, int m
 	// Example show board on edit mode (edit)
 	//creat need to get NULL
 	//edit will get the text file
+	freeStates();
 	if (mod == EDIT)
 	{
 		createBoardController(EDIT, filename, cat, mouse, NONE,worldsIndex);

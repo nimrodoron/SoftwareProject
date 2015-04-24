@@ -16,3 +16,8 @@ Model* create_model(char** imagesArr, char** imagesArrChosen, int* stateArr, int
 	mod->stateId = stateArr;
 	return mod;
 }
+
+void freeModelMenus(Model* model)
+{
+	free(model);
+}

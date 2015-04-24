@@ -22,6 +22,7 @@ Screen* create_screen()
 	return scr;
 }
 
+
 /*create and initalize a new component*/
 Panel* create_panel(int width, int height, int x, int y, char* path, ComponentType type, int stateIndex,Screen* window,int number_buttons)
 {
@@ -234,4 +235,20 @@ void freeWidget(void* wgv) {
 	}
 	if (wg != NULL)
 		free(wg);
+}
+
+void freeScreen(Screen* screen)
+{
+	Panel* currentHead = screen->head;
+	while (screen->head != NULL){
+		currentHead = screen->head;
+		screen->head = currentHead->next;
+		freePanel(currentHead);
+	}
+	free(screen);
+}
+void freePanel(Panel* panel)
+{
+	free(panel->componentProps.dest_rect);
+	free(panel);
 }

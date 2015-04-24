@@ -90,6 +90,7 @@ void reconfigureCatFunction(int level, playerType type, modelBoard* model);
 void GoToMainMenu();
 void save(int worldsIndex);
 void save_world(modelBoard* model);
+void freeStates();
 
 
 #endif
