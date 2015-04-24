@@ -6,7 +6,7 @@ Model* create_model(char** imagesArr, char** imagesArrChosen, int* stateArr, int
 	if (mod==NULL)
 	{
 		isError -1;
-		printf("ERROR: failed to allocate memory for model\n");
+		perror("ERROR: failed to allocate memory for model\n");
 		return NULL;
 	}
 	mod->chosen_images = imagesArrChosen;

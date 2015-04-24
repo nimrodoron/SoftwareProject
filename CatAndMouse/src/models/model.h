@@ -3,7 +3,6 @@
 
 #include "../infrastructure/gui/widgets.h"
 
-
 typedef struct model{
 	char** images; // an array for the images for the buttons in this screen
 	char** chosen_images; //an array for the chosen images for the buttons in this screen

@@ -8,7 +8,7 @@ View* create_view(Model* model, Screen* screen){
 	if (view == NULL)
 	{
 		isError - 1;
-		printf("ERROR: failed to allocate memory for view\n");
+		perror("ERROR: failed to allocate memory for view\n");
 		return NULL;
 	}
 	view->model = model;
@@ -34,11 +34,16 @@ int draw_screen(char* title, Screen* window)
 	SDL_BlitSurface(window->screen, NULL, window->screen, NULL);
 
 	SDL_Color color = window->head->componentProps.background_color;
-	SDL_FillRect(window->screen, 0, SDL_MapRGB(window->screen->format, color.r, color.g, color.b));
+	//SDL_FillRect(window->screen, 0, SDL_MapRGB(window->screen->format, color.r, color.g, color.b));
+	if (SDL_FillRect(window->screen, 0, SDL_MapRGB(window->screen->format, color.r, color.g, color.b)) != 0) {
+		isError - 1;
+		printf("ERROR: failed to draw rect: %s\n", SDL_GetError());
+		return -1;
+	}
 	draw_components(window->head->next, window);
 }
 
-/*complete to all the components in the list!*/
+
 /*draws all the component in the tree */
 void draw_components(Panel* comp, Screen* window){
 	SDL_Rect frame[1];
@@ -54,10 +59,12 @@ void draw_components(Panel* comp, Screen* window){
 		comp = comp->next;
 		i++;
 	}
-	SDL_Flip(window->screen);
+	if (SDL_Flip(window->screen) != 0) {
+		printf("ERROR: failed to flip buffer: %s\n", SDL_GetError());
+	}
 }
 
-/*something with the window display...*/
+
 void apply_surface(SDL_Surface* comp, int x, int y, SDL_Rect* clip, Screen* window)
 {
 	//Holds offsets
@@ -68,6 +75,9 @@ void apply_surface(SDL_Surface* comp, int x, int y, SDL_Rect* clip, Screen* wind
 	offset.y = y;
 
 	//Blit
-	SDL_BlitSurface(comp, clip, window->screen, &offset);
+	if (SDL_BlitSurface(comp, clip, window->screen, &offset) != 0) {
+		isError - 1;
+		printf("ERROR: failed to blit image: %s\n", SDL_GetError());
+	}
 }
 

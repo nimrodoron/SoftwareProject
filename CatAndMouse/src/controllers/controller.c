@@ -560,7 +560,6 @@ void save_world(modelBoard* model)
 {
 	quit = 0;
 	WorldToOpen = 1;
-	//loadGame = 1;
 	worldsMenus = 0;
 	states[7] = build_all_view(save_game_menu_buttons_image, save_game_menu_buttons_image_chosen, stateId_save_game, 1, 1, NUMBER_BUTTONS_LOAD_GAME_MENU);
 	currentView = states[7];

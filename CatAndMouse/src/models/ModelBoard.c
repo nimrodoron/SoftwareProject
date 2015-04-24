@@ -32,6 +32,11 @@ result createEmptyModel(modelBoard** model) {
 				}
 			}
 		}
+		else if ((*model)->board == NULL){
+			res.code = -1;
+			res.message = "ERROR: failed to allocate memory for model\n";
+			return res;
+		}
 
 	(*model)->isValid = true;
 	res.code = SUCCESS;

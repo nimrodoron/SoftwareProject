@@ -98,4 +98,6 @@ void button_click_game_board(Uint16 x, Uint16 y, viewBoard* v);
 void button_click_game_board_game(Uint16 x, Uint16 y, viewBoard* v);
 void printWinnerTopPaenl(playerAnimal winner, viewBoard* view);
 void pauseWasPressed(viewBoard* view);
+void printMessages(char* message);
+void createMessage(char* message);
 
