@@ -57,9 +57,10 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	{ /*to make sure it exists*/
 		pan->componentProps.background_color = color;
 	}
+	pan->componentProps.surface = NULL;
 	if (type == BUTTON)
 	{
-		pan->componentProps.surface = SDL_LoadBMP(path);
+		setImage(pan,path);
 		if (pan->componentProps.surface == NULL) {
 			printf("ERROR: failed to load image: %s\n", SDL_GetError());
 			return NULL;
@@ -68,7 +69,7 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	}
 	else if (type == IMAGE)
 	{
-		pan->componentProps.surface = SDL_LoadBMP(path);
+		setImage(pan, path);
 		if (pan->componentProps.surface == NULL) {
 			printf("ERROR: failed to load image: %s\n", SDL_GetError());
 			return NULL;
@@ -98,7 +99,7 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 }
 
 void update_panel_picture(Panel* item, char* path) {
-	item->componentProps.surface = SDL_LoadBMP(path);
+	setImage(item, path);
 	if (item->componentProps.surface == NULL) {
 		printf("ERROR: failed to load image: %s\n", SDL_GetError());
 	}
@@ -196,7 +197,7 @@ widget* createNewWidget(ComponentType widgetType, char* name) {
 	{
 		return NULL;
 	}
-
+	newWidget->widget_surface = NULL;
 	newWidget->widgetType = widgetType;
 	newWidget->name = name;
 	return newWidget;

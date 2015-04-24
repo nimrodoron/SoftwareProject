@@ -156,7 +156,7 @@ void tab_click(View* v)
 		{
 			setImage(current, v->model->images[v->model->level + 3]);
 			current->enabled = false;
-			setImage(current, v->model->chosen_images[markedButton + 1]);
+			setImage(current->next, v->model->chosen_images[markedButton + 1]);
 			current->next->enabled = true;
 			v->model->marked_button += 1;
 		}
@@ -164,7 +164,7 @@ void tab_click(View* v)
 		{
 			setImage(current, v->model->images[markedButton]);
 			current->enabled = false;
-			setImage(current, v->model->chosen_images[markedButton + 1]);
+			setImage(current->next, v->model->chosen_images[markedButton + 1]);
 			current->next->enabled = true;
 			v->model->marked_button += 1;
 		}

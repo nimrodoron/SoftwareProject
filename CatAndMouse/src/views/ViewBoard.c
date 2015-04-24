@@ -560,7 +560,7 @@ void show_top_panel(viewBoard* view)
 				setWidgetImage(currentWidget, top_panel_pause[1]);
 			if (pause &&
 				(view->model->players[view->model->currentPlayer].type == COMPUTER))
-				setWidgetImage(currentWidget, top_panel_game_status[1]);;
+				setWidgetImage(currentWidget, top_panel_pause[1]);;
 		}
 
 		drawWidget(currentWidget,allBoards);
