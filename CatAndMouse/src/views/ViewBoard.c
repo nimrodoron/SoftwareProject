@@ -584,7 +584,7 @@ Screen* create_sideBar(char** imagesArr)
 	scr->screen = allBoards;
 	
 	scr->head = create_panel(200, 600, 0, 0, "images/side_bar.bmp", IMAGE, -1, scr, 1);
-	apply_surfaceBoard(0, 100 , scr->head->componentProps.surface, allBoards);
+	//apply_surfaceBoard(0, 100 , scr->head->componentProps.surface, allBoards);
 
 	for (int i = 0; i < NUMBER_BUTTONS_SIDE_BAR; i++)
 	{
