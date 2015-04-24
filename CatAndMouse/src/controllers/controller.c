@@ -180,7 +180,7 @@ void button_click(Uint16 x, Uint16 y,View* v)
 	Panel *button = v->screen->head->next;
 	Panel* current = v->screen->head->next;
 	int level = v->model->level;
-	while (button != NULL)
+	while (button != NULL && quit == 0)
 	{
 		//if (button->enabled == 1)
 		

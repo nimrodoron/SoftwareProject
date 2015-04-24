@@ -27,10 +27,12 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	pause = 1;
 
 	result res;
-	Screen* sideBar;
-	Screen* topPanel;
-	Screen* gridArea;
+	Screen* sideBar = NULL;
+	Screen* topPanel = NULL;
+	Screen* gridArea = NULL;
+
 	*view = (viewBoard*)malloc(sizeof(viewBoard));
+	(*view)->GameTopPanel = NULL;
 	if (view == NULL)
 	{
 		result res;
@@ -68,9 +70,10 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 		res.message = "ERROR: failed to allocate memory for game window\n";
 		return res;
 	}
-	//(*view)->GameTopPanel = topPanel;
+	(*view)->topPanel = topPanel;
 	(*view)->sideBar = sideBar;
 	(*view)->gridArea = gridArea;
+	(*view)->quitView = 0;
 
 	res.code = SUCCESS;
 	return res;
@@ -78,7 +81,6 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 
 result showViewBoard(viewBoard* view,modelBoard* model) {
 	result res;
-	int quit=0;
 	
 	allBoards = SDL_SetVideoMode(800, 800, 0, 0);
 	if (allBoards == NULL) {
@@ -104,7 +106,7 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 	}
 	
 
-	while (quit == 0)
+	while (view->quitView == 0)
 	{
 		//While there's events to handle
 		while (SDL_PollEvent(&event) != 0)
@@ -112,7 +114,7 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 			handle_gui_event(&event, view,model);
 		}
 	}
-
+	view->HandleSystemEvent(EXIT, 0, 0);
 	res.code = SUCCESS;
 	return res;
 }
@@ -122,19 +124,24 @@ result freeViewBoard(viewBoard* view) {
 	if (view->GameTopPanel != NULL)
 		// free top panel
 		destroyList(view->GameTopPanel,freeWidget);
-
+	if (view->sideBar != NULL)
+		freeScreen(view->sideBar);
+	if (view->gridArea != NULL)
+		freeScreen(view->gridArea);
+	if (view->topPanel)
+		freeScreen(view->topPanel);
+	free(view);
 }
 
 void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 {
+	if(ev->type ==  SDL_QUIT)
+		v->quitView = 1;	
 	if (model->modelMode == GAME)
 	{
 	if (pause == 0) { // can be clicked only if the game is paused
 		switch (ev->type)
 		{
-		case SDL_QUIT:
-			v->HandleSystemEvent(EXIT, 0, 0);
-			break;
 		case SDL_MOUSEBUTTONUP :
 				if ((ev->button.x > 0 && ev->button.x < 200) && (ev->button.y>0 && ev->button.y<600))
 					button_click_side_panel(ev->button.x, ev->button.y, v);
@@ -181,18 +188,18 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 			case SDLK_SPACE:
 				pauseWasPressed(v);
 				break;
-				case SDLK_RIGHT://right key was pressed
+			case SDLK_RIGHT://right key was pressed
 						if (model->players[model->currentPlayer].playerPos.y < 6)
 							v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x, model->players[model->currentPlayer].playerPos.y + 1);
 						break;
-					case SDLK_LEFT://left key was pressed
+			case SDLK_LEFT://left key was pressed
 						if (model->players[model->currentPlayer].playerPos.y > 0)
 							v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x, model->players[model->currentPlayer].playerPos.y - 1);
 						break;
-					case SDLK_UP:if (model->players[model->currentPlayer].playerPos.x > 0)
+			case SDLK_UP:if (model->players[model->currentPlayer].playerPos.x > 0)
 						v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x - 1, model->players[model->currentPlayer].playerPos.y);;
 						break;
-					case SDLK_DOWN:
+			case SDLK_DOWN:
 						if (model->players[model->currentPlayer].playerPos.x < 6)
 							v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x + 1, model->players[model->currentPlayer].playerPos.y);
 						break;

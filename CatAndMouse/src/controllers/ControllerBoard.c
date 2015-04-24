@@ -65,11 +65,9 @@ result freeBoardController() {
 	if (controller != NULL) {
 		if (controller->model != NULL) {
 			freeModel(&controller->model);
-			free(controller->model);
 		}
 		if (controller->view != NULL) {
 			freeViewBoard(controller->view);
-			free(controller->view);
 		}
 		free(controller);
 	}
@@ -79,7 +77,8 @@ result freeBoardController() {
 
 void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 	switch (event) {
-		case(EXIT):
+		case(EXIT) :
+			freeBoardController();
 			break;
 		case (RECONFIGURE_MOUSE) :
 			reconfigureMouseFunction(controller->model->players[MOUSE].level, controller->model->players[MOUSE].type,controller->model);
