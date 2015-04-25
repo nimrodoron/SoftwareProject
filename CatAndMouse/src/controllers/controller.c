@@ -53,7 +53,36 @@ char* save_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "image
 char* save_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5] = { "images/save-world_title.bmp", "images/world_1_chosen.bmp", "images/done_chosen.bmp", "images/back_chosen.bmp", "images/world_1_chosen.bmp", "images/world_2_chosen.bmp", "images/world_3_chosen.bmp", "images/world_4_chosen.bmp", "images/world_5_chosen.bmp" };
 int stateId_save_game[NUMBER_BUTTONS_LOAD_GAME_MENU] = { 7, 22, 25, 12 };
 
+/*if we didn't get parameters in the console mode then start the program with the gui*/
+int initGUI()
+{
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	{
+		printf("ERROR: unable to init SDL: %s\n", SDL_GetError());
+		return 1;
+	}
+	atexit(SDL_Quit);
 
+	initialize_states();
+
+	currentView = states[0];
+	draw_screen("Cat&Mouse", currentView->screen);
+	//While the user hasn't quit
+	while_handle_event();
+
+	//SDL_FreeSurface(window);
+	return 0;
+	SDL_Quit();
+
+}
+
+/*if we get in the console mode the arguments -console cat or -console mouse
+ * then print q and exit*/
+void handle_event_console()
+{
+	printf("%s", "q\n");
+	exit(0);
+}
 
 /*initializing the array of the menus*/
 void initialize_states(){
@@ -356,13 +385,13 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		break;
 	case 22: //we are in the worlds menus: load game, save game, edit game
 		worldsMenus = 0;
-		try(button, x, y, v, MOUSE);
+		handaleUpDoawArrowas(button, x, y, v, MOUSE);
 		break;
 	case 11: //level button was pressed from 'choose your cat skill level menu'
-		try(button, x, y, v,cat);
+		handaleUpDoawArrowas(button, x, y, v, cat);
 		break;
 	case 10: //level button was pressed for 'choose your mouse skill level menu'
-		try(button,x, y,v,MOUSE);
+		handaleUpDoawArrowas(button, x, y, v, MOUSE);
 		break;
 	case 25://if the done button was pressed in the save world menu
 		save(WorldToOpen);
@@ -375,7 +404,8 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 	}
 }
 
-void try(Panel* button, Uint16 x, Uint16 y, View* v,playerAnimal editedPlayer)
+
+void handaleUpDoawArrowas(Panel* button, Uint16 x, Uint16 y, View* v, playerAnimal editedPlayer)
 {
 	if (v->model->level != -1)
 	{
@@ -556,6 +586,7 @@ void GoToMainMenu()
 {
 	// free all memory - controller, view and model and the new array 'states' that was created in the reconfigure options
 	initialize_states();
+	currentView = states[0];
 	draw_screen("Cat&Mouse", currentView->screen);
 	//restore the defult states
 	quit = 0;

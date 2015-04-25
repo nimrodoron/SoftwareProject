@@ -73,6 +73,8 @@ extern int stateId_edit_game[NUMBER_BUTTONS_LOAD_GAME_MENU];
 #define NUMBER_MENUES 8
 View* states[NUMBER_MENUES];
 
+int initGUI();
+void handle_event_console();
 void while_handle_event();
 void initialize_states();
 void handle_event(SDL_Event *ev, View* v);
@@ -81,6 +83,7 @@ void button_click(Uint16 x, Uint16 y, View* v);
 void enter_click(View* v);
 void quit_main_menu();
 void handale_click(Panel* button, Uint16 x, Uint16 y, View* v);
+void handaleUpDoawArrowas(Panel* button, Uint16 x, Uint16 y, View* v, playerAnimal editedPlayer);
 void handale_down_level_button(Panel* button, View* v);
 void handale_up_level_button(Panel* button, View* v);
 void mainviewboard(playerType catType, playerType mouseType, int catLevel, int mouseLevel, mode mod, int worldIndex);
@@ -90,7 +93,7 @@ void GoToMainMenu();
 void save(int worldsIndex);
 void save_world(modelBoard* model);
 void freeStates();
-void try(Panel* button, Uint16 x, Uint16 y, View* v, playerAnimal editedPlayer);
+
 
 
 #endif
