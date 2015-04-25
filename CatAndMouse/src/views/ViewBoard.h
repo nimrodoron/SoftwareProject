@@ -45,6 +45,7 @@ typedef struct viewBoard{
 	void (*HandleSystemEvent) (viewBoardEvents event, int x, int y);
 	modelBoard* model;
 	pos markedSquare;
+	int quitView;
 }viewBoard;
 
 SDL_Surface* allBoards;

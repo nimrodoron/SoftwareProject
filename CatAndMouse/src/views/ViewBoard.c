@@ -27,10 +27,12 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	pause = 1;
 
 	result res;
-	Screen* sideBar;
-	Screen* topPanel;
-	Screen* gridArea;
+	Screen* sideBar = NULL;
+	Screen* topPanel = NULL;
+	Screen* gridArea = NULL;
+
 	*view = (viewBoard*)malloc(sizeof(viewBoard));
+	(*view)->GameTopPanel = NULL;
 	if (view == NULL)
 	{
 		result res;
@@ -68,9 +70,10 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 		res.message = "ERROR: failed to allocate memory for game window\n";
 		return res;
 	}
-	//(*view)->GameTopPanel = topPanel;
+	(*view)->topPanel = topPanel;
 	(*view)->sideBar = sideBar;
 	(*view)->gridArea = gridArea;
+	(*view)->quitView = 0;
 
 	res.code = SUCCESS;
 	return res;
@@ -78,7 +81,6 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 
 result showViewBoard(viewBoard* view,modelBoard* model) {
 	result res;
-	int quit=0;
 	
 	allBoards = SDL_SetVideoMode(800, 800, 0, 0);
 	if (allBoards == NULL) {
@@ -104,7 +106,7 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 	}
 	
 
-	while (quit == 0)
+	while (view->quitView == 0)
 	{
 		//While there's events to handle
 		while (SDL_PollEvent(&event) != 0)
@@ -112,7 +114,7 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 			handle_gui_event(&event, view,model);
 		}
 	}
-
+	view->HandleSystemEvent(EXIT, 0, 0);
 	res.code = SUCCESS;
 	return res;
 }
@@ -122,19 +124,24 @@ result freeViewBoard(viewBoard* view) {
 	if (view->GameTopPanel != NULL)
 		// free top panel
 		destroyList(view->GameTopPanel,freeWidget);
-
+	if (view->sideBar != NULL)
+		freeScreen(view->sideBar);
+	if (view->gridArea != NULL)
+		freeScreen(view->gridArea);
+	if (view->topPanel)
+		freeScreen(view->topPanel);
+	free(view);
 }
 
 void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 {
+	if(ev->type ==  SDL_QUIT)
+		v->quitView = 1;	
 	if (model->modelMode == GAME)
 	{
 	if (pause == 0) { // can be clicked only if the game is paused
 		switch (ev->type)
 		{
-		case SDL_QUIT:
-			v->HandleSystemEvent(EXIT, 0, 0);
-			break;
 		case SDL_MOUSEBUTTONUP :
 				if ((ev->button.x > 0 && ev->button.x < 200) && (ev->button.y>0 && ev->button.y<600))
 					button_click_side_panel(ev->button.x, ev->button.y, v);
@@ -181,18 +188,18 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 			case SDLK_SPACE:
 				pauseWasPressed(v);
 				break;
-				case SDLK_RIGHT://right key was pressed
+			case SDLK_RIGHT://right key was pressed
 						if (model->players[model->currentPlayer].playerPos.y < 6)
 							v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x, model->players[model->currentPlayer].playerPos.y + 1);
 						break;
-					case SDLK_LEFT://left key was pressed
+			case SDLK_LEFT://left key was pressed
 						if (model->players[model->currentPlayer].playerPos.y > 0)
 							v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x, model->players[model->currentPlayer].playerPos.y - 1);
 						break;
-					case SDLK_UP:if (model->players[model->currentPlayer].playerPos.x > 0)
+			case SDLK_UP:if (model->players[model->currentPlayer].playerPos.x > 0)
 						v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x - 1, model->players[model->currentPlayer].playerPos.y);;
 						break;
-					case SDLK_DOWN:
+			case SDLK_DOWN:
 						if (model->players[model->currentPlayer].playerPos.x < 6)
 							v->HandleSystemEvent(PLAYER_MOVED_TO, model->players[model->currentPlayer].playerPos.x + 1, model->players[model->currentPlayer].playerPos.y);
 						break;
@@ -512,55 +519,55 @@ void show_top_panel(viewBoard* view)
 
 		if (!strcmp(currentWidget->name,TURNS_WIDGET_NAME)) {
 				if (view->model->currentPlayer == MOUSE)
-					currentWidget->widget_surface = SDL_LoadBMP(top_panel_animal_move[1]);
+					setWidgetImage(currentWidget,top_panel_animal_move[1]);
 				else if (view->model->currentPlayer == CAT)
-					currentWidget->widget_surface = SDL_LoadBMP(top_panel_animal_move[0]);
+					setWidgetImage(currentWidget, top_panel_animal_move[0]);
 		}
 
 		if (!strcmp(currentWidget->name,THIRD_DIGIT_WIDGET_NAME)) {
 			int i = (view->model->movesBeforeTie) / 100;
-			currentWidget->widget_surface = SDL_LoadBMP(top_panel_numbers[i]);
+			setWidgetImage(currentWidget, top_panel_numbers[i]);
 		}
 
 		if (!strcmp(currentWidget->name,SECOND_DIGIT_WIDGET_NAME)) {
 			int i = (view->model->movesBeforeTie) / 10;
-			currentWidget->widget_surface = SDL_LoadBMP(top_panel_numbers[i]);
+			setWidgetImage(currentWidget, top_panel_numbers[i]);
 		}
 
 		if (!strcmp(currentWidget->name,FIRST_DIGIT_WIDGET_NAME)) {
 			int i = (view->model->movesBeforeTie) % 10;
-			currentWidget->widget_surface = SDL_LoadBMP(top_panel_numbers[i]);
+			setWidgetImage(currentWidget, top_panel_numbers[i]);
 		}
 
 		if (!strcmp(currentWidget->name,BRACE_CLOSE_WIDGET_NAME)) {
-			currentWidget->widget_surface = SDL_LoadBMP(top_panel_numbers[10]);
+			setWidgetImage(currentWidget, top_panel_numbers[10]);
 		}
 
 		if (!strcmp(currentWidget->name,FREE_TEXT_WIDGET_NAME)) {
 			if (!pause &&
 				(view->model->players[view->model->currentPlayer].type == USER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[0]);
+				setWidgetImage(currentWidget, top_panel_game_status[0]);
 			if (!pause &&
 				(view->model->players[view->model->currentPlayer].type == COMPUTER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[2]);
+				setWidgetImage(currentWidget, top_panel_game_status[2]);
 			if (pause &&
 				(view->model->players[view->model->currentPlayer].type == USER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[1]);
+				setWidgetImage(currentWidget, top_panel_game_status[1]);
 			if (pause &&
 				(view->model->players[view->model->currentPlayer].type == COMPUTER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[3]);
+				setWidgetImage(currentWidget, top_panel_game_status[3]);
 		}
 
 		if (!strcmp(currentWidget->name,PAUSE_BUTTON_NAME)) {
 			if (!pause &&
 				(view->model->players[view->model->currentPlayer].type == USER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_pause[0]);
+				setWidgetImage(currentWidget, top_panel_pause[0]);
 			if (pause &&
 				(view->model->players[view->model->currentPlayer].type == USER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_pause[1]);
+				setWidgetImage(currentWidget, top_panel_pause[1]);
 			if (pause &&
 				(view->model->players[view->model->currentPlayer].type == COMPUTER))
-				currentWidget->widget_surface = SDL_LoadBMP(top_panel_game_status[1]);;
+				setWidgetImage(currentWidget, top_panel_pause[1]);;
 		}
 
 		drawWidget(currentWidget,allBoards);
@@ -584,7 +591,7 @@ Screen* create_sideBar(char** imagesArr)
 	scr->screen = allBoards;
 	
 	scr->head = create_panel(200, 600, 0, 0, "images/side_bar.bmp", IMAGE, -1, scr, 1);
-	apply_surfaceBoard(0, 100 , scr->head->componentProps.surface, allBoards);
+	//apply_surfaceBoard(0, 100 , scr->head->componentProps.surface, allBoards);
 
 	for (int i = 0; i < NUMBER_BUTTONS_SIDE_BAR; i++)
 	{

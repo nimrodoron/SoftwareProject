@@ -11,7 +11,6 @@
 
 
 View* currentView;
-int currentStateIndex;
 
 playerType cat;
 playerType mouse;
@@ -46,32 +45,33 @@ extern char* choose_cat_skills_menu_buttons_image[NUMBER_BUTTONS_CAT_SKILL_LEVEL
 extern char* choose_cat_skills_menu_buttons_image_chosen[NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU+9];
 extern int stateId_choose_cat_skill_level[NUMBER_BUTTONS_CAT_SKILL_LEVEL_MENU];
 
+/*for choose mouse skill level menu*/
 #define NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU 4
 char* choose_mouse_skills_menu_buttons_image[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU+9];
 extern char* choose_mouse_skills_menu_buttons_image_chosen[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU+9];
 extern int stateId_choose_mouse_skill_level[NUMBER_BUTTONS_MOUSE_SKILL_LEVEL_MENU];
 
+/*for load game menu*/
 #define NUMBER_BUTTONS_LOAD_GAME_MENU 4
 char* load_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
 extern char* load_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
 extern int stateId_load_game[NUMBER_BUTTONS_LOAD_GAME_MENU];
 
+/*for save game menu*/
 char* save_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
 extern char* save_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
 extern int stateId_save_game[NUMBER_BUTTONS_LOAD_GAME_MENU];
 
+/*for edit game menu*/
 char* edit_game_menu_buttons_image[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
 extern char* edit_game_menu_buttons_image_chosen[NUMBER_BUTTONS_LOAD_GAME_MENU + 5];
 extern int stateId_edit_game[NUMBER_BUTTONS_LOAD_GAME_MENU];
 
  int quit;
 
- //int currentStateIndex;
-//char* currentState;
+
 #define NUMBER_MENUES 8
 View* states[NUMBER_MENUES];
-/*supposed to be {main_menu, choose your cat, choose your mouse, choose cat skill level, load game, create game, edit game, quit}*/
-
 
 void while_handle_event();
 void initialize_states();
@@ -83,7 +83,6 @@ void quit_main_menu();
 void handale_click(Panel* button, Uint16 x, Uint16 y, View* v);
 void handale_down_level_button(Panel* button, View* v);
 void handale_up_level_button(Panel* button, View* v);
-
 void mainviewboard(playerType catType, playerType mouseType, int catLevel, int mouseLevel, mode mod, int worldIndex);
 void reconfigureMouseFunction(int level, playerType type, modelBoard* model);
 void reconfigureCatFunction(int level, playerType type, modelBoard* model);
