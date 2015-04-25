@@ -90,6 +90,7 @@ void GoToMainMenu();
 void save(int worldsIndex);
 void save_world(modelBoard* model);
 void freeStates();
+void try(Panel* button, Uint16 x, Uint16 y, View* v, playerAnimal editedPlayer);
 
 
 #endif

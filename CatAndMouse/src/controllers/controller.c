@@ -264,7 +264,10 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 	case 20: //load game was pressed, update the flag and then go to choose your cat menu
 		loadGame = 0; 
 		worldsMenus = 1;
-	case 1: // from main menu go he choose your cat menu
+		currentView = states[1];
+		draw_screen("Cat&Mouse", currentView->screen);
+		break;
+	case 1: // from main menu go to choose your cat menu
 		currentView = states[1];
 		draw_screen("Cat&Mouse", currentView->screen);
 		break;
@@ -286,8 +289,17 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		quit = 1;
 		mainviewboard(cat, mouse, catLevel, mouseLevel, EDIT,0);
 		break;
-	case 9: //in 'choose your mouse menu' human was chosen and then go to step 5 to the main game screen
+	case 9: //in 'choose your mouse menu' human was chosen and then go to the main game screen
 		mouse = USER;
+		if (cat == USER){
+			catLevel = -1;
+		}
+		if (mouse == USER){
+			mouseLevel = -1;
+		}
+		quit = 1;
+		mainviewboard(cat, mouse, catLevel, mouseLevel, GAME, WorldToOpen);
+		break;
 	case 5: //going to the main game
 		if (cat == USER){
 			catLevel = -1;
@@ -318,6 +330,9 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		break;
 	case 2:
 		cat = USER;
+		currentView = states[2];
+		draw_screen("Cat&Mouse", currentView->screen);
+		break;
 	case 8: // 'in choose your cat menu' human was chosen
 		currentView = states[2];
 		draw_screen("Cat&Mouse", currentView->screen);
@@ -341,51 +356,13 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		break;
 	case 22: //we are in the worlds menus: load game, save game, edit game
 		worldsMenus = 0;
-		//break;
+		try(button, x, y, v, MOUSE);
+		break;
 	case 11: //level button was pressed from 'choose your cat skill level menu'
-		editedPlayer = CAT;
-		//break;
+		try(button, x, y, v,cat);
+		break;
 	case 10: //level button was pressed for 'choose your mouse skill level menu'
-		if (v->model->level!=-1)
-		{
-			if (x >= button->componentProps.dest_rect->x+147)
-				if (x <= button->componentProps.dest_rect->x + button->componentProps.dest_rect->w)
-				{
-					if (y >= button->componentProps.dest_rect->y)
-						if (y <= button->componentProps.dest_rect->y + button->componentProps.dest_rect->h - 36)
-						{
-							if (button->enabled == true)
-								handale_up_level_button(button, v);
-							else 
-							{
-								button->enabled = true;
-							}
-						}
-						else
-						{
-							if (y >= button->componentProps.dest_rect->y + 26)
-								if (y <= button->componentProps.dest_rect->y + button->componentProps.dest_rect->h)
-								{
-									if (button->enabled == true)
-										handale_down_level_button(button, v);
-									else 
-									{
-										button->enabled = true;
-									}
-								}
-						}
-				}
-				
-			if (editedPlayer == CAT)
-			{
-				catLevel = v->model->level;
-			}
-			else
-			{
-				mouseLevel = v->model->level;
-			}
-			if (worldsMenus == 0)
-				WorldToOpen = v->model->level;
+		try(button,x, y,v,MOUSE);
 		break;
 	case 25://if the done button was pressed in the save world menu
 		save(WorldToOpen);
@@ -394,8 +371,54 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 	currentView = states[button->nextState];
 	draw_screen("Cat&Mouse",currentView->screen);
 	break;
-}
+
 	}
+}
+
+void try(Panel* button, Uint16 x, Uint16 y, View* v,playerAnimal editedPlayer)
+{
+	if (v->model->level != -1)
+	{
+		if (x >= button->componentProps.dest_rect->x + 147)
+			if (x <= button->componentProps.dest_rect->x + button->componentProps.dest_rect->w)
+			{
+				if (y >= button->componentProps.dest_rect->y)
+					if (y <= button->componentProps.dest_rect->y + button->componentProps.dest_rect->h - 36)
+					{
+						if (button->enabled == true)
+							handale_up_level_button(button, v);
+						else
+						{
+							button->enabled = true;
+						}
+					}
+					else
+					{
+						if (y >= button->componentProps.dest_rect->y + 26)
+							if (y <= button->componentProps.dest_rect->y + button->componentProps.dest_rect->h)
+							{
+								if (button->enabled == true)
+									handale_down_level_button(button, v);
+								else
+								{
+									button->enabled = true;
+								}
+							}
+					}
+			}
+
+		if (editedPlayer == CAT)
+		{
+			catLevel = v->model->level;
+		}
+		else
+		{
+			mouseLevel = v->model->level;
+		}
+		if (worldsMenus == 0)
+			WorldToOpen = v->model->level;
+	}
+
 }
 
 /*when pressing on the up arrow*/
@@ -489,6 +512,7 @@ void reconfigureMouseFunction(int level, playerType type,modelBoard* model)
 	}
 	draw_screen("Cat&Mouse", currentView->screen);
 	while_handle_event();
+	freeStates();
 }
 
 /*when pressing on reconfigure cat button*/
@@ -524,6 +548,7 @@ void reconfigureCatFunction(int level, playerType type, modelBoard* model)
 	}
 	draw_screen("Cat&Mouse", currentView->screen);
 	while_handle_event();
+	freeStates();
 }
 
 /*when pressing on Go the main menu button*/
@@ -576,5 +601,6 @@ void freeStates()
 	{
 		if (states[i] != NULL)
 			freeView(states[i]);
+		states[i]=NULL;
 	}
 }
