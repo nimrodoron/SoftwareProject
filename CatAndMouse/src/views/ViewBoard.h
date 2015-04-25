@@ -1,3 +1,6 @@
+#ifndef VIEWBOARD_H_
+#define VIEWBOARD_H_
+
 #include <stdlib.h>
 #include "../models/ModelBoard.h"
 #include "../infrastructure/general/general.h"
@@ -50,32 +53,15 @@ typedef struct viewBoard{
 
 SDL_Surface* allBoards;
 
-// Those function are called from the controller
 
-// Create new viewBoard (malloc)
-// update the fields of the struct and return result
-// view parameter is NULL
+
 result createViewBoard(viewBoard** view, void (*HandleSystemEvent) (viewBoardEvents event, int x, int y),
 					   modelBoard* model,int worldsIndex);
-
-// This function show the view according to the model
-// and than wait for SDL events than pass them to the controller
-// by calling the function HandleSystemEvent
 result showViewBoard(viewBoard* view, modelBoard* model);
-
-// This function is called after Exit event from the controller
-// also the loop waiting for events should stop
-// thus function free the memory of the view
 result freeViewBoard(viewBoard* view);
-
 result refreshViewBoard(viewBoard* view);
 result refreshTopPanel(viewBoard* view);
 result refreshSidePanel(viewBoard* view);
-
-// Those functions are for local use of the view
-
-// Use any function you need to draw the view handle and
-// translate SDL events to view events
 viewBoard* buildBord();
 viewBoard* create_boardView(Screen* topPanel, Screen* sideBar);
 void create_topPanel(viewBoard* view);
@@ -102,3 +88,4 @@ void pauseWasPressed(viewBoard* view);
 void printMessages(char* message);
 void createMessage(char* message);
 
+#endif
