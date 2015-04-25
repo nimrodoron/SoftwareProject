@@ -16,6 +16,8 @@ View* create_view(Model* model, Screen* screen){
 	return view;
 }
 
+/*build the view struct
+includes a call to build the model*/
 View* build_all_view(char** imagesArr, char** imagesArrChosen, int* stateArr, int marked_button, int level, int number_buttons){
 	View* view;
 	Model* model = create_model(imagesArr, imagesArrChosen, stateArr,marked_button,level);
@@ -24,7 +26,7 @@ View* build_all_view(char** imagesArr, char** imagesArrChosen, int* stateArr, in
 	return view;
 }
 
-/**/
+/*draws the screen*/
 int draw_screen(char* title, Screen* window)
 {
 
@@ -34,7 +36,6 @@ int draw_screen(char* title, Screen* window)
 	SDL_BlitSurface(window->screen, NULL, window->screen, NULL);
 
 	SDL_Color color = window->head->componentProps.background_color;
-	//SDL_FillRect(window->screen, 0, SDL_MapRGB(window->screen->format, color.r, color.g, color.b));
 	if (SDL_FillRect(window->screen, 0, SDL_MapRGB(window->screen->format, color.r, color.g, color.b)) != 0) {
 		isError - 1;
 		printf("ERROR: failed to draw rect: %s\n", SDL_GetError());

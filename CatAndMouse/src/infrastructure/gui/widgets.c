@@ -53,8 +53,9 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	pan->prev = NULL;
 	pan->componentProps.dest_rect = dest_rect;
 
+	/*to make sure it exists*/
 	if (window->screen != NULL)
-	{ /*to make sure it exists*/
+	{ 
 		pan->componentProps.background_color = color;
 	}
 	pan->componentProps.surface = NULL;
@@ -94,7 +95,6 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	{
 		pan->nextState = -1;
 	}
-
 	return pan;
 }
 
@@ -105,13 +105,11 @@ void update_panel_picture(Panel* item, char* path) {
 	}
 }
 
-/*to build the main menu*/
+/*to build the main menu with the UI tree*/
 Screen* build_main_menu(int number_buttons, char* title, char** imagesArr, char** imagesArrChosen, int* stateArr,int marked_button)
 {
 	int screen_width=800;
 	int screen_height=800;
-	//screen_width = calc_width(BUTTON_WIDTH);
-	//screen_height = calc_height(number_buttons, BUTTON_HEIGHT, MENUGAP);
 
 	Screen* window = create_screen();
 	
@@ -142,21 +140,7 @@ Screen* build_main_menu(int number_buttons, char* title, char** imagesArr, char*
 }
 
 
-
-
-/*calculates the height of the window*/
-int calc_height(int size, int height, int gap)
-{
-	return  size*(gap)+50;
-}
-
-/*calculates the width of the window*/
-int calc_width(int width)
-{
-	return  width * 2;
-}
-
-/*adds child to linked list*/
+/*adds a child to linked list*/
 void add_child(Panel* item, Screen* window)
 {
 	Panel* current = window->head;
@@ -182,6 +166,7 @@ void add_child(Panel* item, Screen* window)
 	}
 }
 
+/*creates a new widget for the top panel in the game board*/
 widget* createNewWidget(ComponentType widgetType, char* name) {
 
 	widget* newWidget = (widget*)malloc(sizeof(widget));
@@ -202,6 +187,7 @@ widget* createNewWidget(ComponentType widgetType, char* name) {
 	newWidget->name = name;
 	return newWidget;
 }
+/*draws a widget in the top panel*/
 void drawWidget(widget* wg, SDL_Surface* surface) {
 
 	//Make a temporary rectangle to hold the offsets
@@ -222,6 +208,7 @@ void drawWidget(widget* wg, SDL_Surface* surface) {
 	SDL_BlitSurface(wg->widget_surface, wg->dest_rect, surface, &offset);
 }
 
+/*checks if the pause was pressed in the top panel*/
 bool checkClick(widget* wg, int x, int y) {
 	if (wg->widgetType == BUTTON)
 		if ((x > wg->x) && (x < wg->x + wg->width) && (y > wg->y) && (y < wg->y+wg->height))
@@ -229,6 +216,7 @@ bool checkClick(widget* wg, int x, int y) {
 	return false;
 }
 
+/*sets a image to the widget in the top panel */
 void setWidgetImage(widget* wg, char* path)
 {
 	if (wg->widget_surface != NULL){
@@ -237,6 +225,7 @@ void setWidgetImage(widget* wg, char* path)
 	wg->widget_surface = SDL_LoadBMP(path);
 }
 
+/*sets a image to the widget*/
 void setImage(Panel* panel, char* path)
 {
 	if (panel->componentProps.surface != NULL)
@@ -244,8 +233,8 @@ void setImage(Panel* panel, char* path)
 	panel->componentProps.surface = SDL_LoadBMP(path);
 }
 
+/*frees a widget in the top panel*/
 void freeWidget(void* wgv) {
-	;
 	widget* wg = (widget*)wgv;
 	if (wg->dest_rect != NULL) {
 		free(wg->dest_rect);
@@ -254,6 +243,7 @@ void freeWidget(void* wgv) {
 	if (wg != NULL)
 		free(wg);
 }
+
 
 void freeScreen(Screen* screen)
 {
@@ -265,6 +255,7 @@ void freeScreen(Screen* screen)
 	}
 	free(screen);
 }
+
 void freePanel(Panel* panel)
 {
 	if (panel->componentProps.dest_rect!=NULL)
