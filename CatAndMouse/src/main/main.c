@@ -1,7 +1,29 @@
 #include "main.h"
 
 
-int main()
+
+
+int main(int argc, char* argv[]) {
+	if (argc == 1) { //there isn't a parameter to the program. then initiallize the gui
+		initGUI();
+	} 
+	else if (argc == 3){
+		if (!strcmp(argv[1], "-console"))
+			if ((!strcmp(argv[2], "mouse")) || (!strcmp(argv[2], "cat")))
+				handle_event_console();
+	}
+	else{ //if the argument are not valid to the program - quit
+		perror("the arguments are not valid");
+		exit(1);
+	}
+	return 0;
+}
+
+
+
+
+
+int initGUI()
 {
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -20,6 +42,12 @@ int main()
 	
 	//SDL_FreeSurface(window);
 	SDL_Quit();
+}
+
+void handle_event_console()
+{
+	printf("%s\n", "q\n");
+	exit(0);
 }
 
 

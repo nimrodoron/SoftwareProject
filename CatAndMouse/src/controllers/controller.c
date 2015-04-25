@@ -356,13 +356,13 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		break;
 	case 22: //we are in the worlds menus: load game, save game, edit game
 		worldsMenus = 0;
-		try(button, x, y, v, MOUSE);
+		handaleUpDoawArrowas(button, x, y, v, MOUSE);
 		break;
 	case 11: //level button was pressed from 'choose your cat skill level menu'
-		try(button, x, y, v,cat);
+		handaleUpDoawArrowas(button, x, y, v, cat);
 		break;
 	case 10: //level button was pressed for 'choose your mouse skill level menu'
-		try(button,x, y,v,MOUSE);
+		handaleUpDoawArrowas(button, x, y, v, MOUSE);
 		break;
 	case 25://if the done button was pressed in the save world menu
 		save(WorldToOpen);
@@ -375,7 +375,7 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 	}
 }
 
-void try(Panel* button, Uint16 x, Uint16 y, View* v,playerAnimal editedPlayer)
+void handaleUpDoawArrowas(Panel* button, Uint16 x, Uint16 y, View* v, playerAnimal editedPlayer)
 {
 	if (v->model->level != -1)
 	{
@@ -556,6 +556,7 @@ void GoToMainMenu()
 {
 	// free all memory - controller, view and model and the new array 'states' that was created in the reconfigure options
 	initialize_states();
+	currentView = states[0];
 	draw_screen("Cat&Mouse", currentView->screen);
 	//restore the defult states
 	quit = 0;

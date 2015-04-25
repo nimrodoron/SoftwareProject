@@ -81,6 +81,7 @@ void button_click(Uint16 x, Uint16 y, View* v);
 void enter_click(View* v);
 void quit_main_menu();
 void handale_click(Panel* button, Uint16 x, Uint16 y, View* v);
+void handaleUpDoawArrowas(Panel* button, Uint16 x, Uint16 y, View* v, playerAnimal editedPlayer);
 void handale_down_level_button(Panel* button, View* v);
 void handale_up_level_button(Panel* button, View* v);
 void mainviewboard(playerType catType, playerType mouseType, int catLevel, int mouseLevel, mode mod, int worldIndex);
@@ -90,7 +91,6 @@ void GoToMainMenu();
 void save(int worldsIndex);
 void save_world(modelBoard* model);
 void freeStates();
-void try(Panel* button, Uint16 x, Uint16 y, View* v, playerAnimal editedPlayer);
 
 
 #endif

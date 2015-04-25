@@ -4,5 +4,6 @@
 
 
 int quit = 0;
-
+int initGUI();
+void handle_event_console();
 #endif
