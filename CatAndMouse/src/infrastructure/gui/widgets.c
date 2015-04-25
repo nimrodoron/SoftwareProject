@@ -218,7 +218,10 @@ void drawWidget(widget* wg, SDL_Surface* surface) {
 	wg->dest_rect->w = wg->width;
 
 	//Blit the surface
-	SDL_BlitSurface(wg->widget_surface, wg->dest_rect, surface, &offset);
+	if (SDL_BlitSurface(wg->widget_surface, wg->dest_rect, surface, &offset) != 0) {
+		SDL_FreeSurface(wg->widget_surface);
+		printf("ERROR: failed to blit image: %s\n", SDL_GetError());
+	}
 }
 
 bool checkClick(widget* wg, int x, int y) {
