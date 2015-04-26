@@ -42,6 +42,7 @@ void playerMoveTo(int x, int y);
 void updateModelBoard(playerType cat, int catLevel, playerType mouse, int mouseLevel);
 void updateModelBoardMouse(playerType mouse, int mouseLevel);
 void updateModelBoardCat(playerType cat, int catLevel);
+void computerMoveTo();
 
 #endif
 

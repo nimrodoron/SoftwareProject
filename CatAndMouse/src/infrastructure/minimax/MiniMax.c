@@ -37,30 +37,37 @@ struct MiniMaxResult getBestChild(
 		if (isMaxPlayer) { // If it is max player
 			do {
 				if (headData(childrenlistTemp) != NULL) {
-					alpha = MAX(alpha, getBestChild(headData(childrenlistTemp),maxDepth,
-								      getChildren, freeState ,evaluate,!isMaxPlayer,
-									  alpha, beta).value);
+					result.value = getBestChild(headData(childrenlistTemp),maxDepth,
+						      getChildren, freeState ,evaluate,!isMaxPlayer,
+							  alpha, beta).value;
+					if ( (result.value >= alpha) || (isFirstChild)) {
+						result.index = index;
+						alpha = result.value;
+						isFirstChild = false;
+					}
 				}
 				if (beta <= alpha) break;
 				index++;
 				childrenlistTemp = tail(childrenlistTemp);
 			} while (childrenlistTemp != NULL);
-			result.index = index;
-			result.value = alpha;
+
 		}
 		else { // If it is min player
 			do {
 				if (headData(childrenlistTemp) != NULL) {
-					beta = MIN(beta, getBestChild(headData(childrenlistTemp),maxDepth,
-									  getChildren, freeState ,evaluate,!isMaxPlayer,
-									  alpha, beta).value);
+					result.value = getBestChild(headData(childrenlistTemp),maxDepth,
+							  getChildren, freeState ,evaluate,!isMaxPlayer,
+							  alpha, beta).value;
+					if  ((result.value <= beta) || (isFirstChild)){
+						result.index = index;
+						beta = result.value;
+						isFirstChild = false;
+					}
 				}
 				if (beta <= alpha) break;
 				index++;
 				childrenlistTemp = tail(childrenlistTemp);
 			} while (childrenlistTemp != NULL);
-			result.index = index;
-			result.value = beta;
 		}
 
 		// Free the memory of the list

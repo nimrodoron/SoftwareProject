@@ -55,7 +55,7 @@ result LoadWorldFromFile(modelBoard* model, char* name) {
     			case(CHEESE_CELL):
     				model->board[row][col] = CHEESE;
     				model->cheesePos.x = row;
-    				model->cheesePos.x = col;
+    				model->cheesePos.y = col;
     				break;
     			default:
     				model->board[row][col] = EMPTY;

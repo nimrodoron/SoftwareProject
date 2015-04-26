@@ -129,8 +129,10 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 		  	  	  break;
 		  case (PLAYER_MOVED_TO) :
 			  playerMoveTo(x,y);
+
 			  break;
-	
+		  case (COMPUTER_MOVE) :
+ 			 computerMoveTo();
 		default:
 			break;
 	}
@@ -323,19 +325,44 @@ void playerMoveTo(int x, int y) {
 
 
 		 // check for winner
-		 //controller->model->winner = checkForWinner(controller->model);
+		 controller->model->winner = checkForWinner(controller->model);
 
 		 // switch player
 		 controller->model->currentPlayer = !controller->model->currentPlayer;
 
-		 // make computer turn
-		 if (controller->model->players[controller->model->currentPlayer].type == COMPUTER) {
-			 controller->model->movesBeforeTie--;
-			 // pmove = getBestMove(controller->model,controller->model->players[controller->model->currentPlayer].level);
-		 }
-
 		controller->view->model = controller->model;
 		refreshViewBoard(controller->view);
 	}
+}
+
+void computerMoveTo() {
+		int pmove = getBestMove(controller->model,controller->model->players[controller->model->currentPlayer].level);
+		switch (pmove) {
+		case (UP): {
+			playerMoveTo(controller->model->players[controller->model->currentPlayer].playerPos.x-1,
+						 controller->model->players[controller->model->currentPlayer].playerPos.y);
+			break;
+		}
+		case (DOWN): {
+			playerMoveTo(controller->model->players[controller->model->currentPlayer].playerPos.x+1,
+			controller->model->players[controller->model->currentPlayer].playerPos.y);
+			break;
+		}
+		case (RIGHT): {
+			playerMoveTo(controller->model->players[controller->model->currentPlayer].playerPos.x,
+									 controller->model->players[controller->model->currentPlayer].playerPos.y+1);
+			break;
+		}
+		case (LEFT): {
+			playerMoveTo(controller->model->players[controller->model->currentPlayer].playerPos.x,
+									 controller->model->players[controller->model->currentPlayer].playerPos.y-1);
+			break;
+		}
+		}
+
+		// check for winner
+		controller->model->winner = checkForWinner(controller->model);
+
+		refreshViewBoard(controller->view);
 }
 

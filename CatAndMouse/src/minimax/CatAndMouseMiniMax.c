@@ -1,104 +1,76 @@
 #include "CatAndMouseMiniMax.h"
 
-//const int constantVector[CONST_VECTOR_SIZE] = {-5,-2,-1,0,1,2,5};
-
 /* this function gets the best move for the current player 
 according the current state of the game and set_number_steps*/
 int getBestMove(modelBoard* currentState,int numSteps) {
 	int isMaxPlayer =0;
-	if (currentState.currentPlayer==MAX_PLAYER) isMaxPlayer=1;
-	return (getBestChild(currentState,numSteps,getChildren,FreeState,evaluate,isMaxPlayer).index);
+	if (currentState->currentPlayer==MAX_PLAYER) isMaxPlayer=1;
+	return (getBestChild(currentState,numSteps,getChildren,FreeState,evaluate,isMaxPlayer,MIN_EVALUATION,MAX_EVALUATION).index);
 	}
 
 /*this function evaluates the score of the game */
 int evaluate(void* state) {
-//	int scoresTable[SCORES_TABLES_SIZE] = {0,0,0,0,0,0,0,0,0};
-//	int score;
-//	int value;
-//	int result;
-//
-	if (((modelBoard*)state)->isValid) {
+
+	int result;
+	int** graph;
+	int** GraphforCat;
+	int** GraphForMouse;
+
+	modelBoard* mboard = (modelBoard*)state;
+	type** board = mboard->board;
+
+	if (mboard->isValid) {
 
 		// If it is the min player (Cat)
-		if (((modelBoard*)state)->currentPlayer == CAT) {
+		if (mboard->currentPlayer == CAT) {
+			if (ChceckNeighbours(mboard->board,
+								 mboard->players[MOUSE].playerPos.x,
+								 mboard->players[MOUSE].playerPos.y,
+								 MOUSE_PIC))
+				return MAX_EVALUATION;
 
+			if (ChceckNeighbours(mboard->board,
+											 mboard->players[MOUSE].playerPos.x,
+											 mboard->players[MOUSE].playerPos.y,
+											 CHEESE))
+				return MIN_EVALUATION;
+
+			GraphForMouse = GenerateGraphFromMatrix(mboard,CAT_PIC);
+			int pathCatFromMouse = findShortPath(GraphForMouse, mboard->players[MOUSE].playerPos.x,
+								 mboard->players[MOUSE].playerPos.y,
+								 mboard->players[CAT].playerPos.x,
+								 mboard->players[CAT].playerPos.y);
+
+			GraphforCat = GenerateGraphFromMatrix(mboard,CHEESE);
+			int pathCatFromCheese = findShortPath(GraphforCat, mboard->players[MOUSE].playerPos.x,
+					 mboard->players[MOUSE].playerPos.y,
+					 mboard->cheesePos.x,
+					 mboard->cheesePos.y);
+
+			destryGraph(GraphForMouse);
+			destryGraph(GraphforCat);
+			return (int)(2*pathCatFromMouse+8*pathCatFromCheese*(-1));
 		}
-//		for (int row=0; row<MAT_ROWS; row++) {
-//			for (int col=0; col<MAT_COLS; col++) {
-//
-//				// Check horizontal
-//				if (col <= MAT_COLS-WIN_SEQ_SIZE)
-//				{
-//					score = 0;
-//					for (int colIndex=0; colIndex<WIN_SEQ_SIZE; colIndex++)
-//					{
-//						value = ((StateOfBoard*)state)->boradMatrix[row][col+colIndex];
-//						if (value == MAX_PLAYER) score += MAX_PLAYER;
-//						if (value == MIN_PLAYER) score += MIN_PLAYER;
-//					}
-//					scoresTable[score+WIN_SEQ_SIZE] += 1;
-//				}
-//				// Check vertical
-//				if (row <= MAT_ROWS-WIN_SEQ_SIZE)
-//				{
-//					score = 0;
-//					for (int rowIndex=0; rowIndex<WIN_SEQ_SIZE; rowIndex++)
-//					{
-//						value = ((StateOfBoard*)state)->boradMatrix[row+rowIndex][col];
-//						if (value == MAX_PLAYER) score += MAX_PLAYER;
-//						if (value == MIN_PLAYER) score += MIN_PLAYER;
-//					}
-//					scoresTable[score+WIN_SEQ_SIZE] += 1;
-//				}
-//
-//				// Check Diagonal right down
-//				if (col <= MAT_COLS-WIN_SEQ_SIZE && row <= MAT_ROWS-WIN_SEQ_SIZE)
-//				{
-//					score = 0;
-//					for (int appendIndex=0; appendIndex<WIN_SEQ_SIZE; appendIndex++)
-//					{
-//						value = ((StateOfBoard*)state)->boradMatrix[row+appendIndex][col+appendIndex];
-//						if (value == MAX_PLAYER) score += MAX_PLAYER;
-//						if (value == MIN_PLAYER) score += MIN_PLAYER;
-//					}
-//					scoresTable[score+WIN_SEQ_SIZE] += 1;
-//				}
-//
-//				// Check Diagonal left down
-//				if ((col >= MAT_COLS-WIN_SEQ_SIZE) && (row <= MAT_ROWS-4))
-//				{
-//					int tempRow = row;
-//					int tempCol = col;
-//					score = 0;
-//					value = ((StateOfBoard*)state)->boradMatrix[tempRow][tempCol];
-//					if (value == MAX_PLAYER) score += MAX_PLAYER;
-//					if (value == MIN_PLAYER) score += MIN_PLAYER;
-//					for (int index=1; index < WIN_SEQ_SIZE; index ++)
-//					{
-//						tempRow++;
-//						tempCol--;
-//						value = ((StateOfBoard*)state)->boradMatrix[tempRow][tempCol];
-//						if (value == MAX_PLAYER) score += MAX_PLAYER;
-//						if (value == MIN_PLAYER) score += MIN_PLAYER;
-//					}
-//					scoresTable[score+WIN_SEQ_SIZE] += 1;
-//				}
-//			}
-//		}
-//		/*if there is a winner*/
-//		if (scoresTable[MIN_4_SCORE+4] >= 1) {
-//			return MIN_EVALUATION;
-//		}
-//		if (scoresTable[MAX_4_SCORE+4] >= 1) {
-//			return MAX_EVALUATION;
-//		}
-//
-//		// calculate the score
-//		result = 0;
-//		for (int i=0; i<CONST_VECTOR_SIZE; i++)
-//		{
-//			if ((i+1) != WIN_SEQ_SIZE) result += scoresTable[i+1]*constantVector[i];
-//		}
+		// if it is the max player (Mouse)
+		else
+		{
+			if (ChceckNeighbours(mboard->board,
+							 mboard->players[MOUSE].playerPos.x,
+							 mboard->players[MOUSE].playerPos.y,
+							 CAT_PIC))
+				return MIN_EVALUATION;
+
+			// find shortest path from the mouse to the cat
+			graph = GenerateGraphFromMatrix(mboard,CAT_PIC);
+			int path = findShortPath(graph, mboard->players[MOUSE].playerPos.x,
+									 mboard->players[MOUSE].playerPos.y,
+									 mboard->players[CAT].playerPos.x,
+									 mboard->players[CAT].playerPos.y);
+			destryGraph(graph);
+
+			return path;
+		}
+
 	}
 	else { // In case the board is not valid
 		if (((modelBoard*)state)->currentPlayer == MIN_PLAYER) result = MIN_EVALUATION;
@@ -123,37 +95,41 @@ ListRef getChildren(void* state) {
 	    // try move up
 	    copyModel(&childstateRef,state);
 	    childstateRef->isValid = false;
-	    childstateRef->currentPlayer = !childstateRef->currentPlayer;
-	    if (movePlayerTo(x-1,y)) {
+
+	    if (movePlayerTo(childstateRef,x-1,y)) {
 	    	childstateRef->isValid = true;
 	    }
+	    childstateRef->currentPlayer = !childstateRef->currentPlayer;
 	    tempList = append(list,childstateRef);
+
 
 	    // try move down
 	    copyModel(&childstateRef,state);
 	    childstateRef->isValid = false;
-	    childstateRef->currentPlayer = !childstateRef->currentPlayer;
-	    if (movePlayerTo(x+1,y)) {
+	    if (movePlayerTo(childstateRef,x+1,y)) {
 	    	childstateRef->isValid = true;
 	    }
+	    childstateRef->currentPlayer = !childstateRef->currentPlayer;
 	    tempList = append(tempList,childstateRef);
 
 	    // try move left
 	    copyModel(&childstateRef,state);
 	    childstateRef->isValid = false;
-	    childstateRef->currentPlayer = !childstateRef->currentPlayer;
-	    if (movePlayerTo(x,y-1)) {
+	    //childstateRef->currentPlayer = !childstateRef->currentPlayer;
+	    if (movePlayerTo(childstateRef,x,y-1)) {
 	    	childstateRef->isValid = true;
 	    }
+	    childstateRef->currentPlayer = !childstateRef->currentPlayer;
 	    tempList = append(tempList,childstateRef);
 
 	    // try move right
 	    copyModel(&childstateRef,state);
 	    childstateRef->isValid = false;
-	    childstateRef->currentPlayer = !childstateRef->currentPlayer;
-	    if (movePlayerTo(x,y+1)) {
+	    //childstateRef->currentPlayer = !childstateRef->currentPlayer;
+	    if (movePlayerTo(childstateRef,x,y+1)) {
 	    	childstateRef->isValid = true;
 	    }
+	    childstateRef->currentPlayer = !childstateRef->currentPlayer;
 	    tempList = append(tempList,childstateRef);
 	}
 
@@ -161,8 +137,8 @@ ListRef getChildren(void* state) {
 }
 
 void FreeState(void* state) {
-	freeModel(&state);
-	free((modelBoard*)state);
+	modelBoard* mb = ((modelBoard*)state);
+	freeModel(&mb);
 }
 
 /*this function checking if there is a winner */
@@ -172,4 +148,124 @@ playerAnimal checkForWinner(modelBoard* currentState) {
 	return NONE;
 }
 
+int** GenerateGraphFromMatrix(modelBoard* model, type toType) {
+	int in;
+	int jn;
+	int** graph;
+
+	graph = (int**)malloc(49*sizeof(int*));
+	for (int i=0; i<49; i++) {
+		graph[i]= (int*)malloc(49*sizeof(int));
+	}
+
+	for (int i=0;i<49; i++)
+		for (int j=0;j<49;j++)
+			graph[i][j] = 0;
+
+	for (int i=0; i<GRID_SIZE; i++) {
+		for (int j=0; j<GRID_SIZE; j++) {
+			if (model->board[i][j] != WALL) {
+				// Top neighbour
+				in = i-1;
+				jn = j;
+				if ((in>=0) && (in<GRID_SIZE) && (jn>=0) && (jn<GRID_SIZE))
+					if ((model->board[in][jn] == EMPTY) || (model->board[in][jn] == toType))
+							graph[i*GRID_SIZE+j][in*GRID_SIZE+jn] = 1;
+				// Left
+				in = i;
+				jn = j-1;
+				if ((in>=0) && (in<GRID_SIZE) && (jn>=0) && (jn<GRID_SIZE))
+					if ((model->board[in][jn] == EMPTY) || (model->board[in][jn] == toType))
+							graph[i*GRID_SIZE+j][in*GRID_SIZE+jn] = 1;
+				// right;
+				in = i;
+				jn = j+1;
+				if ((in>=0) && (in<GRID_SIZE) && (jn>=0) && (jn<GRID_SIZE))
+					if ((model->board[in][jn] == EMPTY) || (model->board[in][jn] == toType))
+							graph[i*GRID_SIZE+j][in*GRID_SIZE+jn] = 1;
+				// down
+				in = i+1;
+				jn = j;
+				if ((in>=0) && (in<GRID_SIZE) && (jn>=0) && (jn<GRID_SIZE))
+					if ((model->board[in][jn] == EMPTY) || (model->board[in][jn] == toType))
+							graph[i*GRID_SIZE+j][in*GRID_SIZE+jn] = 1;
+			}
+		}
+	}
+	return graph;
+}
+
+void destryGraph(int** graph) {
+	for (int i=0; i<49; i++) {
+			free(graph[i]);
+	}
+	free(graph);
+}
+
+int findShortPath(int** matrix, int s_row, int s_col, int d_row, int d_col)
+{
+	int q[49],visited[49],f=0,r=-1, dis[49];
+	for(int i=0;i<49;i++)
+	 {
+	  q[i]=-1;
+	  visited[i]=NOT_VISIT;
+	  dis[i]=0;
+	 }
+
+	bfs(s_row*GRID_SIZE+s_col,matrix,visited,q,49,f,r,dis);
+
+	return dis[d_row*GRID_SIZE+d_col];
+}
+
+void bfs(int v, int** a,int visited[], int q[], int n, int f,int r, int dis[])
+{
+	int i;
+
+	for(i=0;i<n;i++) {
+		if((a[v][i]) && (visited[i] == NOT_VISIT)) {
+			q[++r]=i;
+			dis[i] = dis[v]+1;
+			visited[i] = IN_QUEUE;
+		}
+	}
+
+	visited[v] = COMPLETED;
+
+	if(f<=r)
+	{
+		visited[q[f]]=COMPLETED;
+		bfs(q[f++],a,visited,q,n,f,r,dis);
+	}
+}
+
+bool ChceckNeighbours(type** board, int i,int j, type type) {
+	int in;
+	int jn;
+
+	// Top neighbour
+	in = i-1;
+	jn = j;
+	if ((in>=0) && (in<GRID_SIZE) && (jn>=0) && (jn<GRID_SIZE))
+		if (board[in][jn] == type)
+	// Left
+	in = i;
+	jn = j-1;
+	if ((in>=0) && (in<GRID_SIZE) && (jn>=0) && (jn<GRID_SIZE))
+			if (board[in][jn] == type)
+				return true;
+	// right;
+	in = i;
+	jn = j+1;
+	if ((in>=0) && (in<GRID_SIZE) && (jn>=0) && (jn<GRID_SIZE))
+			if (board[in][jn] == type)
+				return true;
+	// down
+	in = i-1;
+	jn = j;
+	if ((in>=0) && (in<GRID_SIZE) && (jn>=0) && (jn<GRID_SIZE))
+			if (board[in][jn] == type)
+				return true;
+
+	return false;
+}
 

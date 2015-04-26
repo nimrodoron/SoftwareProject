@@ -246,6 +246,7 @@ void button_click(Uint16 x, Uint16 y,View* v)
 void quit_main_menu()
 {
 	quit = 1;
+	atexit(SDL_Quit);
 }
 
 void freeStates()

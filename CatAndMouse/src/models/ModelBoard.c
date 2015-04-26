@@ -39,6 +39,7 @@ result createEmptyModel(modelBoard** model) {
 		}
 
 	(*model)->isValid = true;
+	(*model)->winner = NONE;
 	res.code = SUCCESS;
 	return res;
 }

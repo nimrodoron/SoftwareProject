@@ -68,7 +68,7 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 		res.message = "ERROR: failed to allocate memory for game window\n";
 		return res;
 	}
-	//(*view)->GameTopPanel = topPanel;
+	(*view)->topPanel = topPanel;
 	(*view)->sideBar = sideBar;
 	(*view)->gridArea = gridArea;
 
@@ -103,6 +103,8 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 		show_grid_area(view->gridArea);
 	}
 	
+	if (model->players[model->currentPlayer].type == COMPUTER)
+		view->HandleSystemEvent(COMPUTER_MOVE,0,0);
 
 	while (quit == 0)
 	{
@@ -924,7 +926,10 @@ result refreshViewBoard(viewBoard* view) {
 	if (view->model->modelMode == GAME)
 	{
 		//create_topPanel(view->model);
-		show_top_panel(view);
+		if (view->model->winner == NONE)
+			show_top_panel(view);
+		else
+			printWinnerTopPaenl(view->model->winner,view);
 	}		
 
 	// refresh the grid
@@ -976,6 +981,9 @@ result refreshViewBoard(viewBoard* view) {
 		}
 	}
 	show_grid_area(view->gridArea);
+
+	if (view->model->players[view->model->currentPlayer].type == COMPUTER)
+		view->HandleSystemEvent(COMPUTER_MOVE,0,0);
 }
 
 

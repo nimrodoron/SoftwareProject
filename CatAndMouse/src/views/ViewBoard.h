@@ -35,6 +35,7 @@ typedef enum {
 	PLACE_WALL,
 	PLACE_EMPTY_SPACE,
 	PLAYER_MOVED_TO,
+	COMPUTER_MOVE
 }viewBoardEvents;
 
 typedef struct viewBoard{

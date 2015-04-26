@@ -5,11 +5,11 @@ all: main MiniMaxDemo
 clean:
 	-rm Gui controller.o main.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o ListUtils.o MiniMax.o MiniMaxDemo.o
 
-main: controller.o main.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o WorldsManager.o ListUtils.o
-	gcc  -o main controller.o main.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o WorldsManager.o ListUtils.o -lm -std=c99 -pedantic-errors -g `sdl-config --libs` -lSDL_image
+main: controller.o main.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o WorldsManager.o ListUtils.o MiniMax.o CatAndMouseMiniMax.o
+	gcc  -o main controller.o main.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o WorldsManager.o ListUtils.o MiniMax.o CatAndMouseMiniMax.o -lm -std=c99 -pedantic-errors -g `sdl-config --libs` -lSDL_image
 
-main.o: src/main/main.c src/controllers/controller.c src/models/model.c src/views/view.c src/infrastructure/gui/widgets.c src/controllers/ControllerBoard.c src/views/ViewBoard.c src/models/ModelBoard.c src/services/WorldsManager.c src/infrastructure/general/ListUtils.c
-	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/main/main.c src/controllers/controller.c src/models/model.c src/views/view.c src/infrastructure/gui/widgets.c src/controllers/ControllerBoard.c src/views/ViewBoard.c src/models/ModelBoard.c src/services/WorldsManager.c  src/infrastructure/general/ListUtils.c `sdl-config --cflags`
+main.o: src/main/main.c src/controllers/controller.c src/models/model.c src/views/view.c src/infrastructure/gui/widgets.c src/controllers/ControllerBoard.c src/views/ViewBoard.c src/models/ModelBoard.c src/services/WorldsManager.c src/infrastructure/general/ListUtils.c  src/infrastructure/minimax/MiniMax.c src/minimax/CatAndMouseMiniMax.c
+	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/main/main.c src/controllers/controller.c src/models/model.c src/views/view.c src/infrastructure/gui/widgets.c src/controllers/ControllerBoard.c src/views/ViewBoard.c src/models/ModelBoard.c src/services/WorldsManager.c  src/infrastructure/general/ListUtils.c src/infrastructure/minimax/MiniMax.c src/minimax/CatAndMouseMiniMax.c `sdl-config --cflags`
 
 MiniMaxDemo: MiniMaxDemo.o MiniMax.o ListUtils.o
 	gcc  -o MiniMaxDemo MiniMaxDemo.o MiniMax.o ListUtils.o $(CFLAGS)
@@ -44,5 +44,8 @@ gcc  -std=c99 -pedantic-errors -c -Wall -g -lm  src/services/WorldsManager.c src
 ListUtils.o: src/infrastructure/general/ListUtils.c
 	gcc -c $(CFLAGS) src/infrastructure/general/ListUtils.c
 	
-MiniMax.o:src/infrastructure/minimax/MiniMax.c src/infrastructure/general/ListUtils.c
+MiniMax.o: src/infrastructure/minimax/MiniMax.c src/infrastructure/general/ListUtils.c
 	gcc -c $(CFLAGS) src/infrastructure/minimax/MiniMax.c src/infrastructure/general/ListUtils.c
+	
+CatAndMouseMiniMax.o: src/minimax/CatAndMouseMiniMax.c src/models/ModelBoard.c src/infrastructure/minimax/MiniMax.c
+	gcc -c $(CFLAGS) src/minimax/CatAndMouseMiniMax.c src/models/ModelBoard.c src/infrastructure/minimax/MiniMax.c
