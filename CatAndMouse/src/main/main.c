@@ -1,36 +1,26 @@
 #include "main.h"
 
 
-int main()
-{
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		//int isError = - 1;
-		// int quit = 0;
-		printf("ERROR: unable to init SDL: %s\n", SDL_GetError());
-		return 1;
+
+int main(int argc, char* argv[]) {
+	if (argc == 1) { //there isn't a parameter to the program. then initiallize the gui
+		initGUI();
+	} 
+	else if (argc == 3){
+		if (!strcmp(argv[1], "-console"))
+			if ((!strcmp(argv[2], "mouse")) || (!strcmp(argv[2], "cat")))
+				handle_event_console();
 	}
-	atexit(SDL_Quit);
-
-
-	//mainviewboard();
-	//exit(1);
-
-	
-
-	currentStateIndex = 0;
-	initialize_states();
-	
-	currentView = states[currentStateIndex];
-	draw_screen("Cat&Mouse", currentView->screen);
-	//While the user hasn't quit
-	while_handle_event();
-	
-
-	//SDL_FreeSurface(window);
-	SDL_Quit();
+	else{ //if the argument are not valid to the program - quit
+		printf("%s","the arguments to the program are not valid\n");
+		exit(1);
+	}
+	return 0;
 }
+
+
+
 
 
 

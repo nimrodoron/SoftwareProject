@@ -7,11 +7,12 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+extern int isError;
+SDL_Event event;
 
-#define SCREEN_HEIGHT 578
-#define SCREEN_WIDTH 350
-#define GAMEGAP 30 /*the gap between the buttons in the game state */
-#define  offsetX 0 /*the offset of the window?*/
+
+/*the offset of the window*/
+#define  offsetX 0 
 #define  offsetY 0
 
 
@@ -26,18 +27,12 @@ extern int button_offsetY;
 typedef enum  ComponentType {
 	BUTTON,
 	IMAGE,
-	PANEL,
-	TEXT
+	PANEL
 } ComponentType;
 
 /*propeties for a component and for a window*/
 typedef struct Properties{
 	SDL_Surface*            surface;		// if type: BUTTON or IMAGE, image surface to blit
-	// if type: TEXT, text surface to blit
-	// if type: WINDOW, window sdl surface to blit on
-
-	SDL_Rect*               surface_rect;	// which part of the surface to blit (if surface is present)
-
 	SDL_Rect*               dest_rect;		// where to draw the control to. if type is PANEL or WINDOW, contains height and width
 	SDL_Color               background_color;		// if type PANEL/WINDOW, what is the background color
 } properties;
@@ -45,19 +40,13 @@ typedef struct Properties{
 
 typedef struct panel
 {
-	ComponentType				type;			// possible types: BUTTON, IMAGE, TEXT, PANEL
+	ComponentType				type;			// possible types: BUTTON, IMAGE, PANEL
 	int 						nextState;
 	struct panel*           next;      // next control in list, that this control is contained in (NULL if last in list)
 	struct panel*           prev;      // previous control in list, that this control is contained in(NULL if first in list)
-
-	//void(*on_click)(struct Component* caller);  // on_click callback function, method receives the button control that was clicked
-	// (only relevant for controls of type BUTTON)
 	properties				componentProps;
 	bool                   enabled;		// whether or not the button is enabled for clicking
 	int						size;
-	//int						markedButton;
-	// can be also used to disable a panel (all controls contained will be not clickable)
-
 }Panel;
 
 
@@ -79,19 +68,11 @@ typedef struct widget {
 }widget;
 
 
-
-
-extern int isError;
-SDL_Event event;
-
 Screen* create_screen();
 Panel* create_panel(int width, int height, int x, int y, char* path, ComponentType type, int stateIndex, Screen* window, int number_buttons);
 Screen* build_main_menu(int number_buttons, char* title, char** imagesArr, char** imagesArrChosen, int* stateArr, int marked_button);
-int calc_height(int size, int height, int gap);
-int calc_width(int width);
 void add_child(Panel* item, Screen* window);
 void update_panel_picture(Panel* item, char* path);
-
 widget* createNewWidget(ComponentType widgetType, char* name);
 bool checkClick(widget* wg, int x, int y);
 void drawWidget(widget* wg,  SDL_Surface* surface);

@@ -3,13 +3,10 @@
 
 #include "../models/model.h"
 
-
-
 typedef struct view{
 	Model* model;
 	Screen* screen;
 }View;
-
 
 
 View* create_view(Model* model, Screen* screen);

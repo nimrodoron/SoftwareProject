@@ -65,11 +65,9 @@ result freeBoardController() {
 	if (controller != NULL) {
 		if (controller->model != NULL) {
 			freeModel(&controller->model);
-			free(controller->model);
 		}
 		if (controller->view != NULL) {
 			freeViewBoard(controller->view);
-			free(controller->view);
 		}
 		free(controller);
 	}
@@ -79,7 +77,8 @@ result freeBoardController() {
 
 void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 	switch (event) {
-		case(EXIT):
+		case(EXIT) :
+			freeBoardController();
 			break;
 		case (RECONFIGURE_MOUSE) :
 			reconfigureMouseFunction(controller->model->players[MOUSE].level, controller->model->players[MOUSE].type,controller->model);
@@ -90,7 +89,8 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 			showViewBoard(controller->view, controller->model);
 			break;
 		case (RESTART_GAME) :
-			//nimrod fill - page 10 PDF
+			LoadWorldFromFile(controller->model, controller->model->name);
+			refreshViewBoard(controller->view);
 			break;
 		case (GO_TO_MAIN_MENU):
 			GoToMainMenu();
@@ -114,7 +114,6 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 			placeEmpty(x,y);
 		  	break;
 		  case(SAVE_WORLD) :
-			  //TEMP
 			  if (checkIfCanSaveModel(controller->model).code)
 			  {
 				  save_world(controller->model);
