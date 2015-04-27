@@ -134,7 +134,6 @@ void handle_event(SDL_Event *ev, View* v)
 			if ((currentView->model->level != -1) && (v->model->marked_button == 1)){
 				Panel* current = v->screen->head->next->next;
 				handale_click(current, 458, 108, v);
-				//	handale_up_level_button(v->screen->head->next, v);
 			}
 			break;
 		case SDLK_DOWN:
@@ -142,7 +141,6 @@ void handle_event(SDL_Event *ev, View* v)
 			{
 				Panel* current = v->screen->head->next->next;
 				handale_click(current, 456, 133, v);
-			//handale_down_level_button(v->screen->head->next, v);
 			}
 			break;
 		default:
