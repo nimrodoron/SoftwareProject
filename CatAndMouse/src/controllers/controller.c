@@ -131,12 +131,19 @@ void handle_event(SDL_Event *ev, View* v)
 			enter_click(v);
 			break;
 		case SDLK_UP:
-			if ((currentView->model->level != - 1) && (v->model->marked_button == 1))
-				handale_up_level_button(v->screen->head->next,v);
+			if ((currentView->model->level != -1) && (v->model->marked_button == 1)){
+				Panel* current = v->screen->head->next->next;
+				handale_click(current, 458, 108, v);
+				//	handale_up_level_button(v->screen->head->next, v);
+			}
 			break;
 		case SDLK_DOWN:
 			if ((currentView->model->level != -1) && (v->model->marked_button == 1))
-				handale_down_level_button(v->screen->head->next, v);
+			{
+				Panel* current = v->screen->head->next->next;
+				handale_click(current, 456, 133, v);
+			//handale_down_level_button(v->screen->head->next, v);
+			}
 			break;
 		default:
 			break;
@@ -485,7 +492,7 @@ void handale_up_level_button(Panel* button,View* v)
 	}
 }
 
-/*when pressing on the up arrow*/
+/*when pressing on the down arrow*/
 void handale_down_level_button(Panel* button, View* v)
 {
 	if(v->model->level>1){

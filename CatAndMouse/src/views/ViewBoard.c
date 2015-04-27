@@ -9,7 +9,7 @@ char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL-2] = { "images/Mouse's
 //arrays for the images in the top panel
 char* top_panel_animal_move[2] = { "images/Cat_move.bmp", "images/Mouse's _move.bmp" };
 char* top_panel_numbers[11] = { "images/0.bmp", "images/1.bmp", "images/2.bmp", "images/3.bmp", "images/4.bmp", "images/5.bmp", "images/6.bmp", "images/7.bmp", "images/8.bmp", "images/9.bmp","images/).bmp" };
-char* top_panel_win_status[3] = { "images/Game_Over_Cat_Wins.bmp", "images/Game_Over_Mouse_Wins.bmp", "images/Game_Over_Timeout.bmp" };
+char* top_panel_win_status[4] = { "images/Game_Over_Cat_Wins.bmp", "images/Game_Over_Mouse_Wins.bmp", "images/Game_Over_Timeout.bmp","images/Game_Over_Empty.bmp" };
 char* top_panel_game_status[4] = { "images/Human-waiting.bmp","images/Human-paused.bmp","images/Machine_computing.bmp","images/Machine-paused.bmp"};
 char* top_panel_pause[3] = { "images/Pause Before Next Move.bmp", "images/Pause.bmp", "images/Resume Game.bmp" };
 
@@ -167,31 +167,38 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 		case SDL_MOUSEBUTTONUP :
 				if ((ev->button.x > 0 && ev->button.x < 200) && (ev->button.y>0 && ev->button.y<600))
 					button_click_side_panel(ev->button.x, ev->button.y, v);
-				if ((ev->button.x > 200 && ev->button.x < 700) && (ev->button.y>0 && ev->button.y<110))
-					button_click_top_panel(ev->button.x, ev->button.y, v);
-				if ((ev->button.x > 230 && ev->button.x < 720) && (ev->button.y>120 && ev->button.y<610))
-					button_click_game_board_game(ev->button.x, ev->button.y, v);
+				if (v->model->winner == NONE) {
+					if ((ev->button.x > 200 && ev->button.x < 700) && (ev->button.y>0 && ev->button.y<110))
+						button_click_top_panel(ev->button.x, ev->button.y, v);
+				}
+				/*if ((ev->button.x > 230 && ev->button.x < 720) && (ev->button.y>120 && ev->button.y<610))
+					button_click_game_board_game(ev->button.x, ev->button.y, v);*/
+
 				break;
 		case SDL_KEYDOWN:
 			switch (ev->key.keysym.sym)
 			{
 			case (SDLK_SPACE) :
-				pauseWasPressed(v);
+				if (v->model->winner == NONE)
+					pauseWasPressed(v);
 				break;
 				case SDLK_F1:
+					if (v->model->winner == NONE)
 					v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
 					break;
 				case SDLK_F2:
+					if (v->model->winner == NONE)
 					v->HandleSystemEvent(RECONFIGURE_CAT, 0, 0);
 					break;
 				case SDLK_F3:
 					v->HandleSystemEvent(RESTART_GAME, 0, 0);
+					pause = 0;
 					break;
 				case SDLK_F4:
 					v->HandleSystemEvent(GO_TO_MAIN_MENU, 0, 0);
 					break;
 				case SDLK_ESCAPE:
-					v->HandleSystemEvent(EXIT, 0, 0);
+					v->quitView = 1;
 					break;
 				default:
 					break;
@@ -203,13 +210,19 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 		}
 	else if(pause ==0){ // if the game isn't paused
 		if (ev->type == SDL_MOUSEBUTTONUP){
-			if ((ev->button.x > 200 && ev->button.x < 700) && (ev->button.y>0 && ev->button.y<110))
-				button_click_top_panel(ev->button.x, ev->button.y, v);
+			if (v->model->winner == NONE)
+			{
+				if ((ev->button.x > 200 && ev->button.x < 700) && (ev->button.y>0 && ev->button.y < 110))
+					button_click_top_panel(ev->button.x, ev->button.y, v);
+			if ((ev->button.x > 230 && ev->button.x < 720) && (ev->button.y>120 && ev->button.y < 610))
+				button_click_game_board_game(ev->button.x, ev->button.y, v);
+			}
 		}
 		else if (ev->type == SDL_KEYDOWN){
 			switch(ev->key.keysym.sym){
 			case SDLK_SPACE:
-				pauseWasPressed(v);
+				if (v->model->winner == NONE)
+					pauseWasPressed(v);
 				break;
 			case SDLK_RIGHT://right key was pressed
 						if (model->players[model->currentPlayer].playerPos.y < 6)
@@ -237,7 +250,7 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 		switch (ev->type)
 		{
 		case SDL_QUIT:
-			v->HandleSystemEvent(EXIT, 0, 0);
+			v->quitView = 1;
 			break;
 		case SDL_MOUSEBUTTONUP:
 			if ((ev->button.x > 0 && ev->button.x < 200) && (ev->button.y>0 && ev->button.y < 600))
@@ -272,7 +285,7 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 					v->HandleSystemEvent(PLACE_EMPTY_SPACE, v->markedSquare.x, v->markedSquare.y);
 					break;
 			case SDLK_ESCAPE:
-				v->HandleSystemEvent(EXIT, 0, 0);
+				v->quitView = 1;
 				break;
 			case SDLK_RIGHT://right key was pressed
 				if (v->markedSquare.y < 6){
@@ -318,11 +331,15 @@ void button_click_side_panel(Uint16 x, Uint16 y, viewBoard* v)
 	if (x > 15 && x < 197)
 	{
 		if (y>150 && y < 210)
+			if (v->model->winner == NONE)
 			v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
 		else if (y>150+88 && y < 210+88)
+			if (v->model->winner == NONE)
 			v->HandleSystemEvent(RECONFIGURE_CAT, 0, 0);
-		else if (y>150+88*2 && y < 210+88*2)
+		else if (y>150+88*2 && y < 210+88*2) {
 			v->HandleSystemEvent(RESTART_GAME, 0, 0);
+			pause = 0;
+		}
 		else if (y>150 + 88*3 && y < 210 + 88*3)
 			v->HandleSystemEvent(GO_TO_MAIN_MENU, 0, 0);
 		else if (y>150 + 88*4 && y < 210 + 88*4)
@@ -763,6 +780,13 @@ result refreshViewBoard(viewBoard* view) {
 	//refresh the top panel
 	if (view->model->modelMode == GAME)
 	{
+		if ((view->model->winner == NONE) && (view->WinnerTopPanel != NULL)) {
+			setWidgetImage(view->WinnerTopPanel,top_panel_win_status[3]);
+			drawWidget(view->WinnerTopPanel,allBoards);
+			freeWidget(view->WinnerTopPanel);
+			view->WinnerTopPanel = NULL;
+		}
+
 		//create_topPanel(view->model);
 		if ((view->model->winner == NONE) && (view->model->movesBeforeTie>0))
 			show_top_panel(view);
@@ -823,7 +847,7 @@ result refreshViewBoard(viewBoard* view) {
 	}
 	show_grid_area(view->gridArea);
 
-	if (view->model->modelMode == GAME) {
+	if ((view->model->modelMode == GAME) && (view->model->movesBeforeTie>0)) {
 		if (view->model->players[view->model->currentPlayer].type == COMPUTER &&
 				view->model->winner == NONE)
 			view->HandleSystemEvent(COMPUTER_MOVE,0,0);
@@ -832,33 +856,32 @@ result refreshViewBoard(viewBoard* view) {
 }
 
 
-//nimrod add it when there is a winner to the game
 void printWinnerTopPaenl(playerAnimal winner,viewBoard* view)
 {
 
-	widget* winnerTopPanel = createNewWidget(IMAGE,"");
-	winnerTopPanel->x = 0;
-	winnerTopPanel->y = 0;
-	winnerTopPanel->width = 800;
-	winnerTopPanel->height = 200;
+	view->WinnerTopPanel = createNewWidget(IMAGE,"");
+	view->WinnerTopPanel->x = 0;
+	view->WinnerTopPanel->y = 0;
+	view->WinnerTopPanel->width = 800;
+	view->WinnerTopPanel->height = 200;
 	//freeTopPanel_List(view->topPanel);
 	if (winner == CAT)
 	{
-		setWidgetImage(winnerTopPanel, top_panel_win_status[0]);
-		drawWidget(winnerTopPanel,allBoards);
+		setWidgetImage(view->WinnerTopPanel, top_panel_win_status[0]);
+		drawWidget(view->WinnerTopPanel,allBoards);
 		//add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[0], 1, 0, view->topPanel, 0), view->topPanel);
 	}
 	else if (winner == MOUSE)
 	{
-		setWidgetImage(winnerTopPanel, top_panel_win_status[1]);
-		drawWidget(winnerTopPanel,allBoards);
+		setWidgetImage(view->WinnerTopPanel, top_panel_win_status[1]);
+		drawWidget(view->WinnerTopPanel,allBoards);
 		//add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[1], 1, 0, view->topPanel, 0), view->topPanel);
 	}
 	else
 	{
-		setWidgetImage(winnerTopPanel, top_panel_win_status[2]);
+		setWidgetImage(view->WinnerTopPanel, top_panel_win_status[2]);
 		//add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[2], 1, 0, view->topPanel, 0), view->topPanel);
-		drawWidget(winnerTopPanel,allBoards);
+		drawWidget(view->WinnerTopPanel,allBoards);
 	}
 	//show_top_panel(view->topPanel, view->model);
 	pause = 1; //  the game enters to the pause state

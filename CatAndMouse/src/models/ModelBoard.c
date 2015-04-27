@@ -101,6 +101,7 @@ result freeModel(modelBoard** model) {
 
 	free((*model)->board);
 	free(*model);
+	(*model) = NULL;
 
 	res.code = SUCCESS;
 	return res;

@@ -90,7 +90,7 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 			showViewBoard(controller->view, controller->model);
 			break;
 		case (RESTART_GAME) :
-			LoadWorldFromFile(controller->model, controller->model->name);
+			restartGame();
 			refreshViewBoard(controller->view);
 			break;
 		case (GO_TO_MAIN_MENU):
@@ -185,6 +185,8 @@ void updateModelBoardCat(playerType cat, int catLevel)
 
 void restartGame() {
 	LoadWorldFromFile(controller->model, controller->model->name);
+	controller->model->winner = NONE;
+
 }
 
 void placeMouse(int x, int y) {
