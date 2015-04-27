@@ -171,8 +171,6 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 					if ((ev->button.x > 200 && ev->button.x < 700) && (ev->button.y>0 && ev->button.y<110))
 						button_click_top_panel(ev->button.x, ev->button.y, v);
 				}
-				/*if ((ev->button.x > 230 && ev->button.x < 720) && (ev->button.y>120 && ev->button.y<610))
-					button_click_game_board_game(ev->button.x, ev->button.y, v);*/
 
 				break;
 		case SDL_KEYDOWN:
@@ -624,10 +622,28 @@ Screen* create_gridArea(modelBoard* model,viewBoard* v)
 		for (int j = 0; j < GRID_SIZE; j++)
 
 		{
-			if (i == v->markedSquare.x && j == v->markedSquare.y && model->board[i][j] == EMPTY)
-			{
-				add_child(create_panel(70, 70, 70 * i, 70 * j, "images/red_square.bmp", BUTTON, 0, scr, 0), scr);
-			}
+			if (i == v->markedSquare.x && j == v->markedSquare.y)
+						{
+							switch (v->model->board[i][j]){
+							case EMPTY:
+								add_child(create_panel(70, 70, 70 * i, 70 * j, "images/red_square.bmp", BUTTON, 0, scr, 0), scr);
+								break;
+							case MOUSE_PIC:
+								add_child(create_panel(70, 70, 70 * i, 70 * j, "images/red_square_mouse.bmp", BUTTON, 0, scr, 0), scr);
+								break;
+							case CHEESE:
+								add_child(create_panel(70, 70, 70 * i, 70 * j, "images/red_square_cheese.bmp", BUTTON, 0, scr, 0), scr);
+								break;
+							case CAT_PIC:
+								add_child(create_panel(70, 70, 70 * i, 70 * j, "images/red_square_cat.bmp", BUTTON, 0, scr, 0), scr);
+								break;
+							case WALL:
+								add_child(create_panel(70, 70, 70 * i, 70 * j, "images/red_square_wall.bmp", BUTTON, 0, scr, 0), scr);
+								break;
+							default:
+							break;
+							}
+						}
 			else
 			{
 				switch (model->board[i][j]){
@@ -825,7 +841,8 @@ result refreshViewBoard(viewBoard* view) {
 				case WALL:
 					update_panel_picture(item, "images/red_square_wall.bmp");
 					break;
-
+				default:
+					break;
 				}
 			}
 			else
