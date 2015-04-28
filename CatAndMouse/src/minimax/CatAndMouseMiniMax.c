@@ -24,16 +24,16 @@ int evaluate(void* state) {
 		// If it is the min player (Cat)
 		if (mboard->currentPlayer == CAT) {
 			if (ChceckNeighbours(mboard->board,
-								 mboard->players[MOUSE].playerPos.x,
-								 mboard->players[MOUSE].playerPos.y,
+								 mboard->players[CAT].playerPos.x,
+								 mboard->players[CAT].playerPos.y,
 								 MOUSE_PIC))
-				return MAX_EVALUATION;
+				return MIN_EVALUATION;
 
 			if (ChceckNeighbours(mboard->board,
 											 mboard->players[MOUSE].playerPos.x,
 											 mboard->players[MOUSE].playerPos.y,
 											 CHEESE))
-				return MIN_EVALUATION;
+				return MAX_EVALUATION;
 
 			GraphForMouse = GenerateGraphFromMatrix(mboard,CAT_PIC);
 			int pathCatFromMouse = findShortPath(GraphForMouse, mboard->players[MOUSE].playerPos.x,
@@ -55,10 +55,16 @@ int evaluate(void* state) {
 		else
 		{
 			if (ChceckNeighbours(mboard->board,
-							 mboard->players[MOUSE].playerPos.x,
-							 mboard->players[MOUSE].playerPos.y,
-							 CAT_PIC))
-				return MIN_EVALUATION;
+											 mboard->players[CAT].playerPos.x,
+											 mboard->players[CAT].playerPos.y,
+											 MOUSE_PIC))
+							return MIN_EVALUATION;
+
+						if (ChceckNeighbours(mboard->board,
+														 mboard->players[MOUSE].playerPos.x,
+														 mboard->players[MOUSE].playerPos.y,
+														 CHEESE))
+							return MAX_EVALUATION;
 
 			// find shortest path from the mouse to the cat
 			graph = GenerateGraphFromMatrix(mboard,CAT_PIC);
@@ -247,6 +253,7 @@ bool ChceckNeighbours(type** board, int i,int j, type type) {
 	jn = j;
 	if ((in>=0) && (in<GRID_SIZE) && (jn>=0) && (jn<GRID_SIZE))
 		if (board[in][jn] == type)
+			return true;
 	// Left
 	in = i;
 	jn = j-1;

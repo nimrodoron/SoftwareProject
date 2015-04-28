@@ -271,20 +271,6 @@ void button_click(Uint16 x, Uint16 y,View* v)
 	}
 }
 
-void quit_main_menu()
-{
-	quit = 1;
-	atexit(SDL_Quit);
-}
-
-void freeStates()
-{
-	for (int i = 0; i < 8; i++)
-	{
-		if (states[i] != NULL)
-			freeView(states[i]);
-	}
-}
 
 /*doing the right action according the buttons thag was pressed and the currently menu*/
 void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
@@ -599,7 +585,7 @@ void reconfigureCatFunction(int level, playerType type, modelBoard* model)
 /*when pressing on Go the main menu button*/
 void GoToMainMenu()
 {
-	// free all memory - controller, view and model and the new array 'states' that was created in the reconfigure options
+	freeBoardController();
 	initialize_states();
 	currentView = states[0];
 	draw_screen("Cat&Mouse", currentView->screen);

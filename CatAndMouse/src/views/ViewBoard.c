@@ -9,7 +9,7 @@ char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL-2] = { "images/Mouse's
 //arrays for the images in the top panel
 char* top_panel_animal_move[2] = { "images/Cat_move.bmp", "images/Mouse's _move.bmp" };
 char* top_panel_numbers[11] = { "images/0.bmp", "images/1.bmp", "images/2.bmp", "images/3.bmp", "images/4.bmp", "images/5.bmp", "images/6.bmp", "images/7.bmp", "images/8.bmp", "images/9.bmp","images/).bmp" };
-char* top_panel_win_status[3] = { "images/Game Over � Cat Wins.bmp", "images/Game Over � Mouse Wins.bmp", "images/Game Over � Timeout.bmp" };
+char* top_panel_win_status[3] = { "images/Game_Over_Cat_Wins.bmp", "images/Game_Over_Mouse_Wins.bmp", "images/Game_Over_Timeout.bmp" };
 char* top_panel_game_status[4] = { "images/Human-waiting.bmp","images/Human-paused.bmp","images/Machine_computing.bmp","images/Machine-paused.bmp"};
 char* top_panel_pause[3] = { "images/Pause Before Next Move.bmp", "images/Pause.bmp", "images/Resume Game.bmp" };
 
@@ -54,6 +54,7 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	{
 		sideBar = create_sideBar(side_bar_images);
 		create_topPanel(*view);
+		(*view)->WinnerTopPanel = NULL;
 		sideBar = create_sideBar(side_bar_images_unable);
 		gridArea = create_gridArea(model,*view);
 
@@ -104,6 +105,9 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 		show_side_bar(view->sideBar);
 		show_top_panel(view);
 		show_grid_area(view->gridArea);
+
+		if (model->players[model->currentPlayer].type == COMPUTER)
+			view->HandleSystemEvent(COMPUTER_MOVE,0,0);
 	}
 	else if (model->modelMode == EDIT)//we are in creating a new world board
 	{
@@ -111,9 +115,6 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 		show_CreateWorld_top_panel(view->topPanel);
 		show_grid_area(view->gridArea);
 	}
-	
-	if (model->players[model->currentPlayer].type == COMPUTER)
-		view->HandleSystemEvent(COMPUTER_MOVE,0,0);
 
 	while (view->quitView == 0)
 	{
@@ -134,6 +135,8 @@ result freeViewBoard(viewBoard* view) {
 	if (view->GameTopPanel != NULL)
 		// free top panel
 		destroyList(view->GameTopPanel,freeWidget);
+	if (view->WinnerTopPanel != NULL)
+		freeWidget(view->WinnerTopPanel);
 	if (view->sideBar != NULL)
 		freeScreen(view->sideBar);
 	if (view->gridArea != NULL)
@@ -745,7 +748,7 @@ result refreshViewBoard(viewBoard* view) {
 	if (view->model->modelMode == GAME)
 	{
 		//create_topPanel(view->model);
-		if (view->model->winner == NONE)
+		if ((view->model->winner == NONE) && (view->model->movesBeforeTie>0))
 			show_top_panel(view);
 		else
 			printWinnerTopPaenl(view->model->winner,view);
@@ -812,17 +815,28 @@ result refreshViewBoard(viewBoard* view) {
 //nimrod add it when there is a winner to the game
 void printWinnerTopPaenl(playerAnimal winner,viewBoard* view)
 {
+
+	widget* winnerTopPanel = createNewWidget(IMAGE,"");
+	winnerTopPanel->x = 0;
+	winnerTopPanel->y = 0;
+	winnerTopPanel->width = 800;
+	winnerTopPanel->height = 200;
 	//freeTopPanel_List(view->topPanel);
 	if (winner == CAT)
 	{
-		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[0], 1, 0, view->topPanel, 0), view->topPanel);
+		setWidgetImage(winnerTopPanel, top_panel_win_status[0]);
+		drawWidget(winnerTopPanel,allBoards);
+		//add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[0], 1, 0, view->topPanel, 0), view->topPanel);
 	}
 	else if (winner == MOUSE)
 	{
-		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[1], 1, 0, view->topPanel, 0), view->topPanel);
+		setWidgetImage(winnerTopPanel, top_panel_win_status[1]);
+		drawWidget(winnerTopPanel,allBoards);
+		//add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[1], 1, 0, view->topPanel, 0), view->topPanel);
 	}
 	else
 	{
+		setWidgetImage(winnerTopPanel, top_panel_win_status[2]);
 		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[2], 1, 0, view->topPanel, 0), view->topPanel);
 	}
 	//show_top_panel(view->topPanel, view->model);

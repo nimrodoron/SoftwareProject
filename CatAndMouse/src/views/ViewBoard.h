@@ -43,6 +43,7 @@ typedef enum {
 
 typedef struct viewBoard{
 	ListRef GameTopPanel;
+	widget* WinnerTopPanel;
 	Screen* topPanel;
 	Screen* sideBar;
 	Screen* gridArea;
