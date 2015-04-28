@@ -181,11 +181,9 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 					pauseWasPressed(v);
 				break;
 				case SDLK_F1:
-					if (v->model->winner == NONE)
 					v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
 					break;
 				case SDLK_F2:
-					if (v->model->winner == NONE)
 					v->HandleSystemEvent(RECONFIGURE_CAT, 0, 0);
 					break;
 				case SDLK_F3:
@@ -332,12 +330,10 @@ void button_click_side_panel(Uint16 x, Uint16 y, viewBoard* v)
 	{
 		if (y>150 && y < 210)
 		{
-			if (v->model->winner == NONE)
 				v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
 		}
 		else if (y>150 + 88 && y < 210 + 88)
 		{
-			if (v->model->winner == NONE)
 				v->HandleSystemEvent(RECONFIGURE_CAT, 0, 0);
 		}
 		else if (y>150+88*2 && y < 210+88*2) {
