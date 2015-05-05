@@ -12,7 +12,7 @@ Screen* create_screen()
 	Screen* scr = (Screen*)malloc(sizeof(Screen));
 	if (scr == NULL)
 	{
-		isError -1;
+		//isError -1;
 		perror("ERROR: failed to allocate memory for screen\n");
 		return NULL;
 	}
@@ -32,7 +32,7 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	dest_rect = (SDL_Rect*)malloc(sizeof(SDL_Rect));
 	if (dest_rect == NULL)
 	{
-		isError -1;
+		//isError -1;
 		perror("ERROR: failed to allocate struct while creating destination rectangle\n");
 		return NULL;
 	}
@@ -43,7 +43,7 @@ Panel* create_panel(int width, int height, int x, int y, char* path, ComponentTy
 	Panel* pan = (Panel*)malloc(sizeof(Panel));
 	if (pan == NULL)
 	{
-		isError -1;
+		//isError -1;
 		perror("ERROR: failed to allocate memory for component\n");
 		free(dest_rect);
 		return NULL;
@@ -115,7 +115,7 @@ Screen* build_main_menu(int number_buttons, char* title, char** imagesArr, char*
 	
 	window->screen = SDL_SetVideoMode(screen_width, screen_height, 0, 0);
 	if (window == NULL) {
-		isError -1;
+		//isError -1;
 		printf("ERROR: failed to set video mode: %s\n", SDL_GetError());
 		return NULL;
 	}

@@ -5,7 +5,7 @@ Model* create_model(char** imagesArr, char** imagesArrChosen, int* stateArr, int
 	Model* mod = (Model*)malloc(sizeof(Model));
 	if (mod==NULL)
 	{
-		isError -1;
+		//isError -1;
 		perror("ERROR: failed to allocate memory for model\n");
 		return NULL;
 	}
