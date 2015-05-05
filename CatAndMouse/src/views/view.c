@@ -79,7 +79,7 @@ void apply_surface(SDL_Surface* comp, int x, int y, SDL_Rect* clip, Screen* wind
 	//Blit
 	if (SDL_BlitSurface(comp, clip, window->screen, &offset) != 0) {
 		SDL_FreeSurface(comp);
-		isError - 1;
+		//isError - 1;
 		printf("ERROR: failed to blit image: %s\n", SDL_GetError());
 	}
 }
