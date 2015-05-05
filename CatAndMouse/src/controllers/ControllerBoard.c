@@ -132,6 +132,7 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 			  break;
 		  case (COMPUTER_MOVE) :
  			 computerMoveTo();
+		  	  break;
 		default:
 			break;
 	}

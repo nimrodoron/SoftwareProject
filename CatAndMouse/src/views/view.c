@@ -42,6 +42,7 @@ int draw_screen(char* title, Screen* window)
 		return -1;
 	}
 	draw_components(window->head->next, window);
+	return 0;
 }
 
 
