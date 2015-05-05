@@ -137,7 +137,10 @@ void handle_event(SDL_Event *ev, View* v)
 			if ((currentView->model->level != -1) && (v->model->marked_button == 1))
 				handale_down_level_button(v->screen->head->next, v);
 			break;
+		default:
+			break;
 		}
+		break;
 	default:
 		break;
 	}
@@ -351,6 +354,9 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		break;
 	case 15: //selecting human in choose your cat menu in reconfigure mode
 			cat = USER;
+			updateModelBoardCat(cat, catLevel);
+			quit = 1;
+			break;
 	case 17://selecting done in mouse skill level menu in reconfigure mouse mode
 		updateModelBoardCat(cat, catLevel);
 		quit = 1;
