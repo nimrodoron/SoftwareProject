@@ -1,4 +1,5 @@
-#include "MiniMax.h"
+#include "../../main/MiniMax.h"
+
 #include <stdio.h>
 #include "stdbool.h"
 

@@ -1,7 +1,7 @@
 #ifndef CATANDMOUSEMINIMAX_H_
 #define CATANDMOUSEMINIMAX_H_
 
-#include "../infrastructure/minimax/MiniMax.h"
+#include "../main/MiniMax.h"
 #include "../models/ModelBoard.h"
 #include <stdio.h>
 #include <stdlib.h>

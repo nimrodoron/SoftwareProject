@@ -5,7 +5,7 @@
 #include "../models/ModelBoard.h"
 #include "../infrastructure/general/general.h"
 #include "../infrastructure/gui/widgets.h"
-#include "../infrastructure/general/ListUtils.h"
+#include "../main/ListUtils.h"
 
 
 #define NUMBER_BUTTONS_TOP_PANEL  6
@@ -89,5 +89,6 @@ void printWinnerTopPaenl(playerAnimal winner, viewBoard* view);
 void pauseWasPressed(viewBoard* view);
 void printMessages(char* message);
 void createMessage(char* message);
+void restartGame();
 
 #endif
