@@ -240,10 +240,10 @@ void button_click(Uint16 x, Uint16 y,View* v)
 									setImage(button, v->model->chosen_images[markedButtonIndex++]); //update the button that was regular to 'chosen'					
 									button->enabled = true;
 								}
-								else if ((markedButton!=1)&&(markedButtonIndex==1)){//the skill button was pressed
+								else if ((markedButton!=1)&&(markedButtonIndex==1)){//the skill button was pressed but wasn't highlithed before
 									setImage(current, v->model->images[markedButton]);//update the button that was 'chosen' to regular
 									current->enabled = false;
-									setImage(current, v->model->chosen_images[level + 3]); //update the button that was regular to 'chosen'
+									setImage(button, v->model->chosen_images[level + 3]); //update the button that was regular to 'chosen'
 									if (x >= button->componentProps.dest_rect->x + 147){ // if the press was in the levels buttons 
 										if (x <= button->componentProps.dest_rect->x + button->componentProps.dest_rect->w)
 										{
