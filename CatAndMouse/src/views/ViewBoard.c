@@ -171,8 +171,8 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 					if ((ev->button.x > 200 && ev->button.x < 700) && (ev->button.y>0 && ev->button.y<110))
 						button_click_top_panel(ev->button.x, ev->button.y, v);
 				}
-				if ((ev->button.x > 230 && ev->button.x < 720) && (ev->button.y>120 && ev->button.y<610))
-					button_click_game_board_game(ev->button.x, ev->button.y, v);
+				/*if ((ev->button.x > 230 && ev->button.x < 720) && (ev->button.y>120 && ev->button.y<610))
+					button_click_game_board_game(ev->button.x, ev->button.y, v);*/
 
 				break;
 		case SDL_KEYDOWN:
@@ -211,8 +211,12 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 	else if(pause ==0){ // if the game isn't paused
 		if (ev->type == SDL_MOUSEBUTTONUP){
 			if (v->model->winner == NONE)
-				if ((ev->button.x > 200 && ev->button.x < 700) && (ev->button.y>0 && ev->button.y<110))
+			{
+				if ((ev->button.x > 200 && ev->button.x < 700) && (ev->button.y>0 && ev->button.y < 110))
 					button_click_top_panel(ev->button.x, ev->button.y, v);
+			if ((ev->button.x > 230 && ev->button.x < 720) && (ev->button.y>120 && ev->button.y < 610))
+				button_click_game_board_game(ev->button.x, ev->button.y, v);
+			}
 		}
 		else if (ev->type == SDL_KEYDOWN){
 			switch(ev->key.keysym.sym){
