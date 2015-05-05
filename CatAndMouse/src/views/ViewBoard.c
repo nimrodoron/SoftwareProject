@@ -9,7 +9,7 @@ char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL-2] = { "images/Mouse's
 //arrays for the images in the top panel
 char* top_panel_animal_move[2] = { "images/Cat_move.bmp", "images/Mouse's _move.bmp" };
 char* top_panel_numbers[11] = { "images/0.bmp", "images/1.bmp", "images/2.bmp", "images/3.bmp", "images/4.bmp", "images/5.bmp", "images/6.bmp", "images/7.bmp", "images/8.bmp", "images/9.bmp","images/).bmp" };
-char* top_panel_win_status[3] = { "images/Game_Over_Cat_Wins.bmp", "images/Game_Over_Mouse_Wins.bmp", "images/Game_Over_Timeout.bmp" };
+char* top_panel_win_status[4] = { "images/Game_Over_Cat_Wins.bmp", "images/Game_Over_Mouse_Wins.bmp", "images/Game_Over_Timeout.bmp","images/Game_Over_Empty.bmp" };
 char* top_panel_game_status[4] = { "images/Human-waiting.bmp","images/Human-paused.bmp","images/Machine_computing.bmp","images/Machine-paused.bmp"};
 char* top_panel_pause[3] = { "images/Pause Before Next Move.bmp", "images/Pause.bmp", "images/Resume Game.bmp" };
 
@@ -192,6 +192,7 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 					break;
 				case SDLK_F3:
 					v->HandleSystemEvent(RESTART_GAME, 0, 0);
+					pause = 0;
 					break;
 				case SDLK_F4:
 					v->HandleSystemEvent(GO_TO_MAIN_MENU, 0, 0);
@@ -331,8 +332,10 @@ void button_click_side_panel(Uint16 x, Uint16 y, viewBoard* v)
 		else if (y>150+88 && y < 210+88)
 			if (v->model->winner == NONE)
 			v->HandleSystemEvent(RECONFIGURE_CAT, 0, 0);
-		else if (y>150+88*2 && y < 210+88*2)
+		else if (y>150+88*2 && y < 210+88*2) {
 			v->HandleSystemEvent(RESTART_GAME, 0, 0);
+			pause = 0;
+		}
 		else if (y>150 + 88*3 && y < 210 + 88*3)
 			v->HandleSystemEvent(GO_TO_MAIN_MENU, 0, 0);
 		else if (y>150 + 88*4 && y < 210 + 88*4)
@@ -774,6 +777,8 @@ result refreshViewBoard(viewBoard* view) {
 	if (view->model->modelMode == GAME)
 	{
 		if ((view->model->winner == NONE) && (view->WinnerTopPanel != NULL)) {
+			setWidgetImage(view->WinnerTopPanel,top_panel_win_status[3]);
+			drawWidget(view->WinnerTopPanel,allBoards);
 			freeWidget(view->WinnerTopPanel);
 			view->WinnerTopPanel = NULL;
 		}
