@@ -49,7 +49,7 @@ int evaluate(void* state) {
 
 			destryGraph(GraphForMouse);
 			destryGraph(GraphforCat);
-			return (int)(2*pathCatFromMouse+8*pathCatFromCheese*(-1));
+			return (int)(pathCatFromMouse+(1/pathCatFromCheese)*10);
 		}
 		// if it is the max player (Mouse)
 		else
@@ -267,7 +267,7 @@ bool ChceckNeighbours(type** board, int i,int j, type type) {
 			if (board[in][jn] == type)
 				return true;
 	// down
-	in = i-1;
+	in = i+1;
 	jn = j;
 	if ((in>=0) && (in<GRID_SIZE) && (jn>=0) && (jn<GRID_SIZE))
 			if (board[in][jn] == type)

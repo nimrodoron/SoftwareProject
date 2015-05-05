@@ -37,12 +37,13 @@ struct MiniMaxResult getBestChild(
 		if (isMaxPlayer) { // If it is max player
 			do {
 				if (headData(childrenlistTemp) != NULL) {
-					result.value = getBestChild(headData(childrenlistTemp),maxDepth,
+					int Score = getBestChild(headData(childrenlistTemp),maxDepth,
 						      getChildren, freeState ,evaluate,!isMaxPlayer,
 							  alpha, beta).value;
-					if ( (result.value >= alpha) || (isFirstChild)) {
+					if ( (Score > alpha) || (isFirstChild)) {
 						result.index = index;
-						alpha = result.value;
+						alpha = Score;
+						result.value = alpha;
 						isFirstChild = false;
 					}
 				}
@@ -55,12 +56,13 @@ struct MiniMaxResult getBestChild(
 		else { // If it is min player
 			do {
 				if (headData(childrenlistTemp) != NULL) {
-					result.value = getBestChild(headData(childrenlistTemp),maxDepth,
+					int Score = getBestChild(headData(childrenlistTemp),maxDepth,
 							  getChildren, freeState ,evaluate,!isMaxPlayer,
 							  alpha, beta).value;
-					if  ((result.value <= beta) || (isFirstChild)){
+					if  ((Score < beta) || (isFirstChild)){
 						result.index = index;
-						beta = result.value;
+						beta = Score;
+						result.value = beta;
 						isFirstChild = false;
 					}
 				}

@@ -1,7 +1,7 @@
 #include "../views/ViewBoard.h"
 
 
-int pause ;
+int pause = 0 ;
 
 //array for the displayed images
 char* displayed_top_panel_images[NUMBER_BUTTONS_TOP_PANEL-2] = { "images/Mouse's _move.bmp", "images/2.bmp", "images/Machine_computing.bmp", "images/Pause Before Next Move.bmp" };
@@ -28,7 +28,7 @@ update the fields of the struct and return result*/
 result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEvents event, int x, int y),
 	modelBoard* model, int worldsIndex) {
 	
-	pause = 1;
+	pause = 0;
 
 	result res;
 	Screen* sideBar = NULL;
@@ -66,6 +66,8 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 		sideBar = create_sideBar(createGame_side_bar_images);
 		topPanel = CreateWorld_topPanel(worldsIndex);
 		gridArea = create_gridArea(model, *view);
+		(*view)->WinnerTopPanel = NULL;
+		(*view)->GameTopPanel = NULL;
 	}
 
 
@@ -132,6 +134,10 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 
 result freeViewBoard(viewBoard* view) {
 
+	result res;
+		res.code = 1;
+		res.message="";
+
 	if (view->GameTopPanel != NULL)
 		// free top panel
 		destroyList(view->GameTopPanel,freeWidget);
@@ -144,6 +150,8 @@ result freeViewBoard(viewBoard* view) {
 	if (view->topPanel!=NULL)
 		freeScreen(view->topPanel);
 	free(view);
+
+	return res;
 }
 
 void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
@@ -152,7 +160,7 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 		v->quitView = 1;	
 	if (model->modelMode == GAME) // if the mode is the game
 	{
-	if (pause == 0) { // can be clicked only if the game is paused
+	if (pause == 1) { // can be clicked only if the game is paused
 		switch (ev->type)
 		{
 		case SDL_MOUSEBUTTONUP :
@@ -191,7 +199,7 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 			break;
 		}
 		}
-	else if(pause ==1){ // if the game isn't paused
+	else if(pause ==0){ // if the game isn't paused
 		if (ev->type == SDL_MOUSEBUTTONUP){
 			if ((ev->button.x > 200 && ev->button.x < 700) && (ev->button.y>0 && ev->button.y<110))
 				button_click_top_panel(ev->button.x, ev->button.y, v);
@@ -744,6 +752,11 @@ void apply_surfaceBoard(int x, int y, SDL_Surface* source, SDL_Surface* destinat
 /*upfate the pictures according to the current state in the model 
 and show the view again*/
 result refreshViewBoard(viewBoard* view) {
+
+	result res;
+		res.code = 1;
+		res.message="";
+
 	//refresh the top panel
 	if (view->model->modelMode == GAME)
 	{
@@ -807,8 +820,12 @@ result refreshViewBoard(viewBoard* view) {
 	}
 	show_grid_area(view->gridArea);
 
-	if (view->model->players[view->model->currentPlayer].type == COMPUTER)
-		view->HandleSystemEvent(COMPUTER_MOVE,0,0);
+	if (view->model->modelMode == GAME) {
+		if (view->model->players[view->model->currentPlayer].type == COMPUTER &&
+				view->model->winner == NONE)
+			view->HandleSystemEvent(COMPUTER_MOVE,0,0);
+	}
+	return res;
 }
 
 
@@ -837,7 +854,8 @@ void printWinnerTopPaenl(playerAnimal winner,viewBoard* view)
 	else
 	{
 		setWidgetImage(winnerTopPanel, top_panel_win_status[2]);
-		add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[2], 1, 0, view->topPanel, 0), view->topPanel);
+		//add_child(create_panel(BUTTON_WIDTH, BUTTON_HEIGHT, button_offsetX, button_offsetY + 0, top_panel_win_status[2], 1, 0, view->topPanel, 0), view->topPanel);
+		drawWidget(winnerTopPanel,allBoards);
 	}
 	//show_top_panel(view->topPanel, view->model);
 	pause = 1; //  the game enters to the pause state
@@ -862,8 +880,13 @@ void pauseWasPressed(viewBoard* view)
 
 /*refresh the side bar to be available/unavailable*/
 result refreshSidePanel(viewBoard* view) {
+
+	result res;
+		res.code = 1;
+		res.message="";
+
 	Panel *item = view->sideBar->head->next;
-		if (pause == 0) // if the game is not paused (mean that it was paused before and the puase button was pressed
+		if (pause == 1) //if the game is paused (mean that it was not paused before and the puase button was pressed
 		{
 			for (int i = 0; i < NUMBER_BUTTONS_SIDE_BAR; i++)
 			{
@@ -872,7 +895,7 @@ result refreshSidePanel(viewBoard* view) {
 			}
 			
 		}
-		else if (pause == 1){ //if the game is paused (mean that it was not paused before and the puase button was pressed
+		else if (pause == 0){ // if the game is not paused (mean that it was paused before and the puase button was presse
 			for (int i = 0; i < NUMBER_BUTTONS_SIDE_BAR; i++)
 			{
 				update_panel_picture(item, side_bar_images_unable[i]);
@@ -880,6 +903,8 @@ result refreshSidePanel(viewBoard* view) {
 			}
 		}
 		show_side_bar(view->sideBar);
+
+		return res;
 }
 
 /*prints the error message*/

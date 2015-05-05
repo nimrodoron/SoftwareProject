@@ -47,6 +47,8 @@ result createEmptyModel(modelBoard** model) {
 result copyModel(modelBoard** toModel,modelBoard* fromModel) {
 
 	result res;
+	res.code = 1;
+	res.message="";
 
 	createEmptyModel(toModel);
 	(*toModel)->cheesePos = fromModel->cheesePos;
@@ -62,6 +64,7 @@ result copyModel(modelBoard** toModel,modelBoard* fromModel) {
 			(*toModel)->board[row][col] = fromModel->board[row][col];
 		}
 	}
+	return res;
 }
 
 bool movePlayerTo(modelBoard* model, int x, int y) {
