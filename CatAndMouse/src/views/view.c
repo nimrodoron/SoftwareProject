@@ -7,7 +7,7 @@ View* create_view(Model* model, Screen* screen){
 
 	if (view == NULL)
 	{
-		isError - 1;
+		//isError - 1;
 		perror("ERROR: failed to allocate memory for view\n");
 		return NULL;
 	}
@@ -37,7 +37,7 @@ int draw_screen(char* title, Screen* window)
 
 	SDL_Color color = window->head->componentProps.background_color;
 	if (SDL_FillRect(window->screen, 0, SDL_MapRGB(window->screen->format, color.r, color.g, color.b)) != 0) {
-		isError - 1;
+		//isError - 1;
 		printf("ERROR: failed to draw rect: %s\n", SDL_GetError());
 		return -1;
 	}
