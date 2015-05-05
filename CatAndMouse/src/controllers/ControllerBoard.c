@@ -70,6 +70,7 @@ result freeBoardController() {
 			freeViewBoard(controller->view);
 		}
 		free(controller);
+		controller = NULL;
 	}
 	res.code = SUCCESS;
 	return res;
@@ -317,7 +318,7 @@ result checkIfCanSaveModel(modelBoard* model) {
 }
 
 void playerMoveTo(int x, int y) {
-	MOVE pmove;
+	//MOVE pmove;
 
 	// move the player if possiable
 	if(movePlayerTo(controller->model,x,y)) {

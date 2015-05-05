@@ -17,7 +17,7 @@ int evaluate(void* state) {
 	int** GraphForMouse;
 
 	modelBoard* mboard = (modelBoard*)state;
-	type** board = mboard->board;
+	//type** board = mboard->board;
 
 	if (mboard->isValid) {
 

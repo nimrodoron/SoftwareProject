@@ -52,7 +52,8 @@ result createViewBoard(viewBoard** view, void(*HandleSystemEvent) (viewBoardEven
 	
 	if (model->modelMode == GAME)
 	{
-		sideBar = create_sideBar(side_bar_images);
+		//sideBar = create_sideBar(side_bar_images);
+		sideBar=NULL;
 		create_topPanel(*view);
 		(*view)->WinnerTopPanel = NULL;
 		sideBar = create_sideBar(side_bar_images_unable);
@@ -195,6 +196,7 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 				default:
 					break;
 			}
+			break;
 		default:
 			break;
 		}
@@ -299,6 +301,7 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 			default:
 				break;
 			}
+			break;
 		default:
 			break;
 		}
@@ -669,7 +672,7 @@ Screen* CreateWorld_topPanel(int worldsndex)
 	int yOffset = 0;
 	int xOffset = 0;
 	int type = 1;
-	Panel* currentHead = scr->head;
+	//Panel* currentHead = scr->head;
 	for (int i = 0; i < NUMBER_BUTTONS_TOP_PANEL_CREATE_GAME; i++)
 	{
 		switch (i)

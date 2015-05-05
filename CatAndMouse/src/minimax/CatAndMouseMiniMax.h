@@ -21,7 +21,7 @@ typedef enum nodeVisit {
 	NOT_VISIT,
 	IN_QUEUE,
 	COMPLETED
-};
+}Visit;
 
 int getBestMove(modelBoard* currentState,int numSteps);
 

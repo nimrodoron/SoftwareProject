@@ -13,7 +13,7 @@ struct MiniMaxResult getBestChild(
 		int beta) {
 
 	struct MiniMaxResult result;
-	struct MiniMaxResult childResult;
+	//struct MiniMaxResult childResult;
 	ListRef childrenlistTemp;
 
 	bool isFirstChild;;

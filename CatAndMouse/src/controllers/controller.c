@@ -70,9 +70,10 @@ int initGUI()
 	//While the user hasn't quit
 	while_handle_event();
 
-	//SDL_FreeSurface(window);
-	return 0;
+	quit_main_menu();
 	SDL_Quit();
+	return 0;
+
 
 }
 
@@ -116,7 +117,7 @@ void handle_event(SDL_Event *ev, View* v)
 	switch (ev->type)
 	{
 	case SDL_QUIT:
-		quit_main_menu();
+		quit = 1;
 		break;
 	case SDL_MOUSEBUTTONUP:
 		button_click(ev->button.x, ev->button.y, v);
@@ -278,7 +279,7 @@ void button_click(Uint16 x, Uint16 y,View* v)
 /*doing the right action according the buttons thag was pressed and the currently menu*/
 void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 {
-	playerAnimal editedPlayer = MOUSE;
+	//playerAnimal editedPlayer = MOUSE;
 	switch(button->nextState){
 	case 0: // if the back was pressed from the choose your cat menu
 		if (loadGame == 0 && currentView == states[1]) // the load game menu was pressed before 
@@ -348,6 +349,9 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		break;
 	case 14:
 		mouse = USER;
+		updateModelBoardMouse(mouse, mouseLevel);
+		quit = 1;
+		break;
 	case 13://selecting done in mouse skill level menu in reconfigure mouse mode
 		updateModelBoardMouse(mouse, mouseLevel);
 		quit = 1;
@@ -362,7 +366,7 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		quit = 1;
 		break;
 	case 7: //quit was pressed
-		quit_main_menu();
+		quit = 1;
 		break;
 	case 2:
 		cat = USER;
@@ -627,8 +631,7 @@ void save(int worldsIndex)
 
 void quit_main_menu()
 {
-	quit = 1;
-	atexit(SDL_Quit);
+	freeStates();
 	SDL_Quit();
 }
 

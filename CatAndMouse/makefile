@@ -1,6 +1,6 @@
 CFLAGS=-Wall -g -std=c99 -pedantic-errors -lm
 
-all: main MiniMaxDemo
+all: main 
 
 clean:
 	-rm Gui controller.o main.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o ListUtils.o MiniMax.o MiniMaxDemo.o
