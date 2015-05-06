@@ -96,9 +96,6 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 		case (GO_TO_MAIN_MENU):
 			GoToMainMenu();
 			break;
-		case(SPACE):
-			//fill - ?
-			break;
 		case (PLACE_MOUSE):
 			placeMouse(x,y);
 			break;
@@ -186,7 +183,6 @@ void updateModelBoardCat(playerType cat, int catLevel)
 void restartGame() {
 	LoadWorldFromFile(controller->model, controller->model->name);
 	controller->model->winner = NONE;
-
 }
 
 void placeMouse(int x, int y) {

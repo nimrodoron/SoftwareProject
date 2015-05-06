@@ -193,6 +193,8 @@ void handle_gui_event(SDL_Event *ev, viewBoard* v, modelBoard* model)
 				case SDLK_F3:
 					v->HandleSystemEvent(RESTART_GAME, 0, 0);
 					pause = 0;
+					refreshSidePanel(v);
+					show_top_panel(v);
 					break;
 				case SDLK_F4:
 					v->HandleSystemEvent(GO_TO_MAIN_MENU, 0, 0);
@@ -331,14 +333,20 @@ void button_click_side_panel(Uint16 x, Uint16 y, viewBoard* v)
 	if (x > 15 && x < 197)
 	{
 		if (y>150 && y < 210)
+		{
 			if (v->model->winner == NONE)
-			v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
-		else if (y>150+88 && y < 210+88)
+				v->HandleSystemEvent(RECONFIGURE_MOUSE, 0, 0);
+		}
+		else if (y>150 + 88 && y < 210 + 88)
+		{
 			if (v->model->winner == NONE)
-			v->HandleSystemEvent(RECONFIGURE_CAT, 0, 0);
+				v->HandleSystemEvent(RECONFIGURE_CAT, 0, 0);
+		}
 		else if (y>150+88*2 && y < 210+88*2) {
 			v->HandleSystemEvent(RESTART_GAME, 0, 0);
 			pause = 0;
+			refreshSidePanel(v);
+			show_top_panel(v);
 		}
 		else if (y>150 + 88*3 && y < 210 + 88*3)
 			v->HandleSystemEvent(GO_TO_MAIN_MENU, 0, 0);
