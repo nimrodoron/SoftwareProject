@@ -406,6 +406,7 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		break;
 	case 25://if the done button was pressed in the save world menu
 		save(WorldToOpen);
+		quit=1;
 		break;
 	default:
 	currentView = states[button->nextState];
