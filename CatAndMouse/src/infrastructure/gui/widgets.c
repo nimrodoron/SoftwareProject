@@ -254,7 +254,11 @@ void freeScreen(Screen* screen)
 		screen->head = currentHead->next;
 		freePanel(currentHead);
 	}
-	free(screen);
+	if(screen!=NULL)
+	{
+		free(screen);
+		screen = NULL;
+	}
 }
 
 void freePanel(Panel* panel)
@@ -264,5 +268,8 @@ void freePanel(Panel* panel)
 	if (panel->componentProps.surface != NULL)
 		SDL_FreeSurface(panel->componentProps.surface);
 	if (panel!=NULL)
+	{
 		free(panel);
+		panel = NULL;
+	}
 }
