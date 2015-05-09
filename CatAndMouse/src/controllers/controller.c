@@ -409,9 +409,9 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 	case 10: //level button was pressed for 'choose your mouse skill level menu'
 		handaleUpDoawArrowas(button, x, y, v, MOUSE);
 		break;
-	case 25://if the done button was pressed in the save world menu
+	case 25://if the done button was pressed in the save world menu;
 		save(WorldToOpen);
-		quit=1;
+		quit =1;
 		break;
 	default:
 	currentView = states[button->nextState];
