@@ -114,8 +114,9 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 		  case(SAVE_WORLD) :
 			  if (checkIfCanSaveModel(controller->model).code)
 			  {
+				  //freeBoardController(controller);
 				  save_world(controller->model);
-				  showViewBoard(controller->view, controller->model);
+				//  showViewBoard(controller->view, controller->model);
 			  }
 			  else 
 			  {
