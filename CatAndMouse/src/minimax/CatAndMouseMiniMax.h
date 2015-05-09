@@ -3,7 +3,7 @@
 
 #include "../main/MiniMax.h"
 #include "../models/ModelBoard.h"
-#include <SDL.h>
+#include <SDL/SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
 
