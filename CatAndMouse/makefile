@@ -6,43 +6,43 @@ clean:
 	-rm CatAndMouse MiniMaxDemo ListUtilsDemo controller.o main.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o ListUtils.o MiniMax.o MiniMaxDemo.o CatAndMouseMiniMax.o WorldsManager.o
 
 CatAndMouse: controller.o CatAndMouse.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o WorldsManager.o ListUtils.o MiniMax.o CatAndMouseMiniMax.o
-	gcc  -o CatAndMouse controller.o CatAndMouse.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o WorldsManager.o ListUtils.o MiniMax.o CatAndMouseMiniMax.o -lm -std=c99 -pedantic-errors -g `sdl-config --libs` -lSDL_image
+	gcc  -o CatAndMouse controller.o CatAndMouse.o model.o view.o widgets.o ModelBoard.o ViewBoard.o ControllerBoard.o WorldsManager.o ListUtils.o MiniMax.o CatAndMouseMiniMax.o -lm -std=c99 -pedantic-errors -g `sdl-config --libs` -L/usr/local/lib/SDL_image-1.2.12/lib -lSDL_image
 
 MiniMaxDemo: MiniMaxDemo.o MiniMax.o ListUtils.o
-	gcc  -o MiniMaxDemo MiniMaxDemo.o MiniMax.o ListUtils.o  -lm -std=c99 -pedantic-errors -g `sdl-config --libs`
+	gcc  -o MiniMaxDemo MiniMaxDemo.o MiniMax.o ListUtils.o  -lm -std=c99 -pedantic-errors -g `sdl-config --libs` -L/usr/local/lib/SDL_image-1.2.12/lib -lSDL_image
 	
 ListUtilsDemo: ListUtilsDemo.o ListUtils.o
-	gcc  -o ListUtilsDemo.o ListUtils.o  -lm -std=c99 -pedantic-errors -g `sdl-config --libs`
+	gcc  -o ListUtilsDemo.o ListUtils.o  -lm -std=c99 -pedantic-errors -g `sdl-config --libs` -L/usr/local/lib/SDL_image-1.2.12/lib -lSDL_image
 	
 CatAndMouse.o: src/main/CatAndMouse.c src/controllers/controller.c src/models/model.c src/views/view.c src/infrastructure/gui/widgets.c src/controllers/ControllerBoard.c src/views/ViewBoard.c src/models/ModelBoard.c src/services/WorldsManager.c src/infrastructure/general/ListUtils.c  src/infrastructure/minimax/MiniMax.c src/minimax/CatAndMouseMiniMax.c
-	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/main/CatAndMouse.c src/controllers/controller.c src/models/model.c src/views/view.c src/infrastructure/gui/widgets.c src/controllers/ControllerBoard.c src/views/ViewBoard.c src/models/ModelBoard.c src/services/WorldsManager.c  src/infrastructure/general/ListUtils.c src/infrastructure/minimax/MiniMax.c src/minimax/CatAndMouseMiniMax.c `sdl-config --cflags`
+	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/main/CatAndMouse.c src/controllers/controller.c src/models/model.c src/views/view.c src/infrastructure/gui/widgets.c src/controllers/ControllerBoard.c src/views/ViewBoard.c src/models/ModelBoard.c src/services/WorldsManager.c  src/infrastructure/general/ListUtils.c src/infrastructure/minimax/MiniMax.c src/minimax/CatAndMouseMiniMax.c `sdl-config --cflags` -I/usr/local/lib/SDL_image-1.2.12/include/SDL -lSDL_image
 	
 MiniMaxDemo.o: src/main/MiniMaxDemo.c src/infrastructure/minimax/MiniMax.c src/infrastructure/general/ListUtils.c
 	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/main/MiniMaxDemo.c src/infrastructure/minimax/MiniMax.c src/infrastructure/general/ListUtils.c
 
 widgets.o: src/infrastructure/gui/widgets.c
-	gcc  -std=c99 -pedantic-errors -c -Wall -g -src/infrastructure/gui/widgets.c `sdl-config --cflags`
+	gcc  -std=c99 -pedantic-errors -c -Wall -g -src/infrastructure/gui/widgets.c `sdl-config --cflags` -I/usr/local/lib/SDL_image-1.2.12/include/SDL -lSDL_image
 	
 model.o: src/infrastructure/gui/widgets.c src/models/model.c
-	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/infrastructure/gui/widgets.c src/models/model.c `sdl-config --cflags`
+	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/infrastructure/gui/widgets.c src/models/model.c `sdl-config --cflags` -I/usr/local/lib/SDL_image-1.2.12/include/SDL -lSDL_image
 	
 ModelBoard.o: src/models/ModelBoard.c
-	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/models/ModelBoard.c `sdl-config --cflags`
+	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/models/ModelBoard.c `sdl-config --cflags` -I/usr/local/lib/SDL_image-1.2.12/include/SDL -lSDL_image
 
 view.o: src/views/view.c src/infrastructure/gui/widgets.c src/models/model.c
-	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/views/view.c src/infrastructure/gui/widgets.c src/models/model.c `sdl-config --cflags`
+	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/views/view.c src/infrastructure/gui/widgets.c src/models/model.c `sdl-config --cflags` -I/usr/local/lib/SDL_image-1.2.12/include/SDL -lSDL_image
 
 ViewBoard.o: src/views/ViewBoard.c src/infrastructure/gui/widgets.c src/models/ModelBoard.c src/infrastructure/general/ListUtils.c
-	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/views/ViewBoard.c src/infrastructure/gui/widgets.c src/models/ModelBoard.c src/infrastructure/general/ListUtils.c `sdl-config --cflags`
+	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/views/ViewBoard.c src/infrastructure/gui/widgets.c src/models/ModelBoard.c src/infrastructure/general/ListUtils.c `sdl-config --cflags` -I/usr/local/lib/SDL_image-1.2.12/include/SDL -lSDL_image
 
 controller.o: src/controllers/controller.c src/views/view.c src/infrastructure/gui/widgets.c src/models/model.c
-	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/controllers/controller.c src/views/view.c src/infrastructure/gui/widgets.c src/models/model.c `sdl-config --cflags`	 
+	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/controllers/controller.c src/views/view.c src/infrastructure/gui/widgets.c src/models/model.c `sdl-config --cflags` -I/usr/local/lib/SDL_image-1.2.12/include/SDL -lSDL_image
 
 ControllerBoard.o: src/controllers/ControllerBoard.c src/views/ViewBoard.c src/infrastructure/gui/widgets.c src/models/ModelBoard.c src/services/WorldsManager.c
-	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/controllers/ControllerBoard.c src/views/ViewBoard.c src/infrastructure/gui/widgets.c src/models/ModelBoard.c src/services/WorldsManager.c `sdl-config --cflags`
+	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/controllers/ControllerBoard.c src/views/ViewBoard.c src/infrastructure/gui/widgets.c src/models/ModelBoard.c src/services/WorldsManager.c `sdl-config --cflags` -I/usr/local/lib/SDL_image-1.2.12/include/SDL -lSDL_image
 
 WorldsManager.o: src/services/WorldsManager.c src/models/ModelBoard.c
-	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm  src/services/WorldsManager.c src/models/ModelBoard.c `sdl-config --cflags`
+	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm  src/services/WorldsManager.c src/models/ModelBoard.c `sdl-config --cflags` -I/usr/local/lib/SDL_image-1.2.12/include/SDL -lSDL_image
 
 ListUtilsDemo.o: src/infrastructure/general/ListUtils.c src/main/ListUtilsDemo.c
 	gcc  -std=c99 -pedantic-errors -c -Wall -g -lm src/infrastructure/general/ListUtils.c src/main/ListUtilsDemo.c
