@@ -3,8 +3,12 @@
 /* this function gets the best move for the current player 
 according the current state of the game and set_number_steps*/
 int getBestMove(modelBoard* currentState,int numSteps) {
+	int orgNumSteps = numSteps;
 	int isMaxPlayer =0;
+	if (numSteps>4)
+		numSteps = 4;
 	if (currentState->currentPlayer==MAX_PLAYER) isMaxPlayer=1;
+	SDL_Delay(orgNumSteps*100);
 	return (getBestChild(currentState,numSteps,getChildren,FreeState,evaluate,isMaxPlayer,MIN_EVALUATION,MAX_EVALUATION).index);
 	}
 
@@ -49,6 +53,7 @@ int evaluate(void* state) {
 
 			destryGraph(GraphForMouse);
 			destryGraph(GraphforCat);
+			if (pathCatFromCheese == 0) return 0;
 			return (int)(pathCatFromMouse+(1/pathCatFromCheese)*10);
 		}
 		// if it is the max player (Mouse)
