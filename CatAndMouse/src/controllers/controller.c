@@ -410,7 +410,6 @@ void handale_click(Panel* button, Uint16 x, Uint16 y,View* v)
 		handaleUpDoawArrowas(button, x, y, v, MOUSE);
 		break;
 	case 25://if the done button was pressed in the save world menu
-		quit = 1;
 		save(WorldToOpen);
 		quit=1;
 		break;
