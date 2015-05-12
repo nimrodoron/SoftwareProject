@@ -29,6 +29,5 @@ Utility evaluation function:
 							 to the cheese. the mouse (max player) will choose the
 							 minimum distance to the cheese (1/shortest path to cheese)*10
 							 and the maximum distance from the cat
-	running time - according to the level (level=seconds)
 
 ##########################################################################################

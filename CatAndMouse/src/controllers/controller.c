@@ -2,6 +2,7 @@
 
 
 int loadGame = 1; //indicate that we are/aren't in Load Game menu
+int bTerminate = 0;
 int WorldToOpen = 1; // indicate which world is loaded
 int worldsMenus = 1; //indicate that we are in menus with arrows: save game, load game, edit game
 
@@ -67,13 +68,13 @@ int initGUI()
 
 	currentView = states[0];
 	draw_screen("Cat&Mouse", currentView->screen);
+
 	//While the user hasn't quit
 	while_handle_event();
 
 	quit_main_menu();
-	SDL_Quit();
-	return 0;
 
+	SDL_Quit();
 
 }
 
@@ -509,12 +510,16 @@ void mainviewboard(playerType catType, playerType mouseType, int catLevel, int m
 	char* filename = worlds[worldsIndex];
 	player cat;
 	player mouse;
+
+
+	if (catLevel ==0) catLevel = 5;
+	if (mouseLevel == 0) mouseLevel = 5;
+
 	mouse.type = mouseType;
 	mouse.level = mouseLevel;
 	cat.type = catType;
 	cat.level = catLevel;
 
-	freeStates();
 	if (mod == EDIT)
 	{
 		createBoardController(EDIT, filename, cat, mouse, NONE,worldsIndex);
@@ -601,8 +606,8 @@ void reconfigureCatFunction(int level, playerType type, modelBoard* model)
 /*when pressing on Go the main menu button*/
 void GoToMainMenu()
 {
-	freeBoardController();
-	initialize_states();
+	//freeControllerAfterEventsFinished();
+	//initialize_states();
 	currentView = states[0];
 	draw_screen("Cat&Mouse", currentView->screen);
 	//restore the defult states
@@ -638,7 +643,6 @@ void save(int worldsIndex)
 void quit_main_menu()
 {
 	freeStates();
-	SDL_Quit();
 }
 
 /*frees the state array*/

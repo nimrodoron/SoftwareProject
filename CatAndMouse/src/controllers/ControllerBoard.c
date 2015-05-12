@@ -2,6 +2,8 @@
 #include "../services/WorldsManager.h"
 #include "../minimax/CatAndMouseMiniMax.h"
 
+bool bGoToMainMenu = false;
+
 result createBoardController(mode Mode, char* name, player mouse,
 							 player cat, playerAnimal currentPlayer, int worldsIndex) {
 	result res;
@@ -61,6 +63,7 @@ result showView() {
 }
 
 result freeBoardController() {
+
 	result res;
 	if (controller != NULL) {
 		if (controller->model != NULL) {
@@ -76,10 +79,14 @@ result freeBoardController() {
 	return res;
 }
 
+void freeControllerAfterEventsFinished() {
+	controller->view->quitView = 1;
+}
+
 void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 	switch (event) {
 		case(EXIT) :
-			freeBoardController();
+			freeControllerAfterEventsFinished();
 			break;
 		case (RECONFIGURE_MOUSE) :
 			reconfigureMouseFunction(controller->model->players[MOUSE].level, controller->model->players[MOUSE].type,controller->model);
@@ -94,7 +101,8 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 			refreshViewBoard(controller->view);
 			break;
 		case (GO_TO_MAIN_MENU):
-			GoToMainMenu();
+			freeControllerAfterEventsFinished();
+			bGoToMainMenu = true;
 			break;
 		case (PLACE_MOUSE):
 			placeMouse(x,y);
@@ -130,6 +138,13 @@ void HandleSystemEvent (viewBoardEvents event, int x, int y) {
 			  break;
 		  case (COMPUTER_MOVE) :
  			 computerMoveTo();
+		  	  break;
+		  case (TERMINATE) :
+			 freeBoardController();
+		  	  if (bGoToMainMenu) {
+		  		bGoToMainMenu = false;
+		  		  GoToMainMenu();
+		  	  }
 		  	  break;
 		default:
 			break;

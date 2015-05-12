@@ -23,6 +23,7 @@ result showView();
 
 // Destroy the singelton controller
 result freeBoardController();
+void freeControllerAfterEventsFinished();
 
 // function used to handle view events update the model and view accordingly
 void HandleSystemEvent (viewBoardEvents event, int x, int y);

@@ -105,12 +105,23 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 	SDL_FillRect(allBoards, 0, SDL_MapRGB(allBoards->format, color.r, color.g, color.b));
 	if (model->modelMode == GAME) //we are in the game board
 	{
-		show_side_bar(view->sideBar);
-		show_top_panel(view);
-		show_grid_area(view->gridArea);
+		if ((view->model->winner == NONE) && (view->model->movesBeforeTie>0))
+		{
 
-		if (model->players[model->currentPlayer].type == COMPUTER)
-			view->HandleSystemEvent(COMPUTER_MOVE,0,0);
+			show_side_bar(view->sideBar);
+			show_top_panel(view);
+			show_grid_area(view->gridArea);
+
+			if (model->players[model->currentPlayer].type == COMPUTER)
+				view->HandleSystemEvent(COMPUTER_MOVE,0,0);
+		}
+		else
+		{
+			show_side_bar(view->sideBar);
+			printWinnerTopPaenl(view->model->winner,view);
+			show_grid_area(view->gridArea);
+		}
+
 	}
 	else if (model->modelMode == EDIT)//we are in creating a new world board
 	{
@@ -127,7 +138,7 @@ result showViewBoard(viewBoard* view,modelBoard* model) {
 			handle_gui_event(&event, view,model);
 		}
 	}
-	view->HandleSystemEvent(EXIT, 0, 0);
+	view->HandleSystemEvent(TERMINATE, 0, 0);
 	res.code = SUCCESS;
 	return res;
 }
